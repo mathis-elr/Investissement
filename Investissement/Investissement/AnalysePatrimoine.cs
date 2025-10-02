@@ -1,4 +1,5 @@
-﻿using MetroFramework;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using MetroFramework;
 using MetroFramework.Controls;
 using MetroFramework.Forms;
 using System;
@@ -28,7 +29,9 @@ namespace Investissement
 
         private void AnalysePatrimoine_Load(object sender, EventArgs e)
         {
+            /********/
             /*ENTETE*/
+            /********/
             this.Text = "Analyse du Patromoine";
             styleManager = new MetroFramework.Components.MetroStyleManager();
             styleManager.Owner = this;
@@ -37,7 +40,10 @@ namespace Investissement
             styleManager.Style = MetroColorStyle.Yellow; 
             styleManager.Theme = MetroThemeStyle.Light;
 
+
+            /********/
             /*LAYOUT*/
+            /********/
             //TableLayoutPanel layoutPrincipal = new TableLayoutPanel()
             //{
             //    Dock = DockStyle.Fill,
@@ -51,16 +57,18 @@ namespace Investissement
             //layoutTitre.AutoSize = true;
             //layoutTitre.Padding = new Padding(10);
 
-
+            /************/
             /*NAVIGATION*/
+            /************/
             var tabControl = new MetroFramework.Controls.MetroTabControl
             {
                 Location = new Point(0, 60),
                 Size = new Size(600, 400),
-                Style = MetroFramework.MetroColorStyle.Yellow,
+                Style = MetroFramework.MetroColorStyle.White,
                 Theme = MetroFramework.MetroThemeStyle.Dark
             };
 
+            /*PAGE D'ACCUEIL*/
             var pageAccueil = new MetroFramework.Controls.MetroTabPage
             {
                 Text = "Accueil",
@@ -68,6 +76,32 @@ namespace Investissement
             };
             tabControl.TabPages.Add(pageAccueil);
 
+            FlowLayoutPanel layoutTitre = new FlowLayoutPanel();
+            layoutTitre.FlowDirection = FlowDirection.LeftToRight;
+            layoutTitre.AutoSize = true;
+            layoutTitre.Padding = new Padding(10);
+
+            MetroLabel patrimoine = new MetroLabel()
+            {
+                Text = "Patrimoine : ",
+                UseStyleColors = true,
+                ForeColor = Color.Black
+            };
+            layoutTitre.Controls.Add(patrimoine);
+            
+            MetroLabel montantPatrimoine = new MetroLabel()
+            {
+                Text = "100000 " + "€",
+                UseStyleColors = true,
+                ForeColor = Color.Yellow
+            };
+            layoutTitre.Controls.Add(montantPatrimoine);
+
+            /*ajout des layouts dans la page*/
+            pageAccueil.Controls.Add(layoutTitre);
+
+
+            /*PAGE DONNEES*/
             var pageDonnees = new MetroFramework.Controls.MetroTabPage
             {
                 Text = "Donnees",
@@ -75,6 +109,8 @@ namespace Investissement
             };
             tabControl.TabPages.Add(pageDonnees);
 
+
+            /*PAGE GRAPHIQUE*/
             var pageGraphique = new MetroFramework.Controls.MetroTabPage
             {
                 Text = "Graphiques",
@@ -83,7 +119,9 @@ namespace Investissement
             tabControl.TabPages.Add(pageGraphique);
 
 
-            /*AFFICHAGE DANS L'APPLICATION*/
+            /************************/
+            /*AFFICHAGE DANS L'APPLI*/
+            /************************/
             this.Controls.Add(tabControl);
         }
     }
