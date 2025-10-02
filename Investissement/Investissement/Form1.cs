@@ -1,7 +1,9 @@
 ﻿using ClosedXML.Excel;
+using CuoreUI;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
+using MetroFramework.Components;
 using MetroFramework.Controls;
 using MetroFramework.Forms;
 using System;
@@ -16,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 
 namespace Investissement
 {
@@ -104,6 +107,13 @@ namespace Investissement
             btnAjoutActif.BackColor = System.Drawing.Color.Green;
             btnAjoutActif.Click += BtnAjoutActif;
 
+            MetroButton btnAnalyse = new MetroButton();
+            btnAnalyse.Text = "Analyse Patrimoine";
+            btnAnalyse.AutoSize = true;
+            btnAnalyse.UseCustomBackColor = true;
+            btnAnalyse.BackColor = System.Drawing.Color.Gold;
+            btnAnalyse.Click += BtnAnalyse;
+
             MetroButton btnInvest = new MetroButton();
             btnInvest.Text = "Valider l'investissement";
             btnInvest.AutoSize = true;
@@ -116,6 +126,7 @@ namespace Investissement
 
             layoutBoutons.Controls.Add(btnAjoutActif);
             layoutBoutons.Controls.Add(btnDernierInvest);
+            layoutBoutons.Controls.Add(btnAnalyse);
 
             layoutActifs.Controls.Add(this.gridActifs);
 
@@ -221,6 +232,12 @@ namespace Investissement
         {
             AjoutActif ajoutActif = new AjoutActif(this);
             ajoutActif.Show();
+        }
+
+        private void BtnAnalyse(object sender, EventArgs e)
+        {
+            AnalysePatrimoine analyse= new AnalysePatrimoine(this);
+            analyse.Show();
         }
 
         private void BtnDernierInvest()
