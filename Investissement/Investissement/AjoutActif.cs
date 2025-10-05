@@ -72,6 +72,11 @@ namespace Investissement
             this.Controls.Add(layoutPrincipal);
         }
 
+
+
+        /**************
+         ***METHODES***
+         **************/
         private void AjouterActif(string nom, string type, string isin, string risque)
         {
 
