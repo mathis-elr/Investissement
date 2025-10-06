@@ -12,7 +12,7 @@
 
 <h2>Ce que l'application proposera :</h2>
   <pre>
-    • Nouvelle interface (accessible depuis la page principale) avec une analyse du patrimoine :
+    • Nouvelles pages (patrimoines, graphiques, bourse) :
       - 2 courbe dans un graphique (somme en fonction de la date) : 
         -> l'une formera le montant total investit en donction de la date (depuis le premier investissement jusqu'au dernier)
         -> l'autre indiquement la valeur du patrimoine actuel en recupérant les valeur des actifs via une API 
