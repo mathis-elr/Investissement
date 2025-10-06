@@ -54,15 +54,19 @@ namespace Investissement
             this.gridActifs.Columns.Add("prix", "prix (€)");
 
             MajGridActifs();
-
+            majModeles();
+            boxModeles.Text = "liste actifs";
 
             /****************************
              *  evenements des boutons  *
              ****************************/
             btnAjoutActifs.Click += BtnAjoutActifs;
+            btnAjoutModele.Click += BtnAjoutModele;
             //this.btnDernierInvest.Click += BtnDernierInvest;
             btnInvest.Click += BtnValiderInvest;
             btnQuitter.Click += BtnQuitter;
+
+            boxModeles.SelectedIndexChanged += changerModele;
         }
 
 
@@ -113,6 +117,93 @@ namespace Investissement
             }
         }
 
+        public void majModeles()
+        {
+            var query = "SELECT nom FROM ModeleInvest;";
+            var command = new SQLiteCommand(query, bdd);
+            var noms = command.ExecuteReader();
+
+            var ModeleInvest = new DataTable();
+            ModeleInvest.Load(noms);
+
+            this.boxModeles.DataSource = ModeleInvest;
+            this.boxModeles.DisplayMember = "nom";
+            this.boxModeles.DisplayMember = "id";
+        }
+
+        public void majGridModele(string nom)
+        {
+            string selectionIdModele = "SELECT id FROM ModeleInvest WHERE nom=@nom";
+            var commandSelectionIdModele = new SQLiteCommand(selectionIdModele, bdd);
+            commandSelectionIdModele.Parameters.AddWithValue("@nom", nom);
+            var idModele = commandSelectionIdModele.ExecuteScalar();
+
+            foreach (DataGridViewRow transaction in this.gridActifs.Rows)
+            {
+                var actif = transaction.Cells[0].Value;
+                var type = transaction.Cells[1].Value;
+                var quantite = transaction.Cells[2].Value;
+                var prix = transaction.Cells[3].Value;
+
+                if (actif!=null && type!=null && quantite!=null && prix!=null)
+                {
+                    string insertionTransactions = "INSERT INTO TransactionsModele(actif,type,quantite,prix,idModele) VALUES(@actif,@type,@quantite,@prix,@idModele);";
+                    var commandInsertionTransactions = new SQLiteCommand(insertionTransactions, bdd);
+                    commandInsertionTransactions.Parameters.AddWithValue("@actif", actif);
+                    commandInsertionTransactions.Parameters.AddWithValue("@type", type);
+                    commandInsertionTransactions.Parameters.AddWithValue("@quantite", quantite);
+                    commandInsertionTransactions.Parameters.AddWithValue("@prix", prix);
+                    commandInsertionTransactions.Parameters.AddWithValue("@idModele", idModele);
+                    commandInsertionTransactions.ExecuteNonQuery();
+
+                    commandInsertionTransactions.Dispose();
+                }
+            }
+
+            commandSelectionIdModele.Dispose();
+        }
+
+
+        public void changerModele(object sender, EventArgs e)
+        {
+            /*afficher la description du modele choisis*/
+            string nomModele = ((DataRowView)boxModeles.SelectedItem)["nom"].ToString();
+            if (nomModele == "liste actifs")
+            {
+                MajGridActifs();
+            }
+            else if (!string.IsNullOrEmpty(nomModele))
+            {
+                var query = "SELECT id,description FROM ModeleInvest WHERE nom=@nom;";
+                var command = new SQLiteCommand(query, bdd);
+                command.Parameters.AddWithValue("@nom", nomModele);
+                var modeleChoisi = command.ExecuteReader();
+
+                modeleChoisi.Read();
+                long idModele = modeleChoisi.GetInt64(0);
+                this.labelDescrModele.Text = modeleChoisi.GetString(1);
+
+                /*affecter les transactions du modele chosis au tableau*/
+                this.gridActifs.Rows.Clear();
+                var queryTransactions = "SELECT actif,type,quantite,prix FROM TransactionsModele WHERE idModele=@idModele;";
+                var commandTransactions = new SQLiteCommand(queryTransactions, bdd);
+                commandTransactions.Parameters.AddWithValue("@idModele", idModele);
+                modeleChoisi.Dispose();
+                var transactions = commandTransactions.ExecuteReader();
+
+                while (transactions.Read())
+                {
+                    //Console.WriteLine(transactions.GetFieldType(0));
+                    //Console.WriteLine(transactions.GetFieldType(1));
+                    //Console.WriteLine(transactions.GetFieldType(2));
+                    //Console.WriteLine(transactions.GetFieldType(3));
+                    this.gridActifs.Rows.Add(transactions.GetString(0), transactions.GetString(1), transactions.GetInt64(2), transactions.GetInt64(3));
+                }
+
+                transactions.Dispose();
+            }
+        }
+
 
         private void BtnValiderInvest(object sender, EventArgs e)
         {
@@ -138,6 +229,7 @@ namespace Investissement
 
                         command.ExecuteNonQuery(); //commande d'executuion poour INSERT, UPDATE, DELETE
                         command.Dispose();
+                        
                     }
                     catch (SQLiteException ex)
                     {
@@ -152,6 +244,12 @@ namespace Investissement
         {
             AjoutActif ajoutActif = new AjoutActif(this);
             ajoutActif.Show();
+        }
+
+        private void BtnAjoutModele(object sender, EventArgs e)
+        {
+            AjoutModele ajoutModele = new AjoutModele(this);
+            ajoutModele.Show();
         }
 
 
