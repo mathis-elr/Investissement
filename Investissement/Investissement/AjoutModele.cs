@@ -33,7 +33,7 @@ namespace Investissement
         {
             //verifier si il n'existe pas déjà
             var query = "SELECT nom FROM ModeleInvest;";
-            var command = new SQLiteCommand(query, form.bdd);
+            var command = new SQLiteCommand(query, form.maBDD.connexion);
             var noms = command.ExecuteReader();
 
             while(noms.Read())
@@ -55,7 +55,7 @@ namespace Investissement
                 try
                 {
                     string insertionModele = "INSERT INTO ModeleInvest(nom,description) VALUES(@nom,@description);";
-                    var commandInsertionModele = new SQLiteCommand(insertionModele, form.bdd);
+                    var commandInsertionModele = new SQLiteCommand(insertionModele, form.maBDD.connexion);
                     commandInsertionModele.Parameters.AddWithValue("@nom", nom);
                     commandInsertionModele.Parameters.AddWithValue("@description", description);
                     commandInsertionModele.ExecuteNonQuery();

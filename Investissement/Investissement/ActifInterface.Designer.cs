@@ -1,6 +1,6 @@
 ﻿namespace Investissement
 {
-    partial class AjoutActif
+    partial class ActifInterface
     {
         /// <summary>
         /// Required designer variable.
@@ -30,14 +30,14 @@
         {
             this.SuspendLayout();
             // 
-            // AjoutActif
+            // ActifInterface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Name = "AjoutActif";
-            this.Text = "AjoutActif";
-            this.Load += new System.EventHandler(this.AjoutActif_Load);
+            this.Name = "ActifInterface";
+            this.Text = "ActifInterface";
+            this.Load += new System.EventHandler(this.ActifInterface_Load);
             this.ResumeLayout(false);
 
         }

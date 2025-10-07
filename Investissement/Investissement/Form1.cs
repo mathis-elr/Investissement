@@ -12,15 +12,20 @@ namespace Investissement
     {
         /*ATTRIBUTS*/
         private MetroStyleManager styleManager;
-        public SQLiteConnection bdd;
+        public BDD maBDD;
+        public ActifBDD actifbdd;
 
         /*CONSTRUCTEUR*/
         public Form1()
         {
             styleManager = new MetroStyleManager();
             styleManager.Owner = this;
-            InitializeComponent();  
-            OuvrirBdd();
+            this.maBDD = new BDD("Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions.db");
+            this.ouvrirBDD(maBDD);
+
+            actifbdd = new ActifBDD(maBDD);
+            InitializeComponent();
+            
             this.FormClosing += MyForm_FormClosing;
         }
 
@@ -60,18 +65,27 @@ namespace Investissement
         /**************
          ***METHODES***
          **************/
-        public void OuvrirBdd()
+        public void ouvrirBDD(BDD bdd)
         {
             try
             {
-                string connectionString = @"Data Source=C:\Users\mathi\Documents\prog perso\c#\Investissement\bd\historique_transactions.db";
-                this.bdd = new SQLiteConnection(connectionString);
-
-                this.bdd.Open();
+                bdd.ouvrirBDD();
             }
-            catch (SQLiteException ex)
+            catch (Exception e)
             {
-                MessageBox.Show(ex.Message,"erreur ouverture bdd");
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        public void fermerBDD(BDD bdd)
+        {
+            try
+            {
+                bdd.fermerBDD();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -83,7 +97,7 @@ namespace Investissement
             try
             {
                 string query = "SELECT nom,type FROM Actif ORDER BY type;";
-                var command = new SQLiteCommand(query, bdd);
+                var command = new SQLiteCommand(query, this.maBDD.connexion);
 
                 var actif = command.ExecuteReader(); //commande d'execution pour SELECT
                 
@@ -106,7 +120,7 @@ namespace Investissement
         public void majModeles()
         {
             var query = "SELECT nom FROM ModeleInvest;";
-            var command = new SQLiteCommand(query, bdd);
+            var command = new SQLiteCommand(query, this.maBDD.connexion);
             var noms = command.ExecuteReader();
 
             var ModeleInvest = new DataTable();
@@ -120,7 +134,7 @@ namespace Investissement
         public void insertionTransactionsNvModele(string nom)
         {
             string selectionIdModele = "SELECT id FROM ModeleInvest WHERE nom=@nom";
-            var commandSelectionIdModele = new SQLiteCommand(selectionIdModele, bdd);
+            var commandSelectionIdModele = new SQLiteCommand(selectionIdModele, this.maBDD.connexion);
             commandSelectionIdModele.Parameters.AddWithValue("@nom", nom);
             var idModele = commandSelectionIdModele.ExecuteScalar();
 
@@ -134,7 +148,7 @@ namespace Investissement
                 {
                     //on ajoute pas le prix qui est variable
                     string insertionTransactions = "INSERT INTO TransactionsModele(actif,type,quantite,idModele) VALUES(@actif,@type,@quantite,@idModele);";
-                    var commandInsertionTransactions = new SQLiteCommand(insertionTransactions, bdd);
+                    var commandInsertionTransactions = new SQLiteCommand(insertionTransactions, this.maBDD.connexion);
                     commandInsertionTransactions.Parameters.AddWithValue("@actif", actif);
                     commandInsertionTransactions.Parameters.AddWithValue("@type", type);
                     commandInsertionTransactions.Parameters.AddWithValue("@quantite", quantite);
@@ -161,7 +175,7 @@ namespace Investissement
             else if (!string.IsNullOrEmpty(nomModele))
             {
                 var query = "SELECT id,description FROM ModeleInvest WHERE nom=@nom;";
-                var command = new SQLiteCommand(query, bdd);
+                var command = new SQLiteCommand(query, this.maBDD.connexion);
                 command.Parameters.AddWithValue("@nom", nomModele);
                 var modeleChoisi = command.ExecuteReader();
 
@@ -172,7 +186,7 @@ namespace Investissement
                 /*affecter les transactions du modele chosis au tableau*/
                 this.gridActifs.Rows.Clear();
                 var queryTransactions = "SELECT actif,type,quantite,prix FROM TransactionsModele WHERE idModele=@idModele;";
-                var commandTransactions = new SQLiteCommand(queryTransactions, bdd);
+                var commandTransactions = new SQLiteCommand(queryTransactions, this.maBDD.connexion);
                 commandTransactions.Parameters.AddWithValue("@idModele", idModele);
                 modeleChoisi.Dispose();
                 var transactions = commandTransactions.ExecuteReader();
@@ -202,7 +216,7 @@ namespace Investissement
                     try
                     {
                         string query = "INSERT INTO [Transaction] (date,actif,type,quantite,prix) VALUES (@date,@actif,@type,@quantite,@prix);"; //entre crochets car Transaction est un mot réservé en sql
-                        var command = new SQLiteCommand(query, bdd);
+                        var command = new SQLiteCommand(query, this.maBDD.connexion);
 
                         command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
                         command.Parameters.AddWithValue("@actif", actif.ToString());
@@ -225,7 +239,7 @@ namespace Investissement
 
         private void BtnAjoutActifs(object sender, EventArgs e)
         {
-            AjoutActif ajoutActif = new AjoutActif(this);
+            ActifInterface ajoutActif = new ActifInterface(this, this.actifbdd, Mode.ajouter);
             ajoutActif.Show();
         }
 
@@ -275,18 +289,7 @@ namespace Investissement
         /* EVENEMENTS LORS DE LA FERMUTURE DE LA FENETRE */
         private void MyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try
-            {
-                if (this.bdd != null && this.bdd.State == System.Data.ConnectionState.Open)
-                {
-                    this.bdd.Close();
-                    this.bdd.Dispose();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Erreur fermeture BDD");
-            }
+            this.fermerBDD(this.maBDD);
         }
     }
 }
