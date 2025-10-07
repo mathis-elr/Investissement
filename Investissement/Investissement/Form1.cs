@@ -8,22 +8,36 @@ using System.Windows.Forms;
 
 namespace Investissement
 {
+
+    public enum Mode
+    {
+        ajouter,
+        supprimer,
+        modifier
+    }
+
+
     public partial class Form1 : MetroForm
     {
         /*ATTRIBUTS*/
         private MetroStyleManager styleManager;
         public BDD maBDD;
+
         public ActifBDD actifbdd;
+        public ModeleInvestBDD modeleInvestbdd;
 
         /*CONSTRUCTEUR*/
         public Form1()
         {
             styleManager = new MetroStyleManager();
             styleManager.Owner = this;
+
             this.maBDD = new BDD("Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions.db");
             this.ouvrirBDD(maBDD);
 
+            modeleInvestbdd = new ModeleInvestBDD(maBDD);
             actifbdd = new ActifBDD(maBDD);
+
             InitializeComponent();
             
             this.FormClosing += MyForm_FormClosing;
@@ -245,8 +259,8 @@ namespace Investissement
 
         private void BtnAjoutModele(object sender, EventArgs e)
         {
-            AjoutModele ajoutModele = new AjoutModele(this);
-            ajoutModele.Show();
+            ModeleInvestInterface ajoutModeleInvest = new ModeleInvestInterface(this, this.modeleInvestbdd, Mode.ajouter);
+            ajoutModeleInvest.Show();
         }
 
         private void BtnQuitter(object sender, EventArgs e)

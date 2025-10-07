@@ -46,7 +46,7 @@ namespace Investissement
                 return false;
             }
 
-            if (actif.type == "")
+            else if (actif.type == "")
             {
                 MessageBox.Show("choisissez un type (ETF, crypto, action ...)", "Erreur type");
                 return false;

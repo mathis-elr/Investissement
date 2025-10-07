@@ -11,24 +11,18 @@ using System.Windows.Forms;
 
 namespace Investissement
 {
-    public enum Mode
-    {
-        ajouter,
-        supprimer,
-        modifier
-    }
     public partial class ActifInterface : Form
     {
         /*ATTRIBUTS*/
         public Mode mode;
+        public ActifBDD actifBDD;
+        public Form1 form;
 
         /*pour le mode ajouter*/
         public MetroTextBox inputNom;
         public MetroTextBox inputType;
         public MetroTextBox inputISIN;
         public MetroTextBox inputRisque;
-        public ActifBDD actifBDD;
-        public Form1 form;
 
         public ActifInterface(Form1 form, ActifBDD actifBDD, Mode mode)
         {
