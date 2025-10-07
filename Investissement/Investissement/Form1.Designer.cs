@@ -45,7 +45,6 @@
             this.labelTitreDescrModele = new MetroFramework.Controls.MetroLabel();
             this.btnAjoutModele = new MetroFramework.Controls.MetroButton();
             this.labelModelesInvest = new MetroFramework.Controls.MetroLabel();
-            this.btnAppliquerModele = new MetroFramework.Controls.MetroButton();
             this.boxModeles = new MetroFramework.Controls.MetroComboBox();
             this.pagePatrimoine = new MetroFramework.Controls.MetroTabPage();
             this.pageGraphiques = new MetroFramework.Controls.MetroTabPage();
@@ -159,21 +158,21 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 63.43283F));
             this.tableLayoutPanel3.Controls.Add(this.btnInvest, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.dateInvest, 0, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(329, 279);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(312, 280);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(281, 70);
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55.55556F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 44.44444F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(318, 72);
             this.tableLayoutPanel3.TabIndex = 7;
             // 
             // btnInvest
             // 
             this.btnInvest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.btnInvest.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnInvest.Location = new System.Drawing.Point(3, 38);
+            this.btnInvest.Location = new System.Drawing.Point(3, 43);
             this.btnInvest.Name = "btnInvest";
-            this.btnInvest.Size = new System.Drawing.Size(275, 29);
+            this.btnInvest.Size = new System.Drawing.Size(312, 26);
             this.btnInvest.TabIndex = 6;
             this.btnInvest.Text = "Confirmer l\'investissement";
             this.btnInvest.UseCustomBackColor = true;
@@ -190,7 +189,7 @@
             this.dateInvest.Location = new System.Drawing.Point(3, 3);
             this.dateInvest.MinimumSize = new System.Drawing.Size(0, 30);
             this.dateInvest.Name = "dateInvest";
-            this.dateInvest.Size = new System.Drawing.Size(275, 30);
+            this.dateInvest.Size = new System.Drawing.Size(312, 30);
             this.dateInvest.TabIndex = 7;
             this.dateInvest.UseCustomBackColor = true;
             this.dateInvest.UseCustomForeColor = true;
@@ -248,11 +247,10 @@
             this.layoutModeles.Controls.Add(this.labelTitreDescrModele, 0, 2);
             this.layoutModeles.Controls.Add(this.btnAjoutModele, 1, 1);
             this.layoutModeles.Controls.Add(this.labelModelesInvest, 0, 0);
-            this.layoutModeles.Controls.Add(this.btnAppliquerModele, 0, 4);
             this.layoutModeles.Controls.Add(this.boxModeles, 0, 1);
             this.layoutModeles.Location = new System.Drawing.Point(675, 31);
             this.layoutModeles.Name = "layoutModeles";
-            this.layoutModeles.RowCount = 5;
+            this.layoutModeles.RowCount = 4;
             this.layoutModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.37705F));
             this.layoutModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.62295F));
             this.layoutModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
@@ -270,9 +268,9 @@
             this.labelDescrModele.BackColor = System.Drawing.Color.Black;
             this.labelDescrModele.FontSize = MetroFramework.MetroLabelSize.Small;
             this.labelDescrModele.ForeColor = System.Drawing.Color.White;
-            this.labelDescrModele.Location = new System.Drawing.Point(3, 128);
+            this.labelDescrModele.Location = new System.Drawing.Point(3, 165);
             this.labelDescrModele.Name = "labelDescrModele";
-            this.labelDescrModele.Size = new System.Drawing.Size(321, 146);
+            this.labelDescrModele.Size = new System.Drawing.Size(321, 147);
             this.labelDescrModele.TabIndex = 6;
             this.labelDescrModele.Text = "aucun modèle sélectionné";
             this.labelDescrModele.UseCustomBackColor = true;
@@ -288,7 +286,7 @@
             this.labelTitreDescrModele.BackColor = System.Drawing.Color.Black;
             this.labelTitreDescrModele.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.labelTitreDescrModele.ForeColor = System.Drawing.Color.White;
-            this.labelTitreDescrModele.Location = new System.Drawing.Point(3, 86);
+            this.labelTitreDescrModele.Location = new System.Drawing.Point(3, 123);
             this.labelTitreDescrModele.Name = "labelTitreDescrModele";
             this.labelTitreDescrModele.Size = new System.Drawing.Size(321, 42);
             this.labelTitreDescrModele.TabIndex = 5;
@@ -302,7 +300,7 @@
             // 
             this.btnAjoutModele.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.btnAjoutModele.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnAjoutModele.Location = new System.Drawing.Point(330, 52);
+            this.btnAjoutModele.Location = new System.Drawing.Point(330, 74);
             this.btnAjoutModele.Name = "btnAjoutModele";
             this.btnAjoutModele.Size = new System.Drawing.Size(30, 30);
             this.btnAjoutModele.TabIndex = 5;
@@ -324,7 +322,7 @@
             this.labelModelesInvest.ForeColor = System.Drawing.Color.White;
             this.labelModelesInvest.Location = new System.Drawing.Point(3, 0);
             this.labelModelesInvest.Name = "labelModelesInvest";
-            this.labelModelesInvest.Size = new System.Drawing.Size(321, 49);
+            this.labelModelesInvest.Size = new System.Drawing.Size(321, 71);
             this.labelModelesInvest.TabIndex = 4;
             this.labelModelesInvest.Text = "Modeles Investissement";
             this.labelModelesInvest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -332,26 +330,11 @@
             this.labelModelesInvest.UseCustomForeColor = true;
             this.labelModelesInvest.UseStyleColors = true;
             // 
-            // btnAppliquerModele
-            // 
-            this.btnAppliquerModele.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.btnAppliquerModele.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnAppliquerModele.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnAppliquerModele.Location = new System.Drawing.Point(83, 277);
-            this.btnAppliquerModele.Name = "btnAppliquerModele";
-            this.btnAppliquerModele.Size = new System.Drawing.Size(241, 32);
-            this.btnAppliquerModele.TabIndex = 4;
-            this.btnAppliquerModele.Text = "appliquer le modele";
-            this.btnAppliquerModele.UseCustomBackColor = true;
-            this.btnAppliquerModele.UseCustomForeColor = true;
-            this.btnAppliquerModele.UseSelectable = true;
-            this.btnAppliquerModele.UseStyleColors = true;
-            // 
             // boxModeles
             // 
             this.boxModeles.FormattingEnabled = true;
             this.boxModeles.ItemHeight = 24;
-            this.boxModeles.Location = new System.Drawing.Point(3, 52);
+            this.boxModeles.Location = new System.Drawing.Point(3, 74);
             this.boxModeles.Name = "boxModeles";
             this.boxModeles.Size = new System.Drawing.Size(321, 30);
             this.boxModeles.TabIndex = 3;
@@ -452,7 +435,6 @@
         private System.Windows.Forms.DataGridView gridActifs;
         private MetroFramework.Controls.MetroButton btnAjoutActifs;
         private MetroFramework.Controls.MetroComboBox boxModeles;
-        private MetroFramework.Controls.MetroButton btnAppliquerModele;
         private MetroFramework.Controls.MetroButton btnAjoutModele;
         private MetroFramework.Controls.MetroLabel labelModelesInvest;
         private System.Windows.Forms.TableLayoutPanel layoutModeles;

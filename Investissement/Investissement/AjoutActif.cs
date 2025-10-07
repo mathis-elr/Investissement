@@ -1,16 +1,8 @@
-﻿using ClosedXML.Excel;
-using MetroFramework.Controls;
+﻿using MetroFramework.Controls;
 using MetroFramework.Forms;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
 using System.Data.SQLite;
 
 
@@ -18,13 +10,18 @@ namespace Investissement
 {
     public partial class AjoutActif : MetroForm
     {
+
+        /*ATTRIBUTS*/
         public Form1 form;
+
+        /*CONSTRUCTEUR*/
         public AjoutActif(Form1 form)
         {
             InitializeComponent();
             this.form = form;
         }
 
+        /*INITIALISATION*/
         private void AjoutActif_Load(object sender, EventArgs e)
         {
             //fenetre
@@ -79,40 +76,58 @@ namespace Investissement
          **************/
         private void AjouterActif(string nom, string type, string isin, string risque)
         {
+            /*informer l'utilisateur de son erreur précise*/
+            var selectionNoms = "SELECT nom FROM Actif;";
+            var commandSelectionNoms = new SQLiteCommand(selectionNoms, form.bdd);
+            var noms = commandSelectionNoms.ExecuteReader();
 
-            if (nom != "" && type != "")
+            while (noms.Read())
+            {
+                if (noms.GetString(0) == nom)
+                {
+                    MessageBox.Show("un actif du même nom existe déjà", "Erreur actif");
+                    return;
+                }
+            }
+
+            if (nom == "")
+            {
+                MessageBox.Show("choisissez un nom", "Erreur nom");
+                return;
+            }
+
+            if (type == "")
+            {
+                MessageBox.Show("choisissez un type (ETF, crypto, action ...)", "Erreur type");
+                return;
+            }
+
+            else
             {
 
                 /*-------------------------------
                    Ajout dans la base de données
                 *-------------------------------*/
-
                 try
                 {
-                    string query = "INSERT INTO Actif VALUES(@nom,@type,@ISIN,@risque);";
-                    var command = new SQLiteCommand(query, form.bdd);
-                    command.Parameters.AddWithValue("@nom", nom);
-                    command.Parameters.AddWithValue("@type", type);
-                    command.Parameters.AddWithValue("@ISIN", isin);
-                    command.Parameters.AddWithValue("@risque", risque);
+                    string insertionActif = "INSERT INTO Actif VALUES(@nom,@type,@ISIN,@risque);";
+                    var commandInsertionActif = new SQLiteCommand(insertionActif, form.bdd);
+                    commandInsertionActif.Parameters.AddWithValue("@nom", nom);
+                    commandInsertionActif.Parameters.AddWithValue("@type", type);
+                    commandInsertionActif.Parameters.AddWithValue("@ISIN", isin);
+                    commandInsertionActif.Parameters.AddWithValue("@risque", risque);
 
-                    command.ExecuteNonQuery();
-                    command.Dispose();
+                    commandInsertionActif.ExecuteNonQuery();
+                    commandInsertionActif.Dispose();
                 }
                 catch (SQLiteException ex)
                 {
-                    MessageBox.Show(ex.Message, "erreur insertion actif bdd");
+                    MessageBox.Show(ex.Message, "Erreur insertion actif bdd");
                 }
 
+                this.form.MajGridActifs(); //mise a jour du tableau des actifs pour pouvoir investir dans l'actif ajouté, methode dans form1 car le tableau appartient à l'interface de form1
                 this.Close();
             }
-            else
-            {
-                MessageBox.Show("Erreur ajout actif : nom ou type vide / actif déjà existant");
-            }
-
-            //on met a jour le tableau en consequence de l'ajout
-            this.form.MajGridActifs();
         }
     }
 }

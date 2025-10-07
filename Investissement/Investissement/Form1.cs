@@ -1,22 +1,8 @@
-﻿using ClosedXML.Excel;
-using CuoreUI;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
-using MetroFramework.Components;
-using MetroFramework.Controls;
+﻿using MetroFramework.Components;
 using MetroFramework.Forms;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -131,7 +117,7 @@ namespace Investissement
             this.boxModeles.DisplayMember = "id";
         }
 
-        public void majGridModele(string nom)
+        public void insertionTransactionsNvModele(string nom)
         {
             string selectionIdModele = "SELECT id FROM ModeleInvest WHERE nom=@nom";
             var commandSelectionIdModele = new SQLiteCommand(selectionIdModele, bdd);
@@ -143,16 +129,15 @@ namespace Investissement
                 var actif = transaction.Cells[0].Value;
                 var type = transaction.Cells[1].Value;
                 var quantite = transaction.Cells[2].Value;
-                var prix = transaction.Cells[3].Value;
 
-                if (actif!=null && type!=null && quantite!=null && prix!=null)
+                if (actif!=null && type!=null && quantite!=null)
                 {
-                    string insertionTransactions = "INSERT INTO TransactionsModele(actif,type,quantite,prix,idModele) VALUES(@actif,@type,@quantite,@prix,@idModele);";
+                    //on ajoute pas le prix qui est variable
+                    string insertionTransactions = "INSERT INTO TransactionsModele(actif,type,quantite,idModele) VALUES(@actif,@type,@quantite,@idModele);";
                     var commandInsertionTransactions = new SQLiteCommand(insertionTransactions, bdd);
                     commandInsertionTransactions.Parameters.AddWithValue("@actif", actif);
                     commandInsertionTransactions.Parameters.AddWithValue("@type", type);
                     commandInsertionTransactions.Parameters.AddWithValue("@quantite", quantite);
-                    commandInsertionTransactions.Parameters.AddWithValue("@prix", prix);
                     commandInsertionTransactions.Parameters.AddWithValue("@idModele", idModele);
                     commandInsertionTransactions.ExecuteNonQuery();
 
@@ -164,9 +149,10 @@ namespace Investissement
         }
 
 
+        /* EVENEMENTS CHOIX DANS UN COMBOBOX */
         public void changerModele(object sender, EventArgs e)
         {
-            /*afficher la description du modele choisis*/
+            
             string nomModele = ((DataRowView)boxModeles.SelectedItem)["nom"].ToString();
             if (nomModele == "liste actifs")
             {
@@ -193,10 +179,6 @@ namespace Investissement
 
                 while (transactions.Read())
                 {
-                    //Console.WriteLine(transactions.GetFieldType(0));
-                    //Console.WriteLine(transactions.GetFieldType(1));
-                    //Console.WriteLine(transactions.GetFieldType(2));
-                    //Console.WriteLine(transactions.GetFieldType(3));
                     this.gridActifs.Rows.Add(transactions.GetString(0), transactions.GetString(1), transactions.GetInt64(2), transactions.GetInt64(3));
                 }
 
@@ -205,6 +187,7 @@ namespace Investissement
         }
 
 
+        /* BOUTONS */
         private void BtnValiderInvest(object sender, EventArgs e)
         {
             foreach (DataGridViewRow transaction in this.gridActifs.Rows)
@@ -252,7 +235,6 @@ namespace Investissement
             ajoutModele.Show();
         }
 
-
         private void BtnQuitter(object sender, EventArgs e)
         {
             this.Close();
@@ -283,9 +265,6 @@ namespace Investissement
         //        command.Dispose();
         //        command2.Dispose();
 
-        //        //on change le texte et l'action du bouton
-        //        this.btnDernierInvest.Text = "Afficher les actifs";
-        //        this.btnDernierInvest.Click += BtnInvestGeneral;
         //    }
         //    else
         //    {
@@ -293,19 +272,7 @@ namespace Investissement
         //    }
         //}
 
-        //public void BtnInvestGeneral(object sender, EventArgs e) 
-        //{ 
-        //    this.gridActifs.Rows.Clear(); //on vide le tableau
-
-        //    //on remet la grille des actifs
-        //    MajGridActifs();
-
-        //    //on change le texte et l'action du bouton
-        //    this.btnDernierInvest.Text = "Afficher dernier investissement";
-        //    this.btnDernierInvest.Click +=  BtnDernierInvest;
-        //} 
-
-
+        /* EVENEMENTS LORS DE LA FERMUTURE DE LA FENETRE */
         private void MyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
