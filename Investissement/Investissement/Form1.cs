@@ -1,4 +1,5 @@
-﻿using MetroFramework.Components;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using MetroFramework.Components;
 using MetroFramework.Forms;
 using System;
 using System.Data;
@@ -23,8 +24,10 @@ namespace Investissement
         private MetroStyleManager styleManager;
         public BDD maBDD;
 
+        public Form1BDD form1BDD;
         public ActifBDD actifbdd;
         public ModeleInvestBDD modeleInvestbdd;
+        public TransactionModeleBDD transactionModeleBDD;
 
         /*CONSTRUCTEUR*/
         public Form1()
@@ -33,10 +36,12 @@ namespace Investissement
             styleManager.Owner = this;
 
             this.maBDD = new BDD("Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions.db");
-            this.ouvrirBDD(maBDD);
+            this.ouvrirBDD(this.maBDD);
 
-            modeleInvestbdd = new ModeleInvestBDD(maBDD);
-            actifbdd = new ActifBDD(maBDD);
+            form1BDD = new Form1BDD(this.maBDD);
+            modeleInvestbdd = new ModeleInvestBDD(this.maBDD);
+            actifbdd = new ActifBDD(this.maBDD);
+            transactionModeleBDD = new TransactionModeleBDD(this.maBDD);
 
             InitializeComponent();
             
@@ -145,35 +150,25 @@ namespace Investissement
             this.boxModeles.DisplayMember = "id";
         }
 
-        public void insertionTransactionsNvModele(string nom)
+        public void insertionTransactionsModeleDepuisGrid(ModeleInvest modele)
         {
-            string selectionIdModele = "SELECT id FROM ModeleInvest WHERE nom=@nom";
-            var commandSelectionIdModele = new SQLiteCommand(selectionIdModele, this.maBDD.connexion);
-            commandSelectionIdModele.Parameters.AddWithValue("@nom", nom);
-            var idModele = commandSelectionIdModele.ExecuteScalar();
-
             foreach (DataGridViewRow transaction in this.gridActifs.Rows)
             {
-                var actif = transaction.Cells[0].Value;
-                var type = transaction.Cells[1].Value;
-                var quantite = transaction.Cells[2].Value;
+                if (transaction.IsNewRow) continue; //ne prend aps en compte la ligne vide en bas
 
-                if (actif!=null && type!=null && quantite!=null)
+                string actif = transaction.Cells[0].Value.ToString();
+                string type = transaction.Cells[1].Value.ToString();
+                var quantiteVar = transaction.Cells[2].Value;
+                long quantiteLong = 0;
+                if (quantiteVar != DBNull.Value) quantiteLong = Convert.ToInt64(quantiteVar);
+
+                if (quantiteLong !=0)
                 {
-                    //on ajoute pas le prix qui est variable
-                    string insertionTransactions = "INSERT INTO TransactionsModele(actif,type,quantite,idModele) VALUES(@actif,@type,@quantite,@idModele);";
-                    var commandInsertionTransactions = new SQLiteCommand(insertionTransactions, this.maBDD.connexion);
-                    commandInsertionTransactions.Parameters.AddWithValue("@actif", actif);
-                    commandInsertionTransactions.Parameters.AddWithValue("@type", type);
-                    commandInsertionTransactions.Parameters.AddWithValue("@quantite", quantite);
-                    commandInsertionTransactions.Parameters.AddWithValue("@idModele", idModele);
-                    commandInsertionTransactions.ExecuteNonQuery();
-
-                    commandInsertionTransactions.Dispose();
+                    TransactionModele transactionModele = new TransactionModele(actif, type, quantiteLong, modele);
+                    modele.ajouterTransaction(transactionModele);
                 }
             }
-
-            commandSelectionIdModele.Dispose();
+            modele.ajouterTransactions(this.transactionModeleBDD);
         }
 
 
@@ -199,15 +194,16 @@ namespace Investissement
 
                 /*affecter les transactions du modele chosis au tableau*/
                 this.gridActifs.Rows.Clear();
-                var queryTransactions = "SELECT actif,type,quantite,prix FROM TransactionsModele WHERE idModele=@idModele;";
+                var queryTransactions = "SELECT actif,type,quantite FROM TransactionsModele WHERE idModele=@idModele;";
                 var commandTransactions = new SQLiteCommand(queryTransactions, this.maBDD.connexion);
                 commandTransactions.Parameters.AddWithValue("@idModele", idModele);
                 modeleChoisi.Dispose();
+
                 var transactions = commandTransactions.ExecuteReader();
 
                 while (transactions.Read())
                 {
-                    this.gridActifs.Rows.Add(transactions.GetString(0), transactions.GetString(1), transactions.GetInt64(2), transactions.GetInt64(3));
+                    this.gridActifs.Rows.Add(transactions.GetString(0), transactions.GetString(1), transactions.GetInt64(2));
                 }
 
                 transactions.Dispose();
