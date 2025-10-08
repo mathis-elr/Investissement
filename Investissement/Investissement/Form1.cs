@@ -24,10 +24,11 @@ namespace Investissement
         private MetroStyleManager styleManager;
         public BDD maBDD;
 
-        public Form1BDD form1BDD;
+        public Form1BDD form1bdd;
         public ActifBDD actifbdd;
         public ModeleInvestBDD modeleInvestbdd;
-        public TransactionModeleBDD transactionModeleBDD;
+        public TransactionModeleBDD transactionModelebdd;
+        public TransactionBDD transactionbdd;
 
         /*CONSTRUCTEUR*/
         public Form1()
@@ -35,13 +36,16 @@ namespace Investissement
             styleManager = new MetroStyleManager();
             styleManager.Owner = this;
 
+            /*GESTION DE LA CONNECTION A LA BASE DE DONNEE*/
             this.maBDD = new BDD("Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions.db");
             this.ouvrirBDD(this.maBDD);
 
-            form1BDD = new Form1BDD(this.maBDD);
+            /*CLASSES QUI GERENT LA PARTIE SQL DE CHAQUE CONCEPT*/
+            form1bdd = new Form1BDD(this.maBDD);
             modeleInvestbdd = new ModeleInvestBDD(this.maBDD);
             actifbdd = new ActifBDD(this.maBDD);
-            transactionModeleBDD = new TransactionModeleBDD(this.maBDD);
+            transactionModelebdd = new TransactionModeleBDD(this.maBDD);
+            transactionbdd = new TransactionBDD(this.maBDD);
 
             InitializeComponent();
             
@@ -63,8 +67,8 @@ namespace Investissement
             this.gridActifs.Columns.Add("quantite", "quantite (€)");
             this.gridActifs.Columns.Add("prix", "prix (€)");
 
-            MajGridActifs();
-            majModeles();
+            majGridActifs();
+            majComboBoxModeles();
             boxModeles.Text = "liste actifs";
 
             /****************************
@@ -109,52 +113,43 @@ namespace Investissement
         }
 
 
-        public void MajGridActifs()
+        public void majGridActifs()
         {
             this.gridActifs.Rows.Clear();
 
             try
             {
-                string query = "SELECT nom,type FROM Actif ORDER BY type;";
-                var command = new SQLiteCommand(query, this.maBDD.connexion);
-
-                var actif = command.ExecuteReader(); //commande d'execution pour SELECT
-                
-
-                while (actif.Read())
+                foreach (var (nom, type) in actifbdd.getActifsGrid())
                 {
-                    this.gridActifs.Rows.Add(actif.GetString(0), actif.GetString(1));
-                    //pour chaque actif ajouter son type dans une colonne a coté
+                    this.gridActifs.Rows.Add(nom, type);
                 }
-
-                actif.Dispose();
-
             }
-            catch (SQLiteException ex)
+            catch(SQLiteException ex)
             {
-                MessageBox.Show(ex.Message,"erreur selection bdd");
+                MessageBox.Show(ex.Message, "Erreur sélection actifs BDD");
             }
         }
+            
 
-        public void majModeles()
+        public void majComboBoxModeles()
         {
-            var query = "SELECT nom FROM ModeleInvest;";
-            var command = new SQLiteCommand(query, this.maBDD.connexion);
-            var noms = command.ExecuteReader();
-
-            var ModeleInvest = new DataTable();
-            ModeleInvest.Load(noms);
-
-            this.boxModeles.DataSource = ModeleInvest;
-            this.boxModeles.DisplayMember = "nom";
-            this.boxModeles.DisplayMember = "id";
+            try
+            {
+                DataTable modeleInvest = modeleInvestbdd.getModeles();
+                this.boxModeles.DataSource = modeleInvest;
+                this.boxModeles.DisplayMember = "nom";
+            }
+            catch(SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message, "Erreur selection modeles BDD");
+            }
         }
 
         public void insertionTransactionsModeleDepuisGrid(ModeleInvest modele)
         {
             foreach (DataGridViewRow transaction in this.gridActifs.Rows)
             {
-                if (transaction.IsNewRow) continue; //ne prend aps en compte la ligne vide en bas
+                if (transaction.IsNewRow) continue; //ne prend pas en compte la ligne vide en bas
 
                 string actif = transaction.Cells[0].Value.ToString();
                 string type = transaction.Cells[1].Value.ToString();
@@ -168,7 +163,7 @@ namespace Investissement
                     modele.ajouterTransaction(transactionModele);
                 }
             }
-            modele.ajouterTransactions(this.transactionModeleBDD);
+            modele.ajouterTransactions(this.transactionModelebdd);
         }
 
 
@@ -179,74 +174,40 @@ namespace Investissement
             string nomModele = ((DataRowView)boxModeles.SelectedItem)["nom"].ToString();
             if (nomModele == "liste actifs")
             {
-                MajGridActifs();
+                majGridActifs();
             }
             else if (!string.IsNullOrEmpty(nomModele))
             {
-                var query = "SELECT id,description FROM ModeleInvest WHERE nom=@nom;";
-                var command = new SQLiteCommand(query, this.maBDD.connexion);
-                command.Parameters.AddWithValue("@nom", nomModele);
-                var modeleChoisi = command.ExecuteReader();
-
-                modeleChoisi.Read();
-                long idModele = modeleChoisi.GetInt64(0);
-                this.labelDescrModele.Text = modeleChoisi.GetString(1);
-
-                /*affecter les transactions du modele chosis au tableau*/
-                this.gridActifs.Rows.Clear();
-                var queryTransactions = "SELECT actif,type,quantite FROM TransactionsModele WHERE idModele=@idModele;";
-                var commandTransactions = new SQLiteCommand(queryTransactions, this.maBDD.connexion);
-                commandTransactions.Parameters.AddWithValue("@idModele", idModele);
-                modeleChoisi.Dispose();
-
-                var transactions = commandTransactions.ExecuteReader();
-
-                while (transactions.Read())
+                try
                 {
-                    this.gridActifs.Rows.Add(transactions.GetString(0), transactions.GetString(1), transactions.GetInt64(2));
-                }
+                    (long id, string description) modeleChoisi = modeleInvestbdd.getModele(nomModele);
+                    long id_modele = modeleChoisi.id;
+                    this.labelDescrModele.Text = modeleChoisi.description;
 
-                transactions.Dispose();
+                    try
+                    {
+                        this.gridActifs.Rows.Clear();
+
+                        foreach (var (actif, type, quantite) in transactionModelebdd.getTransactionModele(id_modele))
+                        {
+                            this.gridActifs.Rows.Add(actif, type, quantite);
+                        }
+                    }
+                    catch (SQLiteException ex)
+                    {
+                        MessageBox.Show(ex.Message, "Erreur selection transaction modele par id_modele BDD");
+                    }
+
+                }
+                catch(SQLiteException ex)
+                {
+                    MessageBox.Show(ex.Message, "Erreur selection modeles par nom BDD");
+                }
             }
         }
 
 
         /* BOUTONS */
-        private void BtnValiderInvest(object sender, EventArgs e)
-        {
-            foreach (DataGridViewRow transaction in this.gridActifs.Rows)
-            {
-                var date = this.dateInvest.Value;    
-                var actif = transaction.Cells[0].Value;
-                var type = transaction.Cells[1].Value;
-                var quantite = transaction.Cells[2].Value;
-                var prix = transaction.Cells[3].Value;
-                if (quantite != null)
-                {
-                    try
-                    {
-                        string query = "INSERT INTO [Transaction] (date,actif,type,quantite,prix) VALUES (@date,@actif,@type,@quantite,@prix);"; //entre crochets car Transaction est un mot réservé en sql
-                        var command = new SQLiteCommand(query, this.maBDD.connexion);
-
-                        command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
-                        command.Parameters.AddWithValue("@actif", actif.ToString());
-                        command.Parameters.AddWithValue("@type", type.ToString());
-                        command.Parameters.AddWithValue("@quantite", Convert.ToDouble(quantite));
-                        command.Parameters.AddWithValue("@prix", Convert.ToDouble(prix));
-
-                        command.ExecuteNonQuery(); //commande d'executuion poour INSERT, UPDATE, DELETE
-                        command.Dispose();
-                        
-                    }
-                    catch (SQLiteException ex)
-                    {
-                        MessageBox.Show(ex.Message,"erreur insertion transaction bdd");
-                    }
-                }
-
-            }
-        }
-
         private void BtnAjoutActifs(object sender, EventArgs e)
         {
             ActifInterface ajoutActif = new ActifInterface(this, this.actifbdd, Mode.ajouter);
@@ -259,44 +220,46 @@ namespace Investissement
             ajoutModeleInvest.Show();
         }
 
+        private void BtnValiderInvest(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow transaction in this.gridActifs.Rows)
+            {
+                DateTime date = this.dateInvest.Value;    
+                string actif = transaction.Cells[0].Value.ToString();
+                string type = transaction.Cells[1].Value.ToString();
+                var quantiteVar = transaction.Cells[2].Value;
+                var prixVar = transaction.Cells[3].Value;
+
+                long quantiteLong = 0;
+                long prixLong = 0;
+
+                if (quantiteVar != DBNull.Value) quantiteLong = Convert.ToInt64(quantiteVar);
+                if (prixVar != DBNull.Value) prixLong = Convert.ToInt64(prixVar);
+
+                if (quantiteLong != 0 && prixLong != 0)
+                {
+                    Transaction nvltransaction = new Transaction(date, actif, type, quantiteLong, prixLong);
+
+                    try
+                    {
+                        transactionbdd.ajouterTransaction(nvltransaction);
+                    }
+                    catch (SQLiteException ex)
+                    {
+                        MessageBox.Show(ex.Message,"erreur insertion transaction bdd");
+                    }
+                }
+
+            }
+        }
+
         private void BtnQuitter(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        //private void BtnDernierInvest(object sender, EventArgs e)
-        //{
-        //    /*On récupère la date du dernier investissement*/
-        //    string queryDate = "SELECT date FROM [Transaction] ORDER BY date DESC LIMIT 1;"; 
-        //    var command = new SQLiteCommand(queryDate, bdd);
-        //    var date = command.ExecuteScalar(); //commande d'execution pour SELECT qui retourne qu'une seule valeur
 
-        //    //on varifie qu'il y a au moins une transaction
-        //    if (date != null) 
-        //    {
-        //        /*grace a cette date on recupère toutes les transactions effectuées ce jour là*/
-        //        string queryDernierInvest = "SELECT actif,type,quantite,prix FROM [Transaction] WHERE date=@date;";
-        //        var command2 = new SQLiteCommand(queryDernierInvest, bdd);
-        //        command2.Parameters.AddWithValue("@date", date);
-        //        var Investissements = command2.ExecuteReader();
-
-        //        //on parcours les transactions
-        //        while (Investissements.Read())
-        //        {
-        //            this.gridActifs.Rows.Add(Investissements.GetString(0), Investissements.GetString(1), Investissements.GetDouble(2), Investissements.GetDouble(3));
-        //        }
-
-        //        command.Dispose();
-        //        command2.Dispose();
-
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("aucune transactions dans la base de données");
-        //    }
-        //}
-
-        /* EVENEMENTS LORS DE LA FERMUTURE DE LA FENETRE */
+        /* EVENEMENTS FERMUTURE DE LA FENETRE */
         private void MyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.fermerBDD(this.maBDD);
