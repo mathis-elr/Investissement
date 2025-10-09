@@ -212,6 +212,7 @@
             // 
             // gridActifs
             // 
+            this.gridActifs.AllowUserToAddRows = false;
             this.gridActifs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridActifs.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.gridActifs.BackgroundColor = System.Drawing.Color.White;
