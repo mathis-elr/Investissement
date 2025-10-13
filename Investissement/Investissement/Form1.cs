@@ -83,12 +83,17 @@ namespace Investissement
              *******************************/
             //boutons
             btnAjoutActifs.Click += BtnAjoutActifs;
+            btnSupprActifOuTransactionInvest.Click += BtnSupprActif;
+
             btnAjoutModele.Click += BtnAjoutModele;
+            btnSupprModele.Click += BtnSupprModele;
+
             btnInvest.Click += BtnValiderInvest;
+
             btnQuitter.Click += BtnQuitter;
 
             //comboBox
-            boxModeles.SelectedIndexChanged += changerModele;
+            boxModeles.SelectedIndexChanged += (s, _) => changerModele();
         }
 
 
@@ -120,10 +125,27 @@ namespace Investissement
          **************/
 
         /* EVENEMENTS COMBOBOX */
-        public void changerModele(object sender, EventArgs e)
+        public void changerModele()
         {
             string nomModele = ((DataRowView)boxModeles.SelectedItem)["nom"].ToString();
             modeleInvestController.choixModele(nomModele);
+
+            if (nomModele  == "liste actifs")
+            {
+                btnSupprModele.Enabled = false;
+                btnAjoutModele.Enabled = true;
+                btnAjoutActifs.Enabled = true;
+                btnSupprActifOuTransactionInvest.Click -= BtnSupprTransactionModele;
+                btnSupprActifOuTransactionInvest.Click += BtnSupprActif;
+            }
+            else
+            {
+                btnSupprModele.Enabled = true;
+                btnAjoutModele.Enabled = false;
+                btnAjoutActifs.Enabled = false;
+                btnSupprActifOuTransactionInvest.Click -= BtnSupprActif;
+                btnSupprActifOuTransactionInvest.Click += BtnSupprTransactionModele;
+            }
         }
 
 
@@ -134,10 +156,35 @@ namespace Investissement
             ajoutActif.Show();
         }
 
+        private void BtnSupprActif(object sender, EventArgs e)
+        {
+            if (actifController.supprActif())
+            {
+                MessageBox.Show("Actif supprimé avec succès", "Actif");
+            }
+        }
+
+        private void BtnSupprTransactionModele(object sender, EventArgs e)
+        {
+            if (transactionModelesController.supprTransactionModele())
+            {
+                MessageBox.Show("transaction de modele supprimé avec succès", "Transaction Modele");
+            }
+        }
+
         private void BtnAjoutModele(object sender, EventArgs e)
         {
             ModeleInvestInterface ajoutModeleInvest = new ModeleInvestInterface(this.modeleInvestController, ModeEdition.ajouter);
             ajoutModeleInvest.Show();
+        }
+
+        private void BtnSupprModele(object sender, EventArgs e)
+        {
+            string nomModele = ((DataRowView)boxModeles.SelectedItem)["nom"].ToString();
+            if (modeleInvestController.supprModele(nomModele))
+            {
+                MessageBox.Show("Modele supprimé avec succès", "Modele");
+            }
         }
 
         private void BtnValiderInvest(object sender, EventArgs e)
