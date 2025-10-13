@@ -33,19 +33,26 @@
             this.labelTitre = new System.Windows.Forms.Label();
             this.navigation = new MetroFramework.Controls.MetroTabControl();
             this.pageInvestir = new MetroFramework.Controls.MetroTabPage();
+            this.panelAjoutModele = new System.Windows.Forms.TableLayoutPanel();
+            this.inputDescriptionModele = new MetroFramework.Controls.MetroTextBox();
+            this.labelTitreCreationOuEdition = new MetroFramework.Controls.MetroLabel();
+            this.inputNomModele = new MetroFramework.Controls.MetroTextBox();
+            this.btnAjoutModeleInvest = new MetroFramework.Controls.MetroButton();
+            this.btnQuitterInterfaceCreationModele = new MetroFramework.Controls.MetroButton();
             this.panelLigne1 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.panelConfirmationInvest = new System.Windows.Forms.TableLayoutPanel();
             this.btnInvest = new MetroFramework.Controls.MetroButton();
             this.dateInvest = new MetroFramework.Controls.MetroDateTime();
             this.layoutActifs = new System.Windows.Forms.TableLayoutPanel();
             this.btnSupprActifOuTransactionInvest = new MetroFramework.Controls.MetroButton();
             this.gridActifs = new System.Windows.Forms.DataGridView();
             this.btnAjoutActifs = new MetroFramework.Controls.MetroButton();
-            this.layoutModeles = new System.Windows.Forms.TableLayoutPanel();
+            this.pannelChoixModeles = new System.Windows.Forms.TableLayoutPanel();
+            this.btnInterfaceEditerModeleInvest = new MetroFramework.Controls.MetroButton();
             this.btnSupprModele = new MetroFramework.Controls.MetroButton();
             this.labelDescrModele = new MetroFramework.Controls.MetroLabel();
             this.labelTitreDescrModele = new MetroFramework.Controls.MetroLabel();
-            this.btnAjoutModele = new MetroFramework.Controls.MetroButton();
+            this.btnInterfaceCreationModel = new MetroFramework.Controls.MetroButton();
             this.labelModelesInvest = new MetroFramework.Controls.MetroLabel();
             this.boxModeles = new MetroFramework.Controls.MetroComboBox();
             this.pagePatrimoine = new MetroFramework.Controls.MetroTabPage();
@@ -54,10 +61,11 @@
             this.panelTitre.SuspendLayout();
             this.navigation.SuspendLayout();
             this.pageInvestir.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
+            this.panelAjoutModele.SuspendLayout();
+            this.panelConfirmationInvest.SuspendLayout();
             this.layoutActifs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridActifs)).BeginInit();
-            this.layoutModeles.SuspendLayout();
+            this.pannelChoixModeles.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTitre
@@ -115,7 +123,7 @@
             this.navigation.Location = new System.Drawing.Point(-6, 80);
             this.navigation.Name = "navigation";
             this.navigation.SelectedIndex = 0;
-            this.navigation.Size = new System.Drawing.Size(1157, 460);
+            this.navigation.Size = new System.Drawing.Size(1229, 519);
             this.navigation.TabIndex = 2;
             this.navigation.UseCustomBackColor = true;
             this.navigation.UseCustomForeColor = true;
@@ -125,16 +133,17 @@
             // pageInvestir
             // 
             this.pageInvestir.BackColor = System.Drawing.Color.Black;
+            this.pageInvestir.Controls.Add(this.panelAjoutModele);
             this.pageInvestir.Controls.Add(this.panelLigne1);
-            this.pageInvestir.Controls.Add(this.tableLayoutPanel3);
+            this.pageInvestir.Controls.Add(this.panelConfirmationInvest);
             this.pageInvestir.Controls.Add(this.layoutActifs);
-            this.pageInvestir.Controls.Add(this.layoutModeles);
+            this.pageInvestir.Controls.Add(this.pannelChoixModeles);
             this.pageInvestir.HorizontalScrollbarBarColor = true;
             this.pageInvestir.HorizontalScrollbarHighlightOnWheel = false;
             this.pageInvestir.HorizontalScrollbarSize = 10;
             this.pageInvestir.Location = new System.Drawing.Point(4, 39);
             this.pageInvestir.Name = "pageInvestir";
-            this.pageInvestir.Size = new System.Drawing.Size(1149, 417);
+            this.pageInvestir.Size = new System.Drawing.Size(1221, 476);
             this.pageInvestir.TabIndex = 0;
             this.pageInvestir.Text = "Investir";
             this.pageInvestir.UseCustomBackColor = true;
@@ -145,6 +154,144 @@
             this.pageInvestir.VerticalScrollbarHighlightOnWheel = false;
             this.pageInvestir.VerticalScrollbarSize = 10;
             // 
+            // panelAjoutModele
+            // 
+            this.panelAjoutModele.ColumnCount = 3;
+            this.panelAjoutModele.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.88889F));
+            this.panelAjoutModele.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 190F));
+            this.panelAjoutModele.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 41F));
+            this.panelAjoutModele.Controls.Add(this.inputDescriptionModele, 0, 3);
+            this.panelAjoutModele.Controls.Add(this.labelTitreCreationOuEdition, 0, 0);
+            this.panelAjoutModele.Controls.Add(this.inputNomModele, 0, 1);
+            this.panelAjoutModele.Controls.Add(this.btnAjoutModeleInvest, 1, 4);
+            this.panelAjoutModele.Controls.Add(this.btnQuitterInterfaceCreationModele, 2, 0);
+            this.panelAjoutModele.Location = new System.Drawing.Point(678, 31);
+            this.panelAjoutModele.Name = "panelAjoutModele";
+            this.panelAjoutModele.RowCount = 5;
+            this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35.05155F));
+            this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 64.94846F));
+            this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 9F));
+            this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 142F));
+            this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 96F));
+            this.panelAjoutModele.Size = new System.Drawing.Size(446, 345);
+            this.panelAjoutModele.TabIndex = 11;
+            this.panelAjoutModele.Visible = false;
+            // 
+            // inputDescriptionModele
+            // 
+            this.panelAjoutModele.SetColumnSpan(this.inputDescriptionModele, 2);
+            // 
+            // 
+            // 
+            this.inputDescriptionModele.CustomButton.Image = null;
+            this.inputDescriptionModele.CustomButton.Location = new System.Drawing.Point(264, 2);
+            this.inputDescriptionModele.CustomButton.Name = "";
+            this.inputDescriptionModele.CustomButton.Size = new System.Drawing.Size(131, 131);
+            this.inputDescriptionModele.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.inputDescriptionModele.CustomButton.TabIndex = 1;
+            this.inputDescriptionModele.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.inputDescriptionModele.CustomButton.UseSelectable = true;
+            this.inputDescriptionModele.CustomButton.Visible = false;
+            this.inputDescriptionModele.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.inputDescriptionModele.Lines = new string[] {
+        "description"};
+            this.inputDescriptionModele.Location = new System.Drawing.Point(3, 109);
+            this.inputDescriptionModele.MaxLength = 32767;
+            this.inputDescriptionModele.Name = "inputDescriptionModele";
+            this.inputDescriptionModele.PasswordChar = '\0';
+            this.inputDescriptionModele.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.inputDescriptionModele.SelectedText = "";
+            this.inputDescriptionModele.SelectionLength = 0;
+            this.inputDescriptionModele.SelectionStart = 0;
+            this.inputDescriptionModele.ShortcutsEnabled = true;
+            this.inputDescriptionModele.Size = new System.Drawing.Size(398, 136);
+            this.inputDescriptionModele.TabIndex = 10;
+            this.inputDescriptionModele.Text = "description";
+            this.inputDescriptionModele.UseSelectable = true;
+            this.inputDescriptionModele.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.inputDescriptionModele.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            // 
+            // labelTitreCreationOuEdition
+            // 
+            this.labelTitreCreationOuEdition.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTitreCreationOuEdition.AutoSize = true;
+            this.labelTitreCreationOuEdition.BackColor = System.Drawing.Color.Black;
+            this.panelAjoutModele.SetColumnSpan(this.labelTitreCreationOuEdition, 2);
+            this.labelTitreCreationOuEdition.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.labelTitreCreationOuEdition.FontWeight = MetroFramework.MetroLabelWeight.Bold;
+            this.labelTitreCreationOuEdition.ForeColor = System.Drawing.Color.White;
+            this.labelTitreCreationOuEdition.Location = new System.Drawing.Point(3, 0);
+            this.labelTitreCreationOuEdition.Name = "labelTitreCreationOuEdition";
+            this.labelTitreCreationOuEdition.Size = new System.Drawing.Size(398, 34);
+            this.labelTitreCreationOuEdition.TabIndex = 4;
+            this.labelTitreCreationOuEdition.Text = "Creation d\'un modele";
+            this.labelTitreCreationOuEdition.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelTitreCreationOuEdition.UseCustomBackColor = true;
+            this.labelTitreCreationOuEdition.UseCustomForeColor = true;
+            this.labelTitreCreationOuEdition.UseStyleColors = true;
+            // 
+            // inputNomModele
+            // 
+            this.panelAjoutModele.SetColumnSpan(this.inputNomModele, 2);
+            // 
+            // 
+            // 
+            this.inputNomModele.CustomButton.Image = null;
+            this.inputNomModele.CustomButton.Location = new System.Drawing.Point(342, 1);
+            this.inputNomModele.CustomButton.Name = "";
+            this.inputNomModele.CustomButton.Size = new System.Drawing.Size(55, 55);
+            this.inputNomModele.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.inputNomModele.CustomButton.TabIndex = 1;
+            this.inputNomModele.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.inputNomModele.CustomButton.UseSelectable = true;
+            this.inputNomModele.CustomButton.Visible = false;
+            this.inputNomModele.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.inputNomModele.Lines = new string[] {
+        "nom modele"};
+            this.inputNomModele.Location = new System.Drawing.Point(3, 37);
+            this.inputNomModele.MaxLength = 32767;
+            this.inputNomModele.Name = "inputNomModele";
+            this.inputNomModele.PasswordChar = '\0';
+            this.inputNomModele.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.inputNomModele.SelectedText = "";
+            this.inputNomModele.SelectionLength = 0;
+            this.inputNomModele.SelectionStart = 0;
+            this.inputNomModele.ShortcutsEnabled = true;
+            this.inputNomModele.Size = new System.Drawing.Size(398, 57);
+            this.inputNomModele.TabIndex = 6;
+            this.inputNomModele.Text = "nom modele";
+            this.inputNomModele.UseSelectable = true;
+            this.inputNomModele.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.inputNomModele.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            // 
+            // btnAjoutModeleInvest
+            // 
+            this.btnAjoutModeleInvest.BackColor = System.Drawing.Color.Lime;
+            this.btnAjoutModeleInvest.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnAjoutModeleInvest.Location = new System.Drawing.Point(217, 299);
+            this.btnAjoutModeleInvest.Name = "btnAjoutModeleInvest";
+            this.btnAjoutModeleInvest.Size = new System.Drawing.Size(184, 43);
+            this.btnAjoutModeleInvest.TabIndex = 11;
+            this.btnAjoutModeleInvest.Text = "Ajouter le modele";
+            this.btnAjoutModeleInvest.UseCustomBackColor = true;
+            this.btnAjoutModeleInvest.UseCustomForeColor = true;
+            this.btnAjoutModeleInvest.UseSelectable = true;
+            this.btnAjoutModeleInvest.UseStyleColors = true;
+            // 
+            // btnQuitterInterfaceCreationModele
+            // 
+            this.btnQuitterInterfaceCreationModele.BackColor = System.Drawing.Color.Red;
+            this.btnQuitterInterfaceCreationModele.Location = new System.Drawing.Point(407, 3);
+            this.btnQuitterInterfaceCreationModele.Name = "btnQuitterInterfaceCreationModele";
+            this.btnQuitterInterfaceCreationModele.Size = new System.Drawing.Size(28, 28);
+            this.btnQuitterInterfaceCreationModele.TabIndex = 12;
+            this.btnQuitterInterfaceCreationModele.Text = "x";
+            this.btnQuitterInterfaceCreationModele.UseCustomBackColor = true;
+            this.btnQuitterInterfaceCreationModele.UseCustomForeColor = true;
+            this.btnQuitterInterfaceCreationModele.UseSelectable = true;
+            // 
             // panelLigne1
             // 
             this.panelLigne1.BackColor = System.Drawing.Color.White;
@@ -153,20 +300,20 @@
             this.panelLigne1.Size = new System.Drawing.Size(1, 350);
             this.panelLigne1.TabIndex = 8;
             // 
-            // tableLayoutPanel3
+            // panelConfirmationInvest
             // 
-            this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36.56717F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 63.43283F));
-            this.tableLayoutPanel3.Controls.Add(this.btnInvest, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.dateInvest, 0, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(307, 307);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55.55556F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 44.44444F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(318, 72);
-            this.tableLayoutPanel3.TabIndex = 7;
+            this.panelConfirmationInvest.ColumnCount = 1;
+            this.panelConfirmationInvest.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36.56717F));
+            this.panelConfirmationInvest.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 63.43283F));
+            this.panelConfirmationInvest.Controls.Add(this.btnInvest, 0, 1);
+            this.panelConfirmationInvest.Controls.Add(this.dateInvest, 0, 0);
+            this.panelConfirmationInvest.Location = new System.Drawing.Point(307, 307);
+            this.panelConfirmationInvest.Name = "panelConfirmationInvest";
+            this.panelConfirmationInvest.RowCount = 2;
+            this.panelConfirmationInvest.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55.55556F));
+            this.panelConfirmationInvest.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 44.44444F));
+            this.panelConfirmationInvest.Size = new System.Drawing.Size(318, 72);
+            this.panelConfirmationInvest.TabIndex = 7;
             // 
             // btnInvest
             // 
@@ -257,35 +404,52 @@
             this.btnAjoutActifs.UseSelectable = true;
             this.btnAjoutActifs.UseStyleColors = true;
             // 
-            // layoutModeles
+            // pannelChoixModeles
             // 
-            this.layoutModeles.ColumnCount = 3;
-            this.layoutModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.88889F));
-            this.layoutModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.11111F));
-            this.layoutModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 37F));
-            this.layoutModeles.Controls.Add(this.btnSupprModele, 2, 1);
-            this.layoutModeles.Controls.Add(this.labelDescrModele, 0, 3);
-            this.layoutModeles.Controls.Add(this.labelTitreDescrModele, 0, 2);
-            this.layoutModeles.Controls.Add(this.btnAjoutModele, 1, 1);
-            this.layoutModeles.Controls.Add(this.labelModelesInvest, 0, 0);
-            this.layoutModeles.Controls.Add(this.boxModeles, 0, 1);
-            this.layoutModeles.Location = new System.Drawing.Point(675, 31);
-            this.layoutModeles.Name = "layoutModeles";
-            this.layoutModeles.RowCount = 4;
-            this.layoutModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.37705F));
-            this.layoutModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.62295F));
-            this.layoutModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
-            this.layoutModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 146F));
-            this.layoutModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
-            this.layoutModeles.Size = new System.Drawing.Size(403, 312);
-            this.layoutModeles.TabIndex = 3;
+            this.pannelChoixModeles.ColumnCount = 4;
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.72832F));
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.27168F));
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 56F));
+            this.pannelChoixModeles.Controls.Add(this.btnInterfaceEditerModeleInvest, 3, 1);
+            this.pannelChoixModeles.Controls.Add(this.btnSupprModele, 2, 1);
+            this.pannelChoixModeles.Controls.Add(this.labelDescrModele, 0, 3);
+            this.pannelChoixModeles.Controls.Add(this.labelTitreDescrModele, 0, 2);
+            this.pannelChoixModeles.Controls.Add(this.btnInterfaceCreationModel, 1, 1);
+            this.pannelChoixModeles.Controls.Add(this.labelModelesInvest, 0, 0);
+            this.pannelChoixModeles.Controls.Add(this.boxModeles, 0, 1);
+            this.pannelChoixModeles.Location = new System.Drawing.Point(675, 31);
+            this.pannelChoixModeles.Name = "pannelChoixModeles";
+            this.pannelChoixModeles.RowCount = 4;
+            this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.37705F));
+            this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.62295F));
+            this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
+            this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 146F));
+            this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
+            this.pannelChoixModeles.Size = new System.Drawing.Size(449, 312);
+            this.pannelChoixModeles.TabIndex = 3;
+            // 
+            // btnInterfaceEditerModeleInvest
+            // 
+            this.btnInterfaceEditerModeleInvest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.btnInterfaceEditerModeleInvest.Enabled = false;
+            this.btnInterfaceEditerModeleInvest.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.btnInterfaceEditerModeleInvest.Location = new System.Drawing.Point(395, 71);
+            this.btnInterfaceEditerModeleInvest.Name = "btnInterfaceEditerModeleInvest";
+            this.btnInterfaceEditerModeleInvest.Size = new System.Drawing.Size(51, 30);
+            this.btnInterfaceEditerModeleInvest.TabIndex = 12;
+            this.btnInterfaceEditerModeleInvest.Text = "✏️";
+            this.btnInterfaceEditerModeleInvest.UseCustomBackColor = true;
+            this.btnInterfaceEditerModeleInvest.UseCustomForeColor = true;
+            this.btnInterfaceEditerModeleInvest.UseSelectable = true;
+            this.btnInterfaceEditerModeleInvest.UseStyleColors = true;
             // 
             // btnSupprModele
             // 
             this.btnSupprModele.BackColor = System.Drawing.Color.Red;
             this.btnSupprModele.Enabled = false;
             this.btnSupprModele.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnSupprModele.Location = new System.Drawing.Point(368, 71);
+            this.btnSupprModele.Location = new System.Drawing.Point(357, 71);
             this.btnSupprModele.Name = "btnSupprModele";
             this.btnSupprModele.Size = new System.Drawing.Size(30, 30);
             this.btnSupprModele.TabIndex = 9;
@@ -306,7 +470,7 @@
             this.labelDescrModele.ForeColor = System.Drawing.Color.White;
             this.labelDescrModele.Location = new System.Drawing.Point(3, 165);
             this.labelDescrModele.Name = "labelDescrModele";
-            this.labelDescrModele.Size = new System.Drawing.Size(319, 147);
+            this.labelDescrModele.Size = new System.Drawing.Size(308, 147);
             this.labelDescrModele.TabIndex = 6;
             this.labelDescrModele.Text = "aucun modèle sélectionné";
             this.labelDescrModele.UseCustomBackColor = true;
@@ -324,7 +488,7 @@
             this.labelTitreDescrModele.ForeColor = System.Drawing.Color.White;
             this.labelTitreDescrModele.Location = new System.Drawing.Point(3, 118);
             this.labelTitreDescrModele.Name = "labelTitreDescrModele";
-            this.labelTitreDescrModele.Size = new System.Drawing.Size(319, 47);
+            this.labelTitreDescrModele.Size = new System.Drawing.Size(308, 47);
             this.labelTitreDescrModele.TabIndex = 5;
             this.labelTitreDescrModele.Text = "description modele";
             this.labelTitreDescrModele.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -332,19 +496,19 @@
             this.labelTitreDescrModele.UseCustomForeColor = true;
             this.labelTitreDescrModele.UseStyleColors = true;
             // 
-            // btnAjoutModele
+            // btnInterfaceCreationModel
             // 
-            this.btnAjoutModele.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.btnAjoutModele.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnAjoutModele.Location = new System.Drawing.Point(328, 71);
-            this.btnAjoutModele.Name = "btnAjoutModele";
-            this.btnAjoutModele.Size = new System.Drawing.Size(30, 30);
-            this.btnAjoutModele.TabIndex = 5;
-            this.btnAjoutModele.Text = "+";
-            this.btnAjoutModele.UseCustomBackColor = true;
-            this.btnAjoutModele.UseCustomForeColor = true;
-            this.btnAjoutModele.UseSelectable = true;
-            this.btnAjoutModele.UseStyleColors = true;
+            this.btnInterfaceCreationModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.btnInterfaceCreationModel.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.btnInterfaceCreationModel.Location = new System.Drawing.Point(317, 71);
+            this.btnInterfaceCreationModel.Name = "btnInterfaceCreationModel";
+            this.btnInterfaceCreationModel.Size = new System.Drawing.Size(30, 30);
+            this.btnInterfaceCreationModel.TabIndex = 5;
+            this.btnInterfaceCreationModel.Text = "+";
+            this.btnInterfaceCreationModel.UseCustomBackColor = true;
+            this.btnInterfaceCreationModel.UseCustomForeColor = true;
+            this.btnInterfaceCreationModel.UseSelectable = true;
+            this.btnInterfaceCreationModel.UseStyleColors = true;
             // 
             // labelModelesInvest
             // 
@@ -358,7 +522,7 @@
             this.labelModelesInvest.ForeColor = System.Drawing.Color.White;
             this.labelModelesInvest.Location = new System.Drawing.Point(3, 0);
             this.labelModelesInvest.Name = "labelModelesInvest";
-            this.labelModelesInvest.Size = new System.Drawing.Size(319, 68);
+            this.labelModelesInvest.Size = new System.Drawing.Size(308, 68);
             this.labelModelesInvest.TabIndex = 4;
             this.labelModelesInvest.Text = "Modeles Investissement";
             this.labelModelesInvest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -372,7 +536,7 @@
             this.boxModeles.ItemHeight = 24;
             this.boxModeles.Location = new System.Drawing.Point(3, 71);
             this.boxModeles.Name = "boxModeles";
-            this.boxModeles.Size = new System.Drawing.Size(319, 30);
+            this.boxModeles.Size = new System.Drawing.Size(300, 30);
             this.boxModeles.TabIndex = 3;
             this.boxModeles.UseSelectable = true;
             // 
@@ -384,7 +548,7 @@
             this.pagePatrimoine.HorizontalScrollbarSize = 10;
             this.pagePatrimoine.Location = new System.Drawing.Point(4, 39);
             this.pagePatrimoine.Name = "pagePatrimoine";
-            this.pagePatrimoine.Size = new System.Drawing.Size(1149, 417);
+            this.pagePatrimoine.Size = new System.Drawing.Size(1221, 476);
             this.pagePatrimoine.TabIndex = 1;
             this.pagePatrimoine.Text = "Patrimoine";
             this.pagePatrimoine.UseCustomBackColor = true;
@@ -403,7 +567,7 @@
             this.pageGraphiques.HorizontalScrollbarSize = 10;
             this.pageGraphiques.Location = new System.Drawing.Point(4, 39);
             this.pageGraphiques.Name = "pageGraphiques";
-            this.pageGraphiques.Size = new System.Drawing.Size(1149, 417);
+            this.pageGraphiques.Size = new System.Drawing.Size(1221, 476);
             this.pageGraphiques.Style = MetroFramework.MetroColorStyle.Black;
             this.pageGraphiques.TabIndex = 2;
             this.pageGraphiques.Text = "Graphiques";
@@ -426,7 +590,7 @@
             this.pageBourse.Location = new System.Drawing.Point(4, 39);
             this.pageBourse.Name = "pageBourse";
             this.pageBourse.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.pageBourse.Size = new System.Drawing.Size(1149, 417);
+            this.pageBourse.Size = new System.Drawing.Size(1221, 476);
             this.pageBourse.TabIndex = 3;
             this.pageBourse.Text = "Bourse ";
             this.pageBourse.UseCustomBackColor = true;
@@ -451,11 +615,13 @@
             this.panelTitre.PerformLayout();
             this.navigation.ResumeLayout(false);
             this.pageInvestir.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
+            this.panelAjoutModele.ResumeLayout(false);
+            this.panelAjoutModele.PerformLayout();
+            this.panelConfirmationInvest.ResumeLayout(false);
             this.layoutActifs.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridActifs)).EndInit();
-            this.layoutModeles.ResumeLayout(false);
-            this.layoutModeles.PerformLayout();
+            this.pannelChoixModeles.ResumeLayout(false);
+            this.pannelChoixModeles.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -471,11 +637,11 @@
         private System.Windows.Forms.DataGridView gridActifs;
         private MetroFramework.Controls.MetroButton btnAjoutActifs;
         private MetroFramework.Controls.MetroComboBox boxModeles;
-        private MetroFramework.Controls.MetroButton btnAjoutModele;
+        private MetroFramework.Controls.MetroButton btnInterfaceCreationModel;
         private MetroFramework.Controls.MetroLabel labelModelesInvest;
-        private System.Windows.Forms.TableLayoutPanel layoutModeles;
+        private System.Windows.Forms.TableLayoutPanel pannelChoixModeles;
         private MetroFramework.Controls.MetroLabel labelTitreDescrModele;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TableLayoutPanel panelConfirmationInvest;
         private MetroFramework.Controls.MetroButton btnInvest;
         private System.Windows.Forms.TableLayoutPanel layoutActifs;
         private MetroFramework.Controls.MetroLabel labelDescrModele;
@@ -485,6 +651,13 @@
         private System.Windows.Forms.Panel panelLigne1;
         private MetroFramework.Controls.MetroButton btnSupprModele;
         private MetroFramework.Controls.MetroButton btnSupprActifOuTransactionInvest;
+        private System.Windows.Forms.TableLayoutPanel panelAjoutModele;
+        private MetroFramework.Controls.MetroTextBox inputDescriptionModele;
+        private MetroFramework.Controls.MetroLabel labelTitreCreationOuEdition;
+        private MetroFramework.Controls.MetroTextBox inputNomModele;
+        private MetroFramework.Controls.MetroButton btnAjoutModeleInvest;
+        private MetroFramework.Controls.MetroButton btnQuitterInterfaceCreationModele;
+        private MetroFramework.Controls.MetroButton btnInterfaceEditerModeleInvest;
     }
 }
 
