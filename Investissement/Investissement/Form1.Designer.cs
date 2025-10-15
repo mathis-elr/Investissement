@@ -33,27 +33,37 @@
             this.labelTitre = new System.Windows.Forms.Label();
             this.navigation = new MetroFramework.Controls.MetroTabControl();
             this.pageInvestir = new MetroFramework.Controls.MetroTabPage();
+            this.labelChoixModele = new MetroFramework.Controls.MetroLabel();
+            this.panelAjoutActif = new System.Windows.Forms.TableLayoutPanel();
+            this.inputNomActif = new MetroFramework.Controls.MetroTextBox();
+            this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
+            this.inputRisqueActif = new MetroFramework.Controls.MetroTextBox();
+            this.inputISINActif = new MetroFramework.Controls.MetroTextBox();
+            this.inputTypeActif = new MetroFramework.Controls.MetroTextBox();
+            this.panelTitreQuitter = new System.Windows.Forms.TableLayoutPanel();
+            this.btnQuittInterface = new MetroFramework.Controls.MetroButton();
+            this.labelTitreInterface = new MetroFramework.Controls.MetroLabel();
+            this.btnValidation = new MetroFramework.Controls.MetroButton();
             this.panelAjoutModele = new System.Windows.Forms.TableLayoutPanel();
-            this.inputDescriptionModele = new MetroFramework.Controls.MetroTextBox();
-            this.labelTitreCreationOuEdition = new MetroFramework.Controls.MetroLabel();
-            this.inputNomModele = new MetroFramework.Controls.MetroTextBox();
-            this.btnAjoutModeleInvest = new MetroFramework.Controls.MetroButton();
-            this.btnQuitterInterfaceCreationModele = new MetroFramework.Controls.MetroButton();
+            this.inputDescriptionModeleInvest = new MetroFramework.Controls.MetroTextBox();
+            this.inputNomModeleInvest = new MetroFramework.Controls.MetroTextBox();
             this.panelLigne1 = new System.Windows.Forms.Panel();
             this.panelConfirmationInvest = new System.Windows.Forms.TableLayoutPanel();
             this.btnInvest = new MetroFramework.Controls.MetroButton();
             this.dateInvest = new MetroFramework.Controls.MetroDateTime();
             this.layoutActifs = new System.Windows.Forms.TableLayoutPanel();
-            this.btnSupprActifOuTransactionInvest = new MetroFramework.Controls.MetroButton();
+            this.btnSupression = new MetroFramework.Controls.MetroButton();
             this.gridActifs = new System.Windows.Forms.DataGridView();
-            this.btnAjoutActifs = new MetroFramework.Controls.MetroButton();
+            this.btnInterfaceAjoutActif = new MetroFramework.Controls.MetroButton();
             this.pannelChoixModeles = new System.Windows.Forms.TableLayoutPanel();
             this.btnInterfaceEditerModeleInvest = new MetroFramework.Controls.MetroButton();
             this.btnSupprModele = new MetroFramework.Controls.MetroButton();
             this.labelDescrModele = new MetroFramework.Controls.MetroLabel();
             this.labelTitreDescrModele = new MetroFramework.Controls.MetroLabel();
             this.btnInterfaceCreationModel = new MetroFramework.Controls.MetroButton();
-            this.labelModelesInvest = new MetroFramework.Controls.MetroLabel();
             this.boxModeles = new MetroFramework.Controls.MetroComboBox();
             this.pagePatrimoine = new MetroFramework.Controls.MetroTabPage();
             this.pageGraphiques = new MetroFramework.Controls.MetroTabPage();
@@ -61,6 +71,8 @@
             this.panelTitre.SuspendLayout();
             this.navigation.SuspendLayout();
             this.pageInvestir.SuspendLayout();
+            this.panelAjoutActif.SuspendLayout();
+            this.panelTitreQuitter.SuspendLayout();
             this.panelAjoutModele.SuspendLayout();
             this.panelConfirmationInvest.SuspendLayout();
             this.layoutActifs.SuspendLayout();
@@ -123,7 +135,7 @@
             this.navigation.Location = new System.Drawing.Point(-6, 80);
             this.navigation.Name = "navigation";
             this.navigation.SelectedIndex = 0;
-            this.navigation.Size = new System.Drawing.Size(1229, 519);
+            this.navigation.Size = new System.Drawing.Size(1294, 576);
             this.navigation.TabIndex = 2;
             this.navigation.UseCustomBackColor = true;
             this.navigation.UseCustomForeColor = true;
@@ -133,6 +145,10 @@
             // pageInvestir
             // 
             this.pageInvestir.BackColor = System.Drawing.Color.Black;
+            this.pageInvestir.Controls.Add(this.labelChoixModele);
+            this.pageInvestir.Controls.Add(this.panelAjoutActif);
+            this.pageInvestir.Controls.Add(this.panelTitreQuitter);
+            this.pageInvestir.Controls.Add(this.btnValidation);
             this.pageInvestir.Controls.Add(this.panelAjoutModele);
             this.pageInvestir.Controls.Add(this.panelLigne1);
             this.pageInvestir.Controls.Add(this.panelConfirmationInvest);
@@ -143,7 +159,7 @@
             this.pageInvestir.HorizontalScrollbarSize = 10;
             this.pageInvestir.Location = new System.Drawing.Point(4, 39);
             this.pageInvestir.Name = "pageInvestir";
-            this.pageInvestir.Size = new System.Drawing.Size(1221, 476);
+            this.pageInvestir.Size = new System.Drawing.Size(1286, 533);
             this.pageInvestir.TabIndex = 0;
             this.pageInvestir.Text = "Investir";
             this.pageInvestir.UseCustomBackColor = true;
@@ -154,143 +170,354 @@
             this.pageInvestir.VerticalScrollbarHighlightOnWheel = false;
             this.pageInvestir.VerticalScrollbarSize = 10;
             // 
+            // labelChoixModele
+            // 
+            this.labelChoixModele.AutoSize = true;
+            this.labelChoixModele.BackColor = System.Drawing.Color.Black;
+            this.labelChoixModele.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.labelChoixModele.FontWeight = MetroFramework.MetroLabelWeight.Bold;
+            this.labelChoixModele.ForeColor = System.Drawing.Color.White;
+            this.labelChoixModele.Location = new System.Drawing.Point(814, 31);
+            this.labelChoixModele.Name = "labelChoixModele";
+            this.labelChoixModele.Size = new System.Drawing.Size(155, 25);
+            this.labelChoixModele.TabIndex = 15;
+            this.labelChoixModele.Text = "Choix du modele";
+            this.labelChoixModele.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelChoixModele.UseCustomBackColor = true;
+            this.labelChoixModele.UseCustomForeColor = true;
+            this.labelChoixModele.UseStyleColors = true;
+            // 
+            // panelAjoutActif
+            // 
+            this.panelAjoutActif.ColumnCount = 2;
+            this.panelAjoutActif.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.panelAjoutActif.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 301F));
+            this.panelAjoutActif.Controls.Add(this.inputNomActif, 1, 0);
+            this.panelAjoutActif.Controls.Add(this.metroLabel4, 0, 3);
+            this.panelAjoutActif.Controls.Add(this.metroLabel3, 0, 2);
+            this.panelAjoutActif.Controls.Add(this.metroLabel2, 0, 1);
+            this.panelAjoutActif.Controls.Add(this.metroLabel1, 0, 0);
+            this.panelAjoutActif.Controls.Add(this.inputRisqueActif, 1, 3);
+            this.panelAjoutActif.Controls.Add(this.inputISINActif, 1, 2);
+            this.panelAjoutActif.Controls.Add(this.inputTypeActif, 1, 1);
+            this.panelAjoutActif.Location = new System.Drawing.Point(705, 103);
+            this.panelAjoutActif.Name = "panelAjoutActif";
+            this.panelAjoutActif.RowCount = 4;
+            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
+            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
+            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.panelAjoutActif.Size = new System.Drawing.Size(387, 157);
+            this.panelAjoutActif.TabIndex = 14;
+            this.panelAjoutActif.Visible = false;
+            // 
+            // inputNomActif
+            // 
+            // 
+            // 
+            // 
+            this.inputNomActif.CustomButton.Image = null;
+            this.inputNomActif.CustomButton.Location = new System.Drawing.Point(271, 1);
+            this.inputNomActif.CustomButton.Name = "";
+            this.inputNomActif.CustomButton.Size = new System.Drawing.Size(23, 23);
+            this.inputNomActif.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.inputNomActif.CustomButton.TabIndex = 1;
+            this.inputNomActif.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.inputNomActif.CustomButton.UseSelectable = true;
+            this.inputNomActif.CustomButton.Visible = false;
+            this.inputNomActif.Lines = new string[0];
+            this.inputNomActif.Location = new System.Drawing.Point(89, 3);
+            this.inputNomActif.MaxLength = 32767;
+            this.inputNomActif.Name = "inputNomActif";
+            this.inputNomActif.PasswordChar = '\0';
+            this.inputNomActif.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.inputNomActif.SelectedText = "";
+            this.inputNomActif.SelectionLength = 0;
+            this.inputNomActif.SelectionStart = 0;
+            this.inputNomActif.ShortcutsEnabled = true;
+            this.inputNomActif.Size = new System.Drawing.Size(295, 25);
+            this.inputNomActif.TabIndex = 17;
+            this.inputNomActif.UseSelectable = true;
+            this.inputNomActif.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.inputNomActif.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            // 
+            // metroLabel4
+            // 
+            this.metroLabel4.AutoSize = true;
+            this.metroLabel4.ForeColor = System.Drawing.Color.White;
+            this.metroLabel4.Location = new System.Drawing.Point(3, 112);
+            this.metroLabel4.Name = "metroLabel4";
+            this.metroLabel4.Size = new System.Drawing.Size(50, 20);
+            this.metroLabel4.TabIndex = 22;
+            this.metroLabel4.Text = "Risque";
+            this.metroLabel4.UseCustomBackColor = true;
+            this.metroLabel4.UseCustomForeColor = true;
+            // 
+            // metroLabel3
+            // 
+            this.metroLabel3.AutoSize = true;
+            this.metroLabel3.ForeColor = System.Drawing.Color.White;
+            this.metroLabel3.Location = new System.Drawing.Point(3, 73);
+            this.metroLabel3.Name = "metroLabel3";
+            this.metroLabel3.Size = new System.Drawing.Size(33, 20);
+            this.metroLabel3.TabIndex = 21;
+            this.metroLabel3.Text = "ISIN";
+            this.metroLabel3.UseCustomBackColor = true;
+            this.metroLabel3.UseCustomForeColor = true;
+            // 
+            // metroLabel2
+            // 
+            this.metroLabel2.AutoSize = true;
+            this.metroLabel2.ForeColor = System.Drawing.Color.White;
+            this.metroLabel2.Location = new System.Drawing.Point(3, 37);
+            this.metroLabel2.Name = "metroLabel2";
+            this.metroLabel2.Size = new System.Drawing.Size(39, 20);
+            this.metroLabel2.TabIndex = 20;
+            this.metroLabel2.Text = "Type";
+            this.metroLabel2.UseCustomBackColor = true;
+            this.metroLabel2.UseCustomForeColor = true;
+            // 
+            // metroLabel1
+            // 
+            this.metroLabel1.AutoSize = true;
+            this.metroLabel1.ForeColor = System.Drawing.Color.White;
+            this.metroLabel1.Location = new System.Drawing.Point(3, 0);
+            this.metroLabel1.Name = "metroLabel1";
+            this.metroLabel1.Size = new System.Drawing.Size(40, 20);
+            this.metroLabel1.TabIndex = 15;
+            this.metroLabel1.Text = "Nom";
+            this.metroLabel1.UseCustomBackColor = true;
+            this.metroLabel1.UseCustomForeColor = true;
+            // 
+            // inputRisqueActif
+            // 
+            // 
+            // 
+            // 
+            this.inputRisqueActif.CustomButton.Image = null;
+            this.inputRisqueActif.CustomButton.Location = new System.Drawing.Point(271, 1);
+            this.inputRisqueActif.CustomButton.Name = "";
+            this.inputRisqueActif.CustomButton.Size = new System.Drawing.Size(23, 23);
+            this.inputRisqueActif.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.inputRisqueActif.CustomButton.TabIndex = 1;
+            this.inputRisqueActif.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.inputRisqueActif.CustomButton.UseSelectable = true;
+            this.inputRisqueActif.CustomButton.Visible = false;
+            this.inputRisqueActif.Lines = new string[0];
+            this.inputRisqueActif.Location = new System.Drawing.Point(89, 115);
+            this.inputRisqueActif.MaxLength = 32767;
+            this.inputRisqueActif.Name = "inputRisqueActif";
+            this.inputRisqueActif.PasswordChar = '\0';
+            this.inputRisqueActif.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.inputRisqueActif.SelectedText = "";
+            this.inputRisqueActif.SelectionLength = 0;
+            this.inputRisqueActif.SelectionStart = 0;
+            this.inputRisqueActif.ShortcutsEnabled = true;
+            this.inputRisqueActif.Size = new System.Drawing.Size(295, 25);
+            this.inputRisqueActif.TabIndex = 19;
+            this.inputRisqueActif.UseSelectable = true;
+            this.inputRisqueActif.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.inputRisqueActif.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            // 
+            // inputISINActif
+            // 
+            // 
+            // 
+            // 
+            this.inputISINActif.CustomButton.Image = null;
+            this.inputISINActif.CustomButton.Location = new System.Drawing.Point(271, 1);
+            this.inputISINActif.CustomButton.Name = "";
+            this.inputISINActif.CustomButton.Size = new System.Drawing.Size(23, 23);
+            this.inputISINActif.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.inputISINActif.CustomButton.TabIndex = 1;
+            this.inputISINActif.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.inputISINActif.CustomButton.UseSelectable = true;
+            this.inputISINActif.CustomButton.Visible = false;
+            this.inputISINActif.Lines = new string[0];
+            this.inputISINActif.Location = new System.Drawing.Point(89, 76);
+            this.inputISINActif.MaxLength = 32767;
+            this.inputISINActif.Name = "inputISINActif";
+            this.inputISINActif.PasswordChar = '\0';
+            this.inputISINActif.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.inputISINActif.SelectedText = "";
+            this.inputISINActif.SelectionLength = 0;
+            this.inputISINActif.SelectionStart = 0;
+            this.inputISINActif.ShortcutsEnabled = true;
+            this.inputISINActif.Size = new System.Drawing.Size(295, 25);
+            this.inputISINActif.TabIndex = 17;
+            this.inputISINActif.UseSelectable = true;
+            this.inputISINActif.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.inputISINActif.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            // 
+            // inputTypeActif
+            // 
+            // 
+            // 
+            // 
+            this.inputTypeActif.CustomButton.Image = null;
+            this.inputTypeActif.CustomButton.Location = new System.Drawing.Point(271, 1);
+            this.inputTypeActif.CustomButton.Name = "";
+            this.inputTypeActif.CustomButton.Size = new System.Drawing.Size(23, 23);
+            this.inputTypeActif.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.inputTypeActif.CustomButton.TabIndex = 1;
+            this.inputTypeActif.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.inputTypeActif.CustomButton.UseSelectable = true;
+            this.inputTypeActif.CustomButton.Visible = false;
+            this.inputTypeActif.Lines = new string[0];
+            this.inputTypeActif.Location = new System.Drawing.Point(89, 40);
+            this.inputTypeActif.MaxLength = 32767;
+            this.inputTypeActif.Name = "inputTypeActif";
+            this.inputTypeActif.PasswordChar = '\0';
+            this.inputTypeActif.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.inputTypeActif.SelectedText = "";
+            this.inputTypeActif.SelectionLength = 0;
+            this.inputTypeActif.SelectionStart = 0;
+            this.inputTypeActif.ShortcutsEnabled = true;
+            this.inputTypeActif.Size = new System.Drawing.Size(295, 25);
+            this.inputTypeActif.TabIndex = 16;
+            this.inputTypeActif.UseSelectable = true;
+            this.inputTypeActif.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.inputTypeActif.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            // 
+            // panelTitreQuitter
+            // 
+            this.panelTitreQuitter.ColumnCount = 2;
+            this.panelTitreQuitter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 90.8297F));
+            this.panelTitreQuitter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 9.170305F));
+            this.panelTitreQuitter.Controls.Add(this.btnQuittInterface, 1, 0);
+            this.panelTitreQuitter.Controls.Add(this.labelTitreInterface, 0, 0);
+            this.panelTitreQuitter.Location = new System.Drawing.Point(678, 28);
+            this.panelTitreQuitter.Name = "panelTitreQuitter";
+            this.panelTitreQuitter.RowCount = 1;
+            this.panelTitreQuitter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.panelTitreQuitter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 51F));
+            this.panelTitreQuitter.Size = new System.Drawing.Size(458, 51);
+            this.panelTitreQuitter.TabIndex = 13;
+            this.panelTitreQuitter.Visible = false;
+            // 
+            // btnQuittInterface
+            // 
+            this.btnQuittInterface.BackColor = System.Drawing.Color.Red;
+            this.btnQuittInterface.Location = new System.Drawing.Point(419, 3);
+            this.btnQuittInterface.Name = "btnQuittInterface";
+            this.btnQuittInterface.Size = new System.Drawing.Size(28, 26);
+            this.btnQuittInterface.TabIndex = 12;
+            this.btnQuittInterface.Text = "x";
+            this.btnQuittInterface.UseCustomBackColor = true;
+            this.btnQuittInterface.UseCustomForeColor = true;
+            this.btnQuittInterface.UseSelectable = true;
+            // 
+            // labelTitreInterface
+            // 
+            this.labelTitreInterface.AutoSize = true;
+            this.labelTitreInterface.BackColor = System.Drawing.Color.Black;
+            this.labelTitreInterface.Dock = System.Windows.Forms.DockStyle.Top;
+            this.labelTitreInterface.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.labelTitreInterface.FontWeight = MetroFramework.MetroLabelWeight.Bold;
+            this.labelTitreInterface.ForeColor = System.Drawing.Color.White;
+            this.labelTitreInterface.Location = new System.Drawing.Point(3, 0);
+            this.labelTitreInterface.Name = "labelTitreInterface";
+            this.labelTitreInterface.Size = new System.Drawing.Size(410, 25);
+            this.labelTitreInterface.TabIndex = 4;
+            this.labelTitreInterface.Text = "Titre interface";
+            this.labelTitreInterface.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelTitreInterface.UseCustomBackColor = true;
+            this.labelTitreInterface.UseCustomForeColor = true;
+            this.labelTitreInterface.UseStyleColors = true;
+            // 
+            // btnValidation
+            // 
+            this.btnValidation.BackColor = System.Drawing.Color.Lime;
+            this.btnValidation.Location = new System.Drawing.Point(895, 350);
+            this.btnValidation.Name = "btnValidation";
+            this.btnValidation.Size = new System.Drawing.Size(184, 43);
+            this.btnValidation.TabIndex = 11;
+            this.btnValidation.UseCustomBackColor = true;
+            this.btnValidation.UseCustomForeColor = true;
+            this.btnValidation.UseSelectable = true;
+            this.btnValidation.UseStyleColors = true;
+            // 
             // panelAjoutModele
             // 
-            this.panelAjoutModele.ColumnCount = 3;
+            this.panelAjoutModele.ColumnCount = 2;
             this.panelAjoutModele.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.88889F));
-            this.panelAjoutModele.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 190F));
-            this.panelAjoutModele.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 41F));
-            this.panelAjoutModele.Controls.Add(this.inputDescriptionModele, 0, 3);
-            this.panelAjoutModele.Controls.Add(this.labelTitreCreationOuEdition, 0, 0);
-            this.panelAjoutModele.Controls.Add(this.inputNomModele, 0, 1);
-            this.panelAjoutModele.Controls.Add(this.btnAjoutModeleInvest, 1, 4);
-            this.panelAjoutModele.Controls.Add(this.btnQuitterInterfaceCreationModele, 2, 0);
-            this.panelAjoutModele.Location = new System.Drawing.Point(678, 31);
+            this.panelAjoutModele.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 192F));
+            this.panelAjoutModele.Controls.Add(this.inputDescriptionModeleInvest, 0, 1);
+            this.panelAjoutModele.Controls.Add(this.inputNomModeleInvest, 0, 0);
+            this.panelAjoutModele.Location = new System.Drawing.Point(678, 106);
             this.panelAjoutModele.Name = "panelAjoutModele";
-            this.panelAjoutModele.RowCount = 5;
+            this.panelAjoutModele.RowCount = 2;
             this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35.05155F));
             this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 64.94846F));
-            this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 9F));
-            this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 142F));
-            this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 96F));
-            this.panelAjoutModele.Size = new System.Drawing.Size(446, 345);
+            this.panelAjoutModele.Size = new System.Drawing.Size(433, 157);
             this.panelAjoutModele.TabIndex = 11;
             this.panelAjoutModele.Visible = false;
             // 
-            // inputDescriptionModele
+            // inputDescriptionModeleInvest
             // 
-            this.panelAjoutModele.SetColumnSpan(this.inputDescriptionModele, 2);
+            this.panelAjoutModele.SetColumnSpan(this.inputDescriptionModeleInvest, 2);
             // 
             // 
             // 
-            this.inputDescriptionModele.CustomButton.Image = null;
-            this.inputDescriptionModele.CustomButton.Location = new System.Drawing.Point(264, 2);
-            this.inputDescriptionModele.CustomButton.Name = "";
-            this.inputDescriptionModele.CustomButton.Size = new System.Drawing.Size(131, 131);
-            this.inputDescriptionModele.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.inputDescriptionModele.CustomButton.TabIndex = 1;
-            this.inputDescriptionModele.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.inputDescriptionModele.CustomButton.UseSelectable = true;
-            this.inputDescriptionModele.CustomButton.Visible = false;
-            this.inputDescriptionModele.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.inputDescriptionModele.Lines = new string[] {
+            this.inputDescriptionModeleInvest.CustomButton.Image = null;
+            this.inputDescriptionModeleInvest.CustomButton.Location = new System.Drawing.Point(223, 1);
+            this.inputDescriptionModeleInvest.CustomButton.Name = "";
+            this.inputDescriptionModeleInvest.CustomButton.Size = new System.Drawing.Size(55, 55);
+            this.inputDescriptionModeleInvest.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.inputDescriptionModeleInvest.CustomButton.TabIndex = 1;
+            this.inputDescriptionModeleInvest.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.inputDescriptionModeleInvest.CustomButton.UseSelectable = true;
+            this.inputDescriptionModeleInvest.CustomButton.Visible = false;
+            this.inputDescriptionModeleInvest.Lines = new string[] {
         "description"};
-            this.inputDescriptionModele.Location = new System.Drawing.Point(3, 109);
-            this.inputDescriptionModele.MaxLength = 32767;
-            this.inputDescriptionModele.Name = "inputDescriptionModele";
-            this.inputDescriptionModele.PasswordChar = '\0';
-            this.inputDescriptionModele.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.inputDescriptionModele.SelectedText = "";
-            this.inputDescriptionModele.SelectionLength = 0;
-            this.inputDescriptionModele.SelectionStart = 0;
-            this.inputDescriptionModele.ShortcutsEnabled = true;
-            this.inputDescriptionModele.Size = new System.Drawing.Size(398, 136);
-            this.inputDescriptionModele.TabIndex = 10;
-            this.inputDescriptionModele.Text = "description";
-            this.inputDescriptionModele.UseSelectable = true;
-            this.inputDescriptionModele.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.inputDescriptionModele.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            this.inputDescriptionModeleInvest.Location = new System.Drawing.Point(3, 58);
+            this.inputDescriptionModeleInvest.MaxLength = 32767;
+            this.inputDescriptionModeleInvest.Name = "inputDescriptionModeleInvest";
+            this.inputDescriptionModeleInvest.PasswordChar = '\0';
+            this.inputDescriptionModeleInvest.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.inputDescriptionModeleInvest.SelectedText = "";
+            this.inputDescriptionModeleInvest.SelectionLength = 0;
+            this.inputDescriptionModeleInvest.SelectionStart = 0;
+            this.inputDescriptionModeleInvest.ShortcutsEnabled = true;
+            this.inputDescriptionModeleInvest.Size = new System.Drawing.Size(400, 57);
+            this.inputDescriptionModeleInvest.TabIndex = 10;
+            this.inputDescriptionModeleInvest.Text = "description";
+            this.inputDescriptionModeleInvest.UseSelectable = true;
+            this.inputDescriptionModeleInvest.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.inputDescriptionModeleInvest.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
-            // labelTitreCreationOuEdition
+            // inputNomModeleInvest
             // 
-            this.labelTitreCreationOuEdition.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTitreCreationOuEdition.AutoSize = true;
-            this.labelTitreCreationOuEdition.BackColor = System.Drawing.Color.Black;
-            this.panelAjoutModele.SetColumnSpan(this.labelTitreCreationOuEdition, 2);
-            this.labelTitreCreationOuEdition.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.labelTitreCreationOuEdition.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.labelTitreCreationOuEdition.ForeColor = System.Drawing.Color.White;
-            this.labelTitreCreationOuEdition.Location = new System.Drawing.Point(3, 0);
-            this.labelTitreCreationOuEdition.Name = "labelTitreCreationOuEdition";
-            this.labelTitreCreationOuEdition.Size = new System.Drawing.Size(398, 34);
-            this.labelTitreCreationOuEdition.TabIndex = 4;
-            this.labelTitreCreationOuEdition.Text = "Creation d\'un modele";
-            this.labelTitreCreationOuEdition.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelTitreCreationOuEdition.UseCustomBackColor = true;
-            this.labelTitreCreationOuEdition.UseCustomForeColor = true;
-            this.labelTitreCreationOuEdition.UseStyleColors = true;
-            // 
-            // inputNomModele
-            // 
-            this.panelAjoutModele.SetColumnSpan(this.inputNomModele, 2);
+            this.panelAjoutModele.SetColumnSpan(this.inputNomModeleInvest, 2);
             // 
             // 
             // 
-            this.inputNomModele.CustomButton.Image = null;
-            this.inputNomModele.CustomButton.Location = new System.Drawing.Point(342, 1);
-            this.inputNomModele.CustomButton.Name = "";
-            this.inputNomModele.CustomButton.Size = new System.Drawing.Size(55, 55);
-            this.inputNomModele.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
-            this.inputNomModele.CustomButton.TabIndex = 1;
-            this.inputNomModele.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
-            this.inputNomModele.CustomButton.UseSelectable = true;
-            this.inputNomModele.CustomButton.Visible = false;
-            this.inputNomModele.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.inputNomModele.Lines = new string[] {
+            this.inputNomModeleInvest.CustomButton.Image = null;
+            this.inputNomModeleInvest.CustomButton.Location = new System.Drawing.Point(253, 2);
+            this.inputNomModeleInvest.CustomButton.Name = "";
+            this.inputNomModeleInvest.CustomButton.Size = new System.Drawing.Size(23, 23);
+            this.inputNomModeleInvest.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.inputNomModeleInvest.CustomButton.TabIndex = 1;
+            this.inputNomModeleInvest.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.inputNomModeleInvest.CustomButton.UseSelectable = true;
+            this.inputNomModeleInvest.CustomButton.Visible = false;
+            this.inputNomModeleInvest.Lines = new string[] {
         "nom modele"};
-            this.inputNomModele.Location = new System.Drawing.Point(3, 37);
-            this.inputNomModele.MaxLength = 32767;
-            this.inputNomModele.Name = "inputNomModele";
-            this.inputNomModele.PasswordChar = '\0';
-            this.inputNomModele.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.inputNomModele.SelectedText = "";
-            this.inputNomModele.SelectionLength = 0;
-            this.inputNomModele.SelectionStart = 0;
-            this.inputNomModele.ShortcutsEnabled = true;
-            this.inputNomModele.Size = new System.Drawing.Size(398, 57);
-            this.inputNomModele.TabIndex = 6;
-            this.inputNomModele.Text = "nom modele";
-            this.inputNomModele.UseSelectable = true;
-            this.inputNomModele.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-            this.inputNomModele.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            // 
-            // btnAjoutModeleInvest
-            // 
-            this.btnAjoutModeleInvest.BackColor = System.Drawing.Color.Lime;
-            this.btnAjoutModeleInvest.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnAjoutModeleInvest.Location = new System.Drawing.Point(217, 299);
-            this.btnAjoutModeleInvest.Name = "btnAjoutModeleInvest";
-            this.btnAjoutModeleInvest.Size = new System.Drawing.Size(184, 43);
-            this.btnAjoutModeleInvest.TabIndex = 11;
-            this.btnAjoutModeleInvest.Text = "Ajouter le modele";
-            this.btnAjoutModeleInvest.UseCustomBackColor = true;
-            this.btnAjoutModeleInvest.UseCustomForeColor = true;
-            this.btnAjoutModeleInvest.UseSelectable = true;
-            this.btnAjoutModeleInvest.UseStyleColors = true;
-            // 
-            // btnQuitterInterfaceCreationModele
-            // 
-            this.btnQuitterInterfaceCreationModele.BackColor = System.Drawing.Color.Red;
-            this.btnQuitterInterfaceCreationModele.Location = new System.Drawing.Point(407, 3);
-            this.btnQuitterInterfaceCreationModele.Name = "btnQuitterInterfaceCreationModele";
-            this.btnQuitterInterfaceCreationModele.Size = new System.Drawing.Size(28, 28);
-            this.btnQuitterInterfaceCreationModele.TabIndex = 12;
-            this.btnQuitterInterfaceCreationModele.Text = "x";
-            this.btnQuitterInterfaceCreationModele.UseCustomBackColor = true;
-            this.btnQuitterInterfaceCreationModele.UseCustomForeColor = true;
-            this.btnQuitterInterfaceCreationModele.UseSelectable = true;
+            this.inputNomModeleInvest.Location = new System.Drawing.Point(3, 3);
+            this.inputNomModeleInvest.MaxLength = 32767;
+            this.inputNomModeleInvest.Name = "inputNomModeleInvest";
+            this.inputNomModeleInvest.PasswordChar = '\0';
+            this.inputNomModeleInvest.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.inputNomModeleInvest.SelectedText = "";
+            this.inputNomModeleInvest.SelectionLength = 0;
+            this.inputNomModeleInvest.SelectionStart = 0;
+            this.inputNomModeleInvest.ShortcutsEnabled = true;
+            this.inputNomModeleInvest.Size = new System.Drawing.Size(400, 28);
+            this.inputNomModeleInvest.TabIndex = 6;
+            this.inputNomModeleInvest.Text = "nom modele";
+            this.inputNomModeleInvest.UseSelectable = true;
+            this.inputNomModeleInvest.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.inputNomModeleInvest.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // panelLigne1
             // 
@@ -349,9 +576,9 @@
             this.layoutActifs.ColumnCount = 2;
             this.layoutActifs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.744108F));
             this.layoutActifs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 92.25589F));
-            this.layoutActifs.Controls.Add(this.btnSupprActifOuTransactionInvest, 0, 1);
+            this.layoutActifs.Controls.Add(this.btnSupression, 0, 1);
             this.layoutActifs.Controls.Add(this.gridActifs, 1, 0);
-            this.layoutActifs.Controls.Add(this.btnAjoutActifs, 0, 0);
+            this.layoutActifs.Controls.Add(this.btnInterfaceAjoutActif, 0, 0);
             this.layoutActifs.Location = new System.Drawing.Point(23, 28);
             this.layoutActifs.Name = "layoutActifs";
             this.layoutActifs.RowCount = 2;
@@ -360,19 +587,19 @@
             this.layoutActifs.Size = new System.Drawing.Size(590, 251);
             this.layoutActifs.TabIndex = 5;
             // 
-            // btnSupprActifOuTransactionInvest
+            // btnSupression
             // 
-            this.btnSupprActifOuTransactionInvest.BackColor = System.Drawing.Color.Red;
-            this.btnSupprActifOuTransactionInvest.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnSupprActifOuTransactionInvest.Location = new System.Drawing.Point(3, 51);
-            this.btnSupprActifOuTransactionInvest.Name = "btnSupprActifOuTransactionInvest";
-            this.btnSupprActifOuTransactionInvest.Size = new System.Drawing.Size(35, 35);
-            this.btnSupprActifOuTransactionInvest.TabIndex = 9;
-            this.btnSupprActifOuTransactionInvest.Text = "-";
-            this.btnSupprActifOuTransactionInvest.UseCustomBackColor = true;
-            this.btnSupprActifOuTransactionInvest.UseCustomForeColor = true;
-            this.btnSupprActifOuTransactionInvest.UseSelectable = true;
-            this.btnSupprActifOuTransactionInvest.UseStyleColors = true;
+            this.btnSupression.BackColor = System.Drawing.Color.Red;
+            this.btnSupression.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.btnSupression.Location = new System.Drawing.Point(3, 51);
+            this.btnSupression.Name = "btnSupression";
+            this.btnSupression.Size = new System.Drawing.Size(35, 35);
+            this.btnSupression.TabIndex = 9;
+            this.btnSupression.Text = "-";
+            this.btnSupression.UseCustomBackColor = true;
+            this.btnSupression.UseCustomForeColor = true;
+            this.btnSupression.UseSelectable = true;
+            this.btnSupression.UseStyleColors = true;
             // 
             // gridActifs
             // 
@@ -390,43 +617,41 @@
             this.gridActifs.Size = new System.Drawing.Size(539, 245);
             this.gridActifs.TabIndex = 2;
             // 
-            // btnAjoutActifs
+            // btnInterfaceAjoutActif
             // 
-            this.btnAjoutActifs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.btnAjoutActifs.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnAjoutActifs.Location = new System.Drawing.Point(3, 3);
-            this.btnAjoutActifs.Name = "btnAjoutActifs";
-            this.btnAjoutActifs.Size = new System.Drawing.Size(35, 35);
-            this.btnAjoutActifs.TabIndex = 4;
-            this.btnAjoutActifs.Text = "+";
-            this.btnAjoutActifs.UseCustomBackColor = true;
-            this.btnAjoutActifs.UseCustomForeColor = true;
-            this.btnAjoutActifs.UseSelectable = true;
-            this.btnAjoutActifs.UseStyleColors = true;
+            this.btnInterfaceAjoutActif.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.btnInterfaceAjoutActif.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.btnInterfaceAjoutActif.Location = new System.Drawing.Point(3, 3);
+            this.btnInterfaceAjoutActif.Name = "btnInterfaceAjoutActif";
+            this.btnInterfaceAjoutActif.Size = new System.Drawing.Size(35, 35);
+            this.btnInterfaceAjoutActif.TabIndex = 4;
+            this.btnInterfaceAjoutActif.Text = "+";
+            this.btnInterfaceAjoutActif.UseCustomBackColor = true;
+            this.btnInterfaceAjoutActif.UseCustomForeColor = true;
+            this.btnInterfaceAjoutActif.UseSelectable = true;
+            this.btnInterfaceAjoutActif.UseStyleColors = true;
             // 
             // pannelChoixModeles
             // 
             this.pannelChoixModeles.ColumnCount = 4;
-            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.72832F));
-            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.27168F));
-            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
-            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 56F));
-            this.pannelChoixModeles.Controls.Add(this.btnInterfaceEditerModeleInvest, 3, 1);
-            this.pannelChoixModeles.Controls.Add(this.btnSupprModele, 2, 1);
-            this.pannelChoixModeles.Controls.Add(this.labelDescrModele, 0, 3);
-            this.pannelChoixModeles.Controls.Add(this.labelTitreDescrModele, 0, 2);
-            this.pannelChoixModeles.Controls.Add(this.btnInterfaceCreationModel, 1, 1);
-            this.pannelChoixModeles.Controls.Add(this.labelModelesInvest, 0, 0);
-            this.pannelChoixModeles.Controls.Add(this.boxModeles, 0, 1);
-            this.pannelChoixModeles.Location = new System.Drawing.Point(675, 31);
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 84.84849F));
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.15152F));
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52F));
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.pannelChoixModeles.Controls.Add(this.btnInterfaceEditerModeleInvest, 3, 0);
+            this.pannelChoixModeles.Controls.Add(this.btnSupprModele, 2, 0);
+            this.pannelChoixModeles.Controls.Add(this.labelDescrModele, 0, 2);
+            this.pannelChoixModeles.Controls.Add(this.labelTitreDescrModele, 0, 1);
+            this.pannelChoixModeles.Controls.Add(this.btnInterfaceCreationModel, 1, 0);
+            this.pannelChoixModeles.Controls.Add(this.boxModeles, 0, 0);
+            this.pannelChoixModeles.Location = new System.Drawing.Point(678, 103);
             this.pannelChoixModeles.Name = "pannelChoixModeles";
-            this.pannelChoixModeles.RowCount = 4;
+            this.pannelChoixModeles.RowCount = 3;
             this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.37705F));
             this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.62295F));
-            this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
-            this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 146F));
+            this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 84F));
             this.pannelChoixModeles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
-            this.pannelChoixModeles.Size = new System.Drawing.Size(449, 312);
+            this.pannelChoixModeles.Size = new System.Drawing.Size(433, 160);
             this.pannelChoixModeles.TabIndex = 3;
             // 
             // btnInterfaceEditerModeleInvest
@@ -434,9 +659,9 @@
             this.btnInterfaceEditerModeleInvest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.btnInterfaceEditerModeleInvest.Enabled = false;
             this.btnInterfaceEditerModeleInvest.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnInterfaceEditerModeleInvest.Location = new System.Drawing.Point(395, 71);
+            this.btnInterfaceEditerModeleInvest.Location = new System.Drawing.Point(360, 3);
             this.btnInterfaceEditerModeleInvest.Name = "btnInterfaceEditerModeleInvest";
-            this.btnInterfaceEditerModeleInvest.Size = new System.Drawing.Size(51, 30);
+            this.btnInterfaceEditerModeleInvest.Size = new System.Drawing.Size(50, 35);
             this.btnInterfaceEditerModeleInvest.TabIndex = 12;
             this.btnInterfaceEditerModeleInvest.Text = "✏️";
             this.btnInterfaceEditerModeleInvest.UseCustomBackColor = true;
@@ -449,9 +674,9 @@
             this.btnSupprModele.BackColor = System.Drawing.Color.Red;
             this.btnSupprModele.Enabled = false;
             this.btnSupprModele.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnSupprModele.Location = new System.Drawing.Point(357, 71);
+            this.btnSupprModele.Location = new System.Drawing.Point(308, 3);
             this.btnSupprModele.Name = "btnSupprModele";
-            this.btnSupprModele.Size = new System.Drawing.Size(30, 30);
+            this.btnSupprModele.Size = new System.Drawing.Size(35, 35);
             this.btnSupprModele.TabIndex = 9;
             this.btnSupprModele.Text = "-";
             this.btnSupprModele.UseCustomBackColor = true;
@@ -468,9 +693,9 @@
             this.labelDescrModele.BackColor = System.Drawing.Color.Black;
             this.labelDescrModele.FontSize = MetroFramework.MetroLabelSize.Small;
             this.labelDescrModele.ForeColor = System.Drawing.Color.White;
-            this.labelDescrModele.Location = new System.Drawing.Point(3, 165);
+            this.labelDescrModele.Location = new System.Drawing.Point(3, 75);
             this.labelDescrModele.Name = "labelDescrModele";
-            this.labelDescrModele.Size = new System.Drawing.Size(308, 147);
+            this.labelDescrModele.Size = new System.Drawing.Size(253, 85);
             this.labelDescrModele.TabIndex = 6;
             this.labelDescrModele.Text = "aucun modèle sélectionné";
             this.labelDescrModele.UseCustomBackColor = true;
@@ -486,9 +711,9 @@
             this.labelTitreDescrModele.BackColor = System.Drawing.Color.Black;
             this.labelTitreDescrModele.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.labelTitreDescrModele.ForeColor = System.Drawing.Color.White;
-            this.labelTitreDescrModele.Location = new System.Drawing.Point(3, 118);
+            this.labelTitreDescrModele.Location = new System.Drawing.Point(3, 43);
             this.labelTitreDescrModele.Name = "labelTitreDescrModele";
-            this.labelTitreDescrModele.Size = new System.Drawing.Size(308, 47);
+            this.labelTitreDescrModele.Size = new System.Drawing.Size(253, 32);
             this.labelTitreDescrModele.TabIndex = 5;
             this.labelTitreDescrModele.Text = "description modele";
             this.labelTitreDescrModele.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -500,9 +725,9 @@
             // 
             this.btnInterfaceCreationModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.btnInterfaceCreationModel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnInterfaceCreationModel.Location = new System.Drawing.Point(317, 71);
+            this.btnInterfaceCreationModel.Location = new System.Drawing.Point(262, 3);
             this.btnInterfaceCreationModel.Name = "btnInterfaceCreationModel";
-            this.btnInterfaceCreationModel.Size = new System.Drawing.Size(30, 30);
+            this.btnInterfaceCreationModel.Size = new System.Drawing.Size(35, 35);
             this.btnInterfaceCreationModel.TabIndex = 5;
             this.btnInterfaceCreationModel.Text = "+";
             this.btnInterfaceCreationModel.UseCustomBackColor = true;
@@ -510,33 +735,13 @@
             this.btnInterfaceCreationModel.UseSelectable = true;
             this.btnInterfaceCreationModel.UseStyleColors = true;
             // 
-            // labelModelesInvest
-            // 
-            this.labelModelesInvest.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelModelesInvest.AutoSize = true;
-            this.labelModelesInvest.BackColor = System.Drawing.Color.Black;
-            this.labelModelesInvest.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.labelModelesInvest.FontWeight = MetroFramework.MetroLabelWeight.Bold;
-            this.labelModelesInvest.ForeColor = System.Drawing.Color.White;
-            this.labelModelesInvest.Location = new System.Drawing.Point(3, 0);
-            this.labelModelesInvest.Name = "labelModelesInvest";
-            this.labelModelesInvest.Size = new System.Drawing.Size(308, 68);
-            this.labelModelesInvest.TabIndex = 4;
-            this.labelModelesInvest.Text = "Modeles Investissement";
-            this.labelModelesInvest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelModelesInvest.UseCustomBackColor = true;
-            this.labelModelesInvest.UseCustomForeColor = true;
-            this.labelModelesInvest.UseStyleColors = true;
-            // 
             // boxModeles
             // 
             this.boxModeles.FormattingEnabled = true;
             this.boxModeles.ItemHeight = 24;
-            this.boxModeles.Location = new System.Drawing.Point(3, 71);
+            this.boxModeles.Location = new System.Drawing.Point(3, 3);
             this.boxModeles.Name = "boxModeles";
-            this.boxModeles.Size = new System.Drawing.Size(300, 30);
+            this.boxModeles.Size = new System.Drawing.Size(253, 30);
             this.boxModeles.TabIndex = 3;
             this.boxModeles.UseSelectable = true;
             // 
@@ -548,7 +753,7 @@
             this.pagePatrimoine.HorizontalScrollbarSize = 10;
             this.pagePatrimoine.Location = new System.Drawing.Point(4, 39);
             this.pagePatrimoine.Name = "pagePatrimoine";
-            this.pagePatrimoine.Size = new System.Drawing.Size(1221, 476);
+            this.pagePatrimoine.Size = new System.Drawing.Size(1286, 533);
             this.pagePatrimoine.TabIndex = 1;
             this.pagePatrimoine.Text = "Patrimoine";
             this.pagePatrimoine.UseCustomBackColor = true;
@@ -567,7 +772,7 @@
             this.pageGraphiques.HorizontalScrollbarSize = 10;
             this.pageGraphiques.Location = new System.Drawing.Point(4, 39);
             this.pageGraphiques.Name = "pageGraphiques";
-            this.pageGraphiques.Size = new System.Drawing.Size(1221, 476);
+            this.pageGraphiques.Size = new System.Drawing.Size(1286, 533);
             this.pageGraphiques.Style = MetroFramework.MetroColorStyle.Black;
             this.pageGraphiques.TabIndex = 2;
             this.pageGraphiques.Text = "Graphiques";
@@ -590,7 +795,7 @@
             this.pageBourse.Location = new System.Drawing.Point(4, 39);
             this.pageBourse.Name = "pageBourse";
             this.pageBourse.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.pageBourse.Size = new System.Drawing.Size(1221, 476);
+            this.pageBourse.Size = new System.Drawing.Size(1286, 533);
             this.pageBourse.TabIndex = 3;
             this.pageBourse.Text = "Bourse ";
             this.pageBourse.UseCustomBackColor = true;
@@ -605,7 +810,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1145, 531);
+            this.ClientSize = new System.Drawing.Size(1148, 536);
             this.Controls.Add(this.navigation);
             this.Controls.Add(this.panelTitre);
             this.Name = "Form1";
@@ -615,8 +820,12 @@
             this.panelTitre.PerformLayout();
             this.navigation.ResumeLayout(false);
             this.pageInvestir.ResumeLayout(false);
+            this.pageInvestir.PerformLayout();
+            this.panelAjoutActif.ResumeLayout(false);
+            this.panelAjoutActif.PerformLayout();
+            this.panelTitreQuitter.ResumeLayout(false);
+            this.panelTitreQuitter.PerformLayout();
             this.panelAjoutModele.ResumeLayout(false);
-            this.panelAjoutModele.PerformLayout();
             this.panelConfirmationInvest.ResumeLayout(false);
             this.layoutActifs.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridActifs)).EndInit();
@@ -635,10 +844,9 @@
         private MetroFramework.Controls.MetroTabPage pageGraphiques;
         private MetroFramework.Controls.MetroTabPage pageBourse;
         private System.Windows.Forms.DataGridView gridActifs;
-        private MetroFramework.Controls.MetroButton btnAjoutActifs;
+        private MetroFramework.Controls.MetroButton btnInterfaceAjoutActif;
         private MetroFramework.Controls.MetroComboBox boxModeles;
         private MetroFramework.Controls.MetroButton btnInterfaceCreationModel;
-        private MetroFramework.Controls.MetroLabel labelModelesInvest;
         private System.Windows.Forms.TableLayoutPanel pannelChoixModeles;
         private MetroFramework.Controls.MetroLabel labelTitreDescrModele;
         private System.Windows.Forms.TableLayoutPanel panelConfirmationInvest;
@@ -650,14 +858,25 @@
         private MetroFramework.Controls.MetroButton btnQuitter;
         private System.Windows.Forms.Panel panelLigne1;
         private MetroFramework.Controls.MetroButton btnSupprModele;
-        private MetroFramework.Controls.MetroButton btnSupprActifOuTransactionInvest;
+        private MetroFramework.Controls.MetroButton btnSupression;
         private System.Windows.Forms.TableLayoutPanel panelAjoutModele;
-        private MetroFramework.Controls.MetroTextBox inputDescriptionModele;
-        private MetroFramework.Controls.MetroLabel labelTitreCreationOuEdition;
-        private MetroFramework.Controls.MetroTextBox inputNomModele;
-        private MetroFramework.Controls.MetroButton btnAjoutModeleInvest;
-        private MetroFramework.Controls.MetroButton btnQuitterInterfaceCreationModele;
+        private MetroFramework.Controls.MetroTextBox inputDescriptionModeleInvest;
+        private MetroFramework.Controls.MetroLabel labelTitreInterface;
+        private MetroFramework.Controls.MetroTextBox inputNomModeleInvest;
+        private MetroFramework.Controls.MetroButton btnValidation;
+        private MetroFramework.Controls.MetroButton btnQuittInterface;
         private MetroFramework.Controls.MetroButton btnInterfaceEditerModeleInvest;
+        private System.Windows.Forms.TableLayoutPanel panelTitreQuitter;
+        private System.Windows.Forms.TableLayoutPanel panelAjoutActif;
+        private MetroFramework.Controls.MetroLabel metroLabel4;
+        private MetroFramework.Controls.MetroLabel metroLabel3;
+        private MetroFramework.Controls.MetroLabel metroLabel2;
+        private MetroFramework.Controls.MetroLabel metroLabel1;
+        private MetroFramework.Controls.MetroTextBox inputRisqueActif;
+        private MetroFramework.Controls.MetroTextBox inputISINActif;
+        private MetroFramework.Controls.MetroTextBox inputTypeActif;
+        private MetroFramework.Controls.MetroTextBox inputNomActif;
+        private MetroFramework.Controls.MetroLabel labelChoixModele;
     }
 }
 
