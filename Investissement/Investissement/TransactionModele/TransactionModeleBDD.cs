@@ -1,7 +1,6 @@
 ﻿using System.Data.SQLite;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System;
 
 namespace Investissement
 {
@@ -50,7 +49,6 @@ namespace Investissement
         /**************
          ***METHODES***
          **************/
-
         public void ajouterTransactionsModele(TransactionModele transaction)
         {
             try

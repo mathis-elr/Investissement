@@ -20,25 +20,55 @@ namespace Investissement
         /*ENCAPSULATION*/
         public DataTable getActifsDataTable()
         {
-            var query = "SELECT nom FROM Actif;";
-            using (var command = new SQLiteCommand(query, this.maBDD.connexion))
+            DataTable actifsDataTable = new DataTable();
+            try
             {
-                var noms = command.ExecuteReader();
-
-                DataTable actifsDataTable = new DataTable();
-                actifsDataTable.Load(noms);
-
-                return actifsDataTable;
+                var query = "SELECT nom FROM Actif;";
+                using (var command = new SQLiteCommand(query, this.maBDD.connexion))
+                {
+                    var noms = command.ExecuteReader();
+                    actifsDataTable.Load(noms);
+                    return actifsDataTable;
+                }
             }
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message, "Erreur selection actif bdd");
+            }
+            return actifsDataTable;
         }
+
+        public List<string> getListeActifs()
+        {
+            var actifs = new List<string>();
+            try
+            {
+                string query = "SELECT nom FROM Actif ORDER BY type;";
+                using (var command = new SQLiteCommand(query, this.maBDD.connexion))
+                {
+                    using (var lecteurActifs = command.ExecuteReader())
+                    {
+                        while (lecteurActifs.Read())
+                        {
+                            actifs.Add(lecteurActifs.GetString(0));
+                        }
+                    }
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message, "Erreur selection actif bdd");
+            }
+            return actifs;
+        }
+
 
         /**************
          ***METHODES***
          **************/
-
         public bool ajouterActif(Actif actif)
         {
-            if (!this.existe(actif))
+            if (!CommunBDD.existe(this.maBDD,"Actif","nom",actif.nom))
             {
                 try
                 {
@@ -71,71 +101,25 @@ namespace Investissement
         }
 
 
-
         public bool supprActif(string nom)
         {
-            try {
-
-                //tester si l'actif n'existe dans aucun modele
-                var selectionNbActifsDansModele = "SELECT COUNT(1) FROM TransactionsModele WHERE actif=@nom;";
-                using (var commandsSlectionNbActifsDansModele = new SQLiteCommand(selectionNbActifsDansModele, this.maBDD.connexion))
+            try
+            {
+                if (!CommunBDD.existe(this.maBDD,"Actif","nom", nom))
                 {
-                    commandsSlectionNbActifsDansModele.Parameters.AddWithValue("@nom", nom);
-                    long existe = Convert.ToInt64(commandsSlectionNbActifsDansModele.ExecuteScalar());
-                    if (existe > 0)
+
+                    string suppresionActif = "DELETE FROM Actif WHERE nom=@nom;";
+                    using (var commandInsertionActif = new SQLiteCommand(suppresionActif, this.maBDD.connexion))
                     {
-                        MessageBox.Show("impossible de supprimer cette actif car il est utilisé dans au moins un modele", "Erreur suppresion actif bdd");
-                        return false;
+                        commandInsertionActif.Parameters.AddWithValue("@nom", nom);
+                        commandInsertionActif.ExecuteNonQuery();
                     }
-                }
-
-                string suppresionActif = "DELETE FROM Actif WHERE nom=@nom;";
-                using (var commandInsertionActif = new SQLiteCommand(suppresionActif, this.maBDD.connexion))
-                {
-                    commandInsertionActif.Parameters.AddWithValue("@nom", nom);
-                    commandInsertionActif.ExecuteNonQuery();
+                    return true;
                 }
             }
             catch (SQLiteException ex)
             {
                 MessageBox.Show(ex.Message, "Erreur suppresion actif bdd");
-                return false;
-            }
-
-            return true;
-        }
-
-
-        public List<string> getListeActifs()
-        {
-            var actifs = new List<string>();
-            string query = "SELECT nom FROM Actif ORDER BY type;";
-            using (var command = new SQLiteCommand(query, this.maBDD.connexion))
-            {
-                using (var lecteurActifs = command.ExecuteReader())
-                {
-                    while (lecteurActifs.Read())
-                    {
-                        actifs.Add(lecteurActifs.GetString(0));
-                    }
-                }
-            }
-            return actifs;
-        }
-
-        public bool existe(Actif actif)
-        {
-            /*informer l'utilisateur de son erreur précise*/
-            var selectionNoms = "SELECT COUNT(1) FROM Actif WHERE nom=@nom;"; //retourne 0 si il n'existe pas sinon 1
-            using (var commandSelectionNoms = new SQLiteCommand(selectionNoms, this.maBDD.connexion))       
-            {
-                commandSelectionNoms.Parameters.AddWithValue("@nom", actif.nom);
-                long existe = Convert.ToInt64(commandSelectionNoms.ExecuteScalar());
-                if (existe > 0)
-                {
-                    MessageBox.Show("un actif du même nom existe déjà", "Erreur actif");
-                    return true;
-                }
             }
             return false;
         }

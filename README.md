@@ -34,7 +34,7 @@
   <pre>
       Page Investir :
         - pouvoir programmer ses investissement tous les x jours en ajoutant dans un agenda (google calendar API)
-        - envoyer des notifications (connecté a l'agenda) si on doit rajouter de l'argent sur l'appli <br>
+        - envoyer des notifications (connecté a l'agenda) si on doit rajouter de l'argent sur l'appli
         - modifier un actif 
   </pre>
 
