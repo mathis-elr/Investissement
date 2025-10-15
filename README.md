@@ -7,7 +7,7 @@
     • Ajouter/Supprimer des actifs (crypto, ETF, actions ...)
     • Visualiser les actifs enregistrées dans la base de données 
     • Ajouter un investissement (= une ou plusieurs transactions) en indiquant pour chaque actif le prix d'achat, la quantité et la date
-    • Création/Suppression de modèles d'investissements pour faciliter l'investissement DCA avec l'ajout/suppresion de transactions (nom actif, leur type, la quantité)
+    • Création/Suppression/modification de modèles d'investissements pour faciliter l'investissement DCA avec l'ajout/suppresion/modification de transactions (nom actif et quantité)
     • Appliquer un modele d'investissement
   </pre>
 
@@ -35,9 +35,6 @@
       Page Investir :
         - pouvoir programmer ses investissement tous les x jours en ajoutant dans un agenda (google calendar API)
         - envoyer des notifications (connecté a l'agenda) si on doit rajouter de l'argent sur l'appli <br>
-        - modifier un modele (nom, description et transactions)
         - modifier un actif 
-        - maj ajouter un modele d'investissement, ça vide le tableau actuel, on peut choisir les actifs que l'ont souhaite via un combo box dans la tableau, pour le nom et la description ce sera directement dans l'interface de base sous forme d'input et donc rajouter un bouton ajouter le modele 
-        - maj ajouter actif, ça vide le tableau et affiche les colonnes correspondantes aux paramètre d'un actif, plus d'interface, tout ce fait dans l'interface principale
   </pre>
 
