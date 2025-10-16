@@ -38,6 +38,8 @@ namespace Investissement
         /*CONSTRUCTEUR*/
         public Form1()
         {
+            InitializeComponent();
+
             styleManager = new MetroStyleManager();
             styleManager.Owner = this;
 
@@ -53,7 +55,19 @@ namespace Investissement
 
             this.FormClosing += MyForm_FormClosing;
 
-            InitializeComponent();
+            /*GESTION DES DIFFERENTES PAGES*/
+            var vuePatrimoine = new PatrimoineVue(transactionController);
+            var vueGraphiques = new GraphiquesVue(transactionController);
+            var vueBourse = new BourseVue();
+
+            /*LIAISON DES CHAQUE VUE A SA PAGE*/
+            this.pagePatrimoine.Controls.Add(vuePatrimoine);
+            this.pageGraphiques.Controls.Add(vueGraphiques);
+            this.pageBourse.Controls.Add(vueBourse);
+
+            vuePatrimoine.Dock = DockStyle.Fill;
+            vueGraphiques.Dock = DockStyle.Fill;
+            vueBourse.Dock = DockStyle.Fill;
         }
 
         /*INITIALISATION*/

@@ -135,7 +135,7 @@
             this.navigation.Location = new System.Drawing.Point(-6, 80);
             this.navigation.Name = "navigation";
             this.navigation.SelectedIndex = 0;
-            this.navigation.Size = new System.Drawing.Size(1294, 576);
+            this.navigation.Size = new System.Drawing.Size(1160, 463);
             this.navigation.TabIndex = 2;
             this.navigation.UseCustomBackColor = true;
             this.navigation.UseCustomForeColor = true;
@@ -159,7 +159,7 @@
             this.pageInvestir.HorizontalScrollbarSize = 10;
             this.pageInvestir.Location = new System.Drawing.Point(4, 39);
             this.pageInvestir.Name = "pageInvestir";
-            this.pageInvestir.Size = new System.Drawing.Size(1286, 533);
+            this.pageInvestir.Size = new System.Drawing.Size(1152, 420);
             this.pageInvestir.TabIndex = 0;
             this.pageInvestir.Text = "Investir";
             this.pageInvestir.UseCustomBackColor = true;
@@ -638,7 +638,7 @@
             this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 84.84849F));
             this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.15152F));
             this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52F));
-            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 77F));
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 78F));
             this.pannelChoixModeles.Controls.Add(this.btnInterfaceEditerModeleInvest, 3, 0);
             this.pannelChoixModeles.Controls.Add(this.btnSupprModele, 2, 0);
             this.pannelChoixModeles.Controls.Add(this.labelDescrModele, 0, 2);
@@ -660,7 +660,7 @@
             this.btnInterfaceEditerModeleInvest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.btnInterfaceEditerModeleInvest.Enabled = false;
             this.btnInterfaceEditerModeleInvest.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnInterfaceEditerModeleInvest.Location = new System.Drawing.Point(358, 3);
+            this.btnInterfaceEditerModeleInvest.Location = new System.Drawing.Point(357, 3);
             this.btnInterfaceEditerModeleInvest.Name = "btnInterfaceEditerModeleInvest";
             this.btnInterfaceEditerModeleInvest.Size = new System.Drawing.Size(50, 35);
             this.btnInterfaceEditerModeleInvest.TabIndex = 12;
@@ -675,7 +675,7 @@
             this.btnSupprModele.BackColor = System.Drawing.Color.Red;
             this.btnSupprModele.Enabled = false;
             this.btnSupprModele.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnSupprModele.Location = new System.Drawing.Point(306, 3);
+            this.btnSupprModele.Location = new System.Drawing.Point(305, 3);
             this.btnSupprModele.Name = "btnSupprModele";
             this.btnSupprModele.Size = new System.Drawing.Size(35, 35);
             this.btnSupprModele.TabIndex = 9;
@@ -754,7 +754,7 @@
             this.pagePatrimoine.HorizontalScrollbarSize = 10;
             this.pagePatrimoine.Location = new System.Drawing.Point(4, 39);
             this.pagePatrimoine.Name = "pagePatrimoine";
-            this.pagePatrimoine.Size = new System.Drawing.Size(1286, 533);
+            this.pagePatrimoine.Size = new System.Drawing.Size(1286, 538);
             this.pagePatrimoine.TabIndex = 1;
             this.pagePatrimoine.Text = "Patrimoine";
             this.pagePatrimoine.UseCustomBackColor = true;
@@ -773,7 +773,7 @@
             this.pageGraphiques.HorizontalScrollbarSize = 10;
             this.pageGraphiques.Location = new System.Drawing.Point(4, 39);
             this.pageGraphiques.Name = "pageGraphiques";
-            this.pageGraphiques.Size = new System.Drawing.Size(1286, 533);
+            this.pageGraphiques.Size = new System.Drawing.Size(1286, 538);
             this.pageGraphiques.Style = MetroFramework.MetroColorStyle.Black;
             this.pageGraphiques.TabIndex = 2;
             this.pageGraphiques.Text = "Graphiques";
@@ -796,7 +796,7 @@
             this.pageBourse.Location = new System.Drawing.Point(4, 39);
             this.pageBourse.Name = "pageBourse";
             this.pageBourse.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.pageBourse.Size = new System.Drawing.Size(1286, 533);
+            this.pageBourse.Size = new System.Drawing.Size(1286, 538);
             this.pageBourse.TabIndex = 3;
             this.pageBourse.Text = "Bourse ";
             this.pageBourse.UseCustomBackColor = true;
