@@ -12,12 +12,10 @@ namespace Investissement
     {
         /*ATTRIBUTS*/
         public ActifBDD actifbdd;
-        public Form1 form;
 
         /*CONSTRUCTEUR*/
-        public ActifController(Form1 form, BDD bdd)
+        public ActifController(BDD bdd)
         {
-            this.form = form;
             this.actifbdd = new ActifBDD(bdd);
         }
 
@@ -35,40 +33,18 @@ namespace Investissement
             return actifbdd.getActifsDataTable();
         }
 
-        public bool ajoutActif(string nom, string type, string isin, string risque)
+        public bool ajoutActif(Actif nvActif)
         {
-            Actif actif = new Actif(nom,type,isin,risque);
-            if (actifbdd.ajouterActif(actif))
+            if (actifbdd.ajouterActif(nvActif))
             {
-                form.afficherActifs(); //mise a jour en direct du tableau avec le nv actif
                 return true;
             }
             return false;
         }
 
-        public bool supprActif()
+        public bool supprActif(string nom)
         {
-            if (form.getGridViewActifs().SelectedRows.Count > 0)
-            {
-                DataGridViewRow row = form.getGridViewActifs().SelectedRows[0];
-                string nom = row.Cells["Nom"].Value.ToString();
-                DialogResult result = MessageBox.Show(
-                    "Voulez-vous vraiment supprimer cet actif ?",
-                    "Confirmation",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-
-                if (result == DialogResult.Yes)
-                {
-                    if (actifbdd.supprActif(nom))
-                    {
-                        form.afficherActifs();
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return actifbdd.supprActif(nom);
         }
     }
 }

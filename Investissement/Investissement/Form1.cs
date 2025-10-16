@@ -4,6 +4,7 @@ using MetroFramework.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SQLite;
 using System.Windows.Forms;
 
 namespace Investissement
@@ -45,14 +46,14 @@ namespace Investissement
             this.maBDD = new BDD("Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions.db");
             maBDD.ouvrirBDD();
 
-            /*CLASSES QUI GERENT LA LOGIQUE DE CHAQUE CONCEPT*/
-            actifController = new ActifController(this, this.maBDD);
-            modeleInvestController = new ModeleInvestController(this, this.maBDD);
-            transactionController = new TransactionController(this, this.maBDD);
+            /*LIAISON AVEC LES PRESENTATIONS*/
+            actifController = new ActifController(this.maBDD);
+            modeleInvestController = new ModeleInvestController(this.maBDD);
+            transactionController = new TransactionController(this.maBDD);
+
+            this.FormClosing += MyForm_FormClosing;
 
             InitializeComponent();
-            
-            this.FormClosing += MyForm_FormClosing;
         }
 
         /*INITIALISATION*/
@@ -66,9 +67,9 @@ namespace Investissement
             this.gridListeActifs();
             this.afficherActifs();
 
-            /*Remplissage du comboBox avec les Modeles d'investissement existan*/
-            boxModeles.Text = "liste actifs";
-            modeleInvestController.chargerModeles();
+            /*Remplissage du comboBox avec les Modeles d'investissement existant*/
+            this.chargerModeles();
+            boxModeles.SelectedIndex = 0; //la liste d'actif
 
             /*Interception d'evenements*/
             //boutons affichage d'interface
@@ -91,33 +92,9 @@ namespace Investissement
         }
 
 
-        /*ENCAPSULATION*/
-        public DataGridView getGridViewActifs()
-        {
-            return this.gridActifs;
-        }
-
-        public MetroComboBox getComboBoxModeles()
-        {
-            return this.boxModeles;
-        }
-
-        public Label getLabelDescriptionModele()
-        {
-            return this.labelDescrModele;
-        }
-
-        public MetroDateTime getDateInvest()
-        {
-            return this.dateInvest;
-        }
-
-
-
         /**************
          ***METHODES***
          **************/
-
         /* EVENEMENTS COMBOBOX */
         public void changerModele()
         {
@@ -167,6 +144,16 @@ namespace Investissement
                 }
             }
         }
+
+        public void chargerModeles()
+        {
+            MetroComboBox modeles = this.boxModeles;
+            DataTable modeleInvest = modeleInvestController.getModelesDataTable();
+            modeles.DataSource = modeleInvest;
+            modeles.ValueMember = "id";
+            modeles.DisplayMember = "nom";
+        }
+
 
         /*Differentes formes du gridActifs*/
         private void gridListeActifs()
@@ -224,6 +211,7 @@ namespace Investissement
             this.labelTitreInterface.Text = "Ajouter un actif";
             this.btnValidation.Text = "Ajouter l'actif";
 
+            this.btnValidation.Visible = true;
             this.panelAjoutActif.Visible = true;
             this.panelTitreQuitter.Visible = true;
             this.panelConfirmationInvest.Visible = false;
@@ -295,6 +283,7 @@ namespace Investissement
             this.etatBoutonSuppression = EtatBoutonSuppression.supprActif;
         }
 
+
         /*ROLE BOUTONS EN FONCTION DE L'INTERFACE*/
         private void BtnChoixValidation(object sender, EventArgs e)
         {
@@ -325,25 +314,12 @@ namespace Investissement
             }
         }
 
-        /*BOUTONS ACTION*/
+
+        /*ACTIONS BOUTONS*/
         private void ajoutActif()
         {
-            if(this.inputNomActif.Text == "")
-            {
-                MessageBox.Show("entrez un nom pour votre actif", "Actif");
-                return;
-            }
-            if (this.inputTypeActif.Text == "")
-            {
-                MessageBox.Show("entrez le type de votre actif", "Actif");
-                return;
-            }
-            if (this.inputRisqueActif.Text == "")
-            {
-                MessageBox.Show("entrez un niveau de rique d'investissement pour votre actif (faible, moyen,fort)", "Actif");
-                return;
-            }
-            if (actifController.ajoutActif(this.inputNomActif.Text, this.inputTypeActif.Text, this.inputISINActif.Text, this.inputRisqueActif.Text))
+            Actif nvActif = new Actif(this.inputNomActif.Text, this.inputTypeActif.Text, this.inputISINActif.Text, this.inputRisqueActif.Text);
+            if (actifController.ajoutActif(nvActif))
             {
                 this.afficherActifs();
                 this.labelChoixModele.Visible = true;
@@ -356,55 +332,89 @@ namespace Investissement
                 MessageBox.Show("Actif ajouté avec succès", "Actif");
             }
         }
+        private void supprActif()
+        {
+            if (this.gridActifs.SelectedRows.Count > 0)
+            {
+                DataGridViewRow row = this.gridActifs.SelectedRows[0];
+                string nom = row.Cells["Nom"].Value.ToString();
+                DialogResult result = MessageBox.Show(
+                    "Voulez-vous vraiment supprimer cet actif ?",
+                    "Confirmation",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+                if (result == DialogResult.Yes)
+                {
+                    if (actifController.supprActif(nom))
+                    {
+                        this.afficherActifs();
+                        MessageBox.Show("Actif supprimé avec succès", "Actif");
+                    }
+                }
+            }
+        }
 
         private void ajouterModeleInvest()
         {
-            if (this.inputNomModeleInvest.Text == "")
+            try
             {
-                MessageBox.Show("choisissez un nom", "Erreur nom vide");
-                return;
+                ModeleInvest modeleInvest = new ModeleInvest(this.inputNomModeleInvest.Text, this.inputDescriptionModeleInvest.Text);
+                if (modeleInvestController.ajouterModele(modeleInvest))
+                {
+                    this.ajouterTransactionsModele(modeleInvest);
+                    this.chargerModeles();
+                    this.gridListeActifs();
+                    this.afficherActifs();
+                    this.labelTitreInterface.Text = "Choix du modele";
+                    this.pannelChoixModeles.Visible = true;
+                    this.panelConfirmationInvest.Visible = true;
+                    this.panelTitreQuitter.Visible = false;
+                    this.panelAjoutModele.Visible = false;
+                    MessageBox.Show("Modele ajouté avec succès", "Modele");
+                }
             }
-
-            if (this.inputDescriptionModeleInvest.Text == "")
+            catch(Exception ex)
             {
-                MessageBox.Show("decrivez votre modèle", "Erreur description vide");
-                return;
+                MessageBox.Show(ex.Message, "Erreur insertion Modele");
             }
+        }
 
-            if (modeleInvestController.ajouterModele(this.inputNomModeleInvest.Text,this.inputDescriptionModeleInvest.Text))
+        private void ajouterTransactionsModele(ModeleInvest modeleInvest)
+        {
+            foreach (DataGridViewRow transaction in this.gridActifs.Rows)
             {
-                this.gridListeActifs();
-                this.afficherActifs();
-                this.labelTitreInterface.Text = "Choix du modele";
-                this.pannelChoixModeles.Visible = true;
-                this.panelConfirmationInvest.Visible = true;
-                this.panelTitreQuitter.Visible = false;
-                this.panelAjoutModele.Visible = false;
-                MessageBox.Show("Modele ajouté avec succès", "Modele");
+                if (transaction.IsNewRow) continue; //ne prend pas en compte la ligne vide en bas
+
+                string actif = transaction.Cells[0].Value.ToString();
+                var quantiteVar = transaction.Cells[1].Value;
+                long quantiteLong = 0;
+                if (quantiteVar != DBNull.Value) quantiteLong = Convert.ToInt64(quantiteVar);
+
+                if (quantiteLong != 0)
+                {
+                    TransactionModele transactionModele = new TransactionModele(actif, quantiteLong, modeleInvest.id);
+                    modeleInvestController.ajouterTransactionsModele(transactionModele);
+                }
             }
         }
 
         private void enregistreEditModeleInvest()
         {
-            if (this.inputNomModeleInvest.Text == "")
-            {
-                MessageBox.Show("choisissez un nom", "Erreur nom vide");
-                return;
-            }
-
-            if (this.inputDescriptionModeleInvest.Text == "")
-            {
-                MessageBox.Show("decrivez votre modèle", "Erreur description vide");
-                return;
-            }
+            //pour la modification d'un modele on supprime toutes les transaction associées et on rajoute les nouvelles/modifiées
+            //pour le nom et la description on fait une mise a jour directement
 
             string nomModele = ((DataRowView)this.boxModeles.SelectedItem)["nom"].ToString();
+            ModeleInvest ModeleInvestModifie = new ModeleInvest(this.inputNomModeleInvest.Text, this.inputDescriptionModeleInvest.Text);
+            ModeleInvestModifie.id = Convert.ToInt64(boxModeles.SelectedValue);
+
             if (modeleInvestController.editTransactionModele(nomModele))
             {
-                if (modeleInvestController.majNomDescription(nomModele, this.inputNomModeleInvest.Text, this.inputDescriptionModeleInvest.Text))
+                this.ajouterTransactionsModele(ModeleInvestModifie);
+                if (modeleInvestController.majNomDescription(nomModele, ModeleInvestModifie))
                 {
                     this.gridListeActifs();
-                    modeleInvestController.chargerModeles();
+                    this.chargerModeles();
                     this.labelTitreInterface.Text = "Choix du modele";
                     this.pannelChoixModeles.Visible = true;
                     this.panelConfirmationInvest.Visible = true;
@@ -419,38 +429,69 @@ namespace Investissement
 
         private void BtnSupprModele(object sender, EventArgs e)
         {
-            string nomModele = ((DataRowView)boxModeles.SelectedItem)["nom"].ToString();
-            if (modeleInvestController.supprModele(nomModele))
+            DialogResult result = MessageBox.Show(
+                "Voulez-vous vraiment supprimer ce modele ?",
+                "Confirmation",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+            if (result == DialogResult.Yes)
             {
-                MessageBox.Show("Modele supprimé avec succès", "Modele");
+                string nomModele = ((DataRowView)boxModeles.SelectedItem)["nom"].ToString();
+                if (modeleInvestController.supprModele(nomModele))
+                {
+                    this.chargerModeles();
+                    MessageBox.Show("Modele supprimé avec succès", "Modele");
+                }
             }
         }
 
         private void supprTransactionModele()
         {
-            if (modeleInvestController.supprTransactionModele())
+            if (this.gridActifs.SelectedRows.Count > 0)
             {
-                MessageBox.Show("transaction de modele supprimé avec succès", "Transaction Modele");
-            }
-        }
-
-        private void supprActif()
-        {
-            if (actifController.supprActif())
-            {
-                MessageBox.Show("Actif supprimé avec succès", "Actif");
+                DataGridViewRow row = this.gridActifs.SelectedRows[0];
+                string nomActif = row.Cells["Nom"].Value.ToString();
+                DialogResult result = MessageBox.Show(
+                    "Voulez-vous vraiment supprimer cette transaction ?",
+                    "Confirmation",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+                if (result == DialogResult.Yes)
+                {
+                    if (modeleInvestController.supprTransactionModele(nomActif))
+                    {
+                        this.changerModele(); //pour que la grille se mette a jour en consequence de la suppression d'une transaction
+                        MessageBox.Show("transaction de modele supprimé avec succès", "Transaction Modele");
+                    }
+                }
             }
         }
 
         private void BtnValiderInvest(object sender, EventArgs e)
         {
-            if(transactionController.ajouterInvestissement())
+            foreach (DataGridViewRow transaction in this.gridActifs.Rows)
             {
-                MessageBox.Show("Investissement effectué avec succès", "Investissement");
-            }
-            else
-            {
-                MessageBox.Show("Erreur Investissement non effectue", "Investissement");
+                DateTime date = this.dateInvest.Value;
+                var actif = transaction.Cells[0].Value.ToString();
+                var quantiteVar = transaction.Cells[1].Value;
+                var prixVar = transaction.Cells[2].Value;
+
+                long quantiteLong = 0;
+                long prixLong = 0;
+
+                if (quantiteVar != DBNull.Value) quantiteLong = Convert.ToInt64(quantiteVar);
+                if (prixVar != DBNull.Value) prixLong = Convert.ToInt64(prixVar);
+
+                if (quantiteLong != 0 && prixLong != 0)
+                {
+                    Transaction nvltransaction = new Transaction(date, actif, quantiteLong, prixLong);
+                    if (transactionController.ajouterInvestissement(nvltransaction))
+                    {
+                        MessageBox.Show("Investissement effectué avec succès", "Investissement");
+                    }
+                }
             }
         }
 

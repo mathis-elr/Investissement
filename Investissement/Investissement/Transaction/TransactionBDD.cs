@@ -18,7 +18,7 @@ namespace Investissement
          ***METHODES***
          **************/
 
-        public void ajouterTransaction(Transaction transaction)
+        public bool ajouterTransaction(Transaction transaction)
         {
             try
             {
@@ -31,11 +31,13 @@ namespace Investissement
                     command.Parameters.AddWithValue("@prix", transaction.prix);
 
                     command.ExecuteNonQuery();
+                    return true;
                 }
             }
             catch (SQLiteException ex)
             {
                 MessageBox.Show(ex.Message, "Erreur ajout Transaction");
+                return false;
             }
         }
     }

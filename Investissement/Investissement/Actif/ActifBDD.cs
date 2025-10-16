@@ -68,30 +68,26 @@ namespace Investissement
          **************/
         public bool ajouterActif(Actif actif)
         {
-            if (!CommunBDD.existe(this.maBDD,"Actif","nom",actif.nom))
+            try
             {
-                try
+                string insertionActif = "INSERT INTO Actif VALUES(@nom,@type,@ISIN,@risque);";
+                using (var commandInsertionActif = new SQLiteCommand(insertionActif, this.maBDD.connexion))
                 {
-                    string insertionActif = "INSERT INTO Actif VALUES(@nom,@type,@ISIN,@risque);";
-                    using (var commandInsertionActif = new SQLiteCommand(insertionActif, this.maBDD.connexion))
-                    {
-                        commandInsertionActif.Parameters.AddWithValue("@nom", actif.nom);
-                        commandInsertionActif.Parameters.AddWithValue("@type", actif.type);
-                        commandInsertionActif.Parameters.AddWithValue("@ISIN", actif.isin);
-                        commandInsertionActif.Parameters.AddWithValue("@risque", actif.risque);
+                    commandInsertionActif.Parameters.AddWithValue("@nom", actif.nom);
+                    commandInsertionActif.Parameters.AddWithValue("@type", actif.type);
+                    commandInsertionActif.Parameters.AddWithValue("@ISIN", actif.isin);
+                    commandInsertionActif.Parameters.AddWithValue("@risque", actif.risque);
 
-                        commandInsertionActif.ExecuteNonQuery();
-                    }
+                    commandInsertionActif.ExecuteNonQuery();
                 }
-                catch (SQLiteException ex)
-                {
-                    MessageBox.Show(ex.Message, "Erreur insertion actif bdd");
-                    return false;
-                }
-
-                return true;
             }
-            return false;
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message, "Erreur insertion actif bdd");
+                return false;
+            }
+
+            return true;
         }
 
         public bool modifActif()
@@ -105,23 +101,20 @@ namespace Investissement
         {
             try
             {
-                if (!CommunBDD.existe(this.maBDD,"Actif","nom", nom))
-                {
 
-                    string suppresionActif = "DELETE FROM Actif WHERE nom=@nom;";
-                    using (var commandInsertionActif = new SQLiteCommand(suppresionActif, this.maBDD.connexion))
-                    {
-                        commandInsertionActif.Parameters.AddWithValue("@nom", nom);
-                        commandInsertionActif.ExecuteNonQuery();
-                    }
-                    return true;
+                string suppresionActif = "DELETE FROM Actif WHERE nom=@nom;";
+                using (var commandInsertionActif = new SQLiteCommand(suppresionActif, this.maBDD.connexion))
+                {
+                    commandInsertionActif.Parameters.AddWithValue("@nom", nom);
+                    commandInsertionActif.ExecuteNonQuery();
                 }
+                return true;
             }
             catch (SQLiteException ex)
             {
                 MessageBox.Show(ex.Message, "Erreur suppresion actif bdd");
+                return false;
             }
-            return false;
         }
     }
 }

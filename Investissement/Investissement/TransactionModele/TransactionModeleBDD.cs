@@ -1,6 +1,7 @@
 ﻿using System.Data.SQLite;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System;
 
 namespace Investissement
 {
@@ -19,7 +20,6 @@ namespace Investissement
         public List<(string actif, long quantite)> getTransactionsModele(string nomModele)
         {
             var listeTransactions = new List<(string actif, long quantite)>();
-
             try
             {
                 var queryTransactions = "SELECT actif,quantite FROM TransactionsModele JOIN ModeleInvest ON ModeleInvest.id=TransactionsModele.idModele WHERE nom=@nom;";
@@ -36,13 +36,12 @@ namespace Investissement
                         }
                     }
                 }
-                return listeTransactions;
             }
             catch (SQLiteException ex)
             {
-                MessageBox.Show(ex.Message, "Erreur recuperation d'une transaction");
-                return listeTransactions;
+                MessageBox.Show(ex.Message, "Erreur recuperation d'une transaction"); 
             }
+            return listeTransactions;
         }
 
 
@@ -53,6 +52,7 @@ namespace Investissement
         {
             try
             {
+                Console.WriteLine(transaction.actif, transaction.quantite, transaction.id_modele);
                 string insertionTransactions = "INSERT INTO TransactionsModele(actif,quantite,idModele) VALUES(@actif,@quantite,@idModele);";
                 using (var commandInsertionTransactions = new SQLiteCommand(insertionTransactions, this.maBDD.connexion))
                 {

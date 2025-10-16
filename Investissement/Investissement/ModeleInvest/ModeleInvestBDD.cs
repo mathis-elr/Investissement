@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
+using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 
 namespace Investissement
@@ -22,7 +23,7 @@ namespace Investissement
             DataTable modeleInvest = new DataTable();
             try
             {
-                var query = "SELECT nom FROM ModeleInvest;";
+                var query = "SELECT id,nom FROM ModeleInvest;";
                 using (var command = new SQLiteCommand(query, this.maBDD.connexion))
                 {
                     var noms = command.ExecuteReader();
@@ -100,42 +101,24 @@ namespace Investissement
          ***METHODES***
          **************/
         public bool ajouterModele(ModeleInvest modeleInvest)
-        {   
-            if (modeleInvest.nom == "")
+        {
+            try
             {
-                MessageBox.Show("chosissez un nom", "Erreur nom");
-                return false;
-            }
-            if (modeleInvest.description == "")
-            {
-                MessageBox.Show("decrivez votre modèle", "Erreur desccription");
-                return false;
-            }
-            if (!CommunBDD.existe(this.maBDD, "ModeleInvest", "nom", modeleInvest.nom))
-            {
-                MessageBox.Show("l'actif existe déjà", "Erreur actif");
-                return false;
-            }
-            else
-            {
-                try
+                string insertionModele = "INSERT INTO ModeleInvest(nom,description) VALUES(@nom,@description);";
+                using (var commandInsertionModele = new SQLiteCommand(insertionModele, this.maBDD.connexion))
                 {
-                    string insertionModele = "INSERT INTO ModeleInvest(nom,description) VALUES(@nom,@description);";
-                    using (var commandInsertionModele = new SQLiteCommand(insertionModele, this.maBDD.connexion))
-                    {
-                        commandInsertionModele.Parameters.AddWithValue("@nom", modeleInvest.nom);
-                        commandInsertionModele.Parameters.AddWithValue("@description", modeleInvest.description);
-                        commandInsertionModele.ExecuteNonQuery();
+                    commandInsertionModele.Parameters.AddWithValue("@nom", modeleInvest.nom);
+                    commandInsertionModele.Parameters.AddWithValue("@description", modeleInvest.description);
+                    commandInsertionModele.ExecuteNonQuery();
 
-                        modeleInvest.id = (int)this.maBDD.connexion.LastInsertRowId;
-                        return true;
-                    }
+                    modeleInvest.id = (int)this.maBDD.connexion.LastInsertRowId;
+                    return true;
                 }
-                catch (SQLiteException ex)
-                {
-                    MessageBox.Show(ex.Message, "Erreur insertion modele bdd");
-                    return false;
-                }
+            }
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message, "Erreur insertion modele bdd");
+                return false;
             }
         }
 
@@ -143,21 +126,19 @@ namespace Investissement
         {
             try
             {
-                if (CommunBDD.existe(this.maBDD, "TransactionsModele", "idModele", $"(SELECT id FROM ModeleInvest WHERE nom = {modeleInvest})"))
-                {
-                    MessageBox.Show("impossible de supprimer ce modele car des transactions en dépendent", "Erreur suppresion modele bdd");
+                if (this.transactionDependante(modeleInvest))
+                { 
+                    MessageBox.Show("impossible de supprimer le modele, des transactions en dépendent", "Erreur suppresion modele");
                     return false;
-                }
-                else
+                } 
+
+                var suppressionModele = "DELETE FROM ModeleInvest WHERE nom=@nom;";
+                using (var commandeSuppressionModele = new SQLiteCommand(suppressionModele, this.maBDD.connexion))
                 {
-                    var suppressionModele = "DELETE FROM ModeleInvest WHERE nom=@nom;";
-                    using (var commandeSuppressionModele = new SQLiteCommand(suppressionModele, this.maBDD.connexion))
-                    {
-                        commandeSuppressionModele.Parameters.AddWithValue("@nom", modeleInvest);
-                        commandeSuppressionModele.ExecuteNonQuery();
-                    }
-                    return true;
+                    commandeSuppressionModele.Parameters.AddWithValue("@nom", modeleInvest);
+                    commandeSuppressionModele.ExecuteNonQuery();
                 }
+                return true;
             }
             catch(SQLiteException ex)
             {
@@ -166,16 +147,16 @@ namespace Investissement
             }
         }
 
-        public bool majNomDescription(string nomModele, string nom, string description)
+        public bool majNomDescription(string ancienNomModele,ModeleInvest ModeleInvestModifie)
         {
             try
             {
                 string insertionModele = "UPDATE ModeleInvest SET nom=@nom, description=@description WHERE nom=@nomModele;";
                 using (var commandInsertionModele = new SQLiteCommand(insertionModele, this.maBDD.connexion))
                 {
-                    commandInsertionModele.Parameters.AddWithValue("@nom", nom);
-                    commandInsertionModele.Parameters.AddWithValue("@description", description);
-                    commandInsertionModele.Parameters.AddWithValue("@nomModele", nomModele);
+                    commandInsertionModele.Parameters.AddWithValue("@nom", ModeleInvestModifie.nom);
+                    commandInsertionModele.Parameters.AddWithValue("@description", ModeleInvestModifie.description);
+                    commandInsertionModele.Parameters.AddWithValue("@nomModele", ancienNomModele);
                     commandInsertionModele.ExecuteNonQuery();
 
                     return true;
@@ -185,6 +166,17 @@ namespace Investissement
             {
                 MessageBox.Show(ex.Message, "Erreur mise à jour elmt modele bdd");
                 return false;
+            }
+        }
+
+        private bool transactionDependante(string modeleInvest)
+        {
+            var selectionTransactionDependantes = "SELECT COUNT(*) FROM TransactionsModele JOIN ModeleInvest ON ModeleInvest.id=TransactionsModele.idModele WHERE nom=@nom;";
+            using (var commandeselectionTransactionDependantes = new SQLiteCommand(selectionTransactionDependantes, this.maBDD.connexion))
+            {
+                commandeselectionTransactionDependantes.Parameters.AddWithValue("@nom", modeleInvest);
+                long nbTransactions = Convert.ToInt64(commandeselectionTransactionDependantes.ExecuteScalar());
+                return nbTransactions > 0;
             }
         }
     }

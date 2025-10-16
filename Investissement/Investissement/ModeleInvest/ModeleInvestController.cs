@@ -1,4 +1,5 @@
 ﻿using MetroFramework.Controls;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
@@ -10,16 +11,14 @@ namespace Investissement
     public class ModeleInvestController
     {
         /*ATTRIBUTS*/
-        Form1 form;
         ModeleInvestBDD modeleInvestbdd;
         TransactionModelesController transactionModelesController;
 
         /*CONSTRUCTEUR*/
-        public ModeleInvestController(Form1 form, BDD bdd)
+        public ModeleInvestController(BDD bdd)
         {
-            this.form = form;
             this.modeleInvestbdd = new ModeleInvestBDD(bdd);
-            this.transactionModelesController = new TransactionModelesController(this.form,this.modeleInvestbdd , bdd);
+            this.transactionModelesController = new TransactionModelesController(bdd);
         }
 
         /*ENCAPSUALTION*/
@@ -33,50 +32,43 @@ namespace Investissement
             return transactionModelesController.getTransactionsModele(nomModele);
         }
 
-        /**************
-         ***METHODES***
-         **************/
-        public void chargerModeles()
+        public DataTable getModelesDataTable()
         {
-            try
-            {
-                MetroComboBox modeles = form.getComboBoxModeles();
-                DataTable modeleInvest = modeleInvestbdd.getModelesDataTable();
-                modeles.DataSource = modeleInvest;
-                modeles.DisplayMember = "nom";
-            }
-            catch (SQLiteException ex)
-            {
-                MessageBox.Show(ex.Message, "Erreur selection modeles BDD");
-            }
+            return modeleInvestbdd.getModelesDataTable();
         }
 
 
-        public bool ajouterModele(string nom,string description)
+        /**************
+         ***METHODES***
+         **************/
+
+        public bool ajouterModele(ModeleInvest modeleInvest)
         {
-            ModeleInvest modeleInvest = new ModeleInvest(nom,description);
-            if (modeleInvestbdd.ajouterModele(modeleInvest))
-            {
-                transactionModelesController.ajouterTransactionsModele(modeleInvest.id);
-                this.chargerModeles(); //mise a jour du combo box pour pouvoir utiliser le modele crée
-                return true;
-            }
-            return false;
+            if (string.IsNullOrWhiteSpace(modeleInvest.nom))
+                throw new Exception("Nom du modèle vide");
+            if (string.IsNullOrWhiteSpace(modeleInvest.description))
+                throw new Exception("Nom du modèle vide");
+
+            return modeleInvestbdd.ajouterModele(modeleInvest);
         }
 
         public bool supprModele(string modeleInvest)
         {
             if(modeleInvestbdd.supprModele(modeleInvest))
             {
-                this.chargerModeles();
                 return true;
             }
             return false;
         }
 
-        public bool majNomDescription(string nomModele, string nvNom,string nvDescription)
+        public void ajouterTransactionsModele(TransactionModele transactionModele)
         {
-            if (modeleInvestbdd.majNomDescription(nomModele, nvNom, nvDescription))
+            transactionModelesController.ajouterTransactionsModele(transactionModele);
+        }
+
+        public bool majNomDescription(string ancienNomModele, ModeleInvest ModeleInvestModifie)
+        {
+            if (modeleInvestbdd.majNomDescription(ancienNomModele, ModeleInvestModifie))
             {
                 return true;
             }
@@ -92,9 +84,9 @@ namespace Investissement
             return false;
         }
 
-        public bool supprTransactionModele()
+        public bool supprTransactionModele(string nomActif)
         {
-            if(transactionModelesController.supprTransactionModele())
+            if(transactionModelesController.supprTransactionModele(nomActif))
             {
                 return true;
             }
