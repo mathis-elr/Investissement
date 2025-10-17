@@ -35,11 +35,7 @@ namespace Investissement
 
         public bool ajoutActif(Actif nvActif)
         {
-            if (actifbdd.ajouterActif(nvActif))
-            {
-                return true;
-            }
-            return false;
+            return actifbdd.ajouterActif(nvActif);
         }
 
         public bool supprActif(string nom)

@@ -52,7 +52,6 @@ namespace Investissement
         {
             try
             {
-                Console.WriteLine(transaction.actif, transaction.quantite, transaction.id_modele);
                 string insertionTransactions = "INSERT INTO TransactionsModele(actif,quantite,idModele) VALUES(@actif,@quantite,@idModele);";
                 using (var commandInsertionTransactions = new SQLiteCommand(insertionTransactions, this.maBDD.connexion))
                 {
