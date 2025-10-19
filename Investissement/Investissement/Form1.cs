@@ -17,6 +17,10 @@ namespace Investissement
         public ModeleInvestController modeleInvestController;
         public TransactionController transactionController;
 
+        public InvestirVue investirVue;
+        public PatrimoineVue patrimoineVue;
+        public BourseVue bourseVue;
+
 
         /*CONSTRUCTEUR*/
         public Form1()
@@ -39,18 +43,18 @@ namespace Investissement
             this.FormClosing += MyForm_FormClosing;
 
             /*GESTION DES DIFFERENTES PAGES*/
-            var vueInvestir = new InvestirVue(actifController, modeleInvestController, transactionController);
-            var vuePatrimoine = new PatrimoineVue(transactionController);
-            var vueBourse = new BourseVue();
+            investirVue = new InvestirVue(actifController, modeleInvestController, transactionController);
+            patrimoineVue = new PatrimoineVue(transactionController);
+            bourseVue = new BourseVue();
 
             /*LIAISON DES CHAQUE VUE A SA PAGE*/
-            this.pageInvestir.Controls.Add(vueInvestir);
-            this.pagePatrimoine.Controls.Add(vuePatrimoine);
-            this.pageBourse.Controls.Add(vueBourse);
+            this.pageInvestir.Controls.Add(investirVue);
+            this.pagePatrimoine.Controls.Add(patrimoineVue);
+            this.pageBourse.Controls.Add(bourseVue);
 
-            vueInvestir.Dock = DockStyle.Fill;
-            vuePatrimoine.Dock = DockStyle.Fill;
-            vueBourse.Dock = DockStyle.Fill;
+            investirVue.Dock = DockStyle.Fill;
+            patrimoineVue.Dock = DockStyle.Fill;
+            bourseVue.Dock = DockStyle.Fill;
         }
 
         /*INITIALISATION*/
@@ -63,7 +67,10 @@ namespace Investissement
             navigation.Theme = MetroFramework.MetroThemeStyle.Dark;
 
             btnQuitter.Click += BtnQuitter;
+
+            navigation.SelectedIndexChanged += patrimoineVue.majDonnees;
         }
+
 
         /* EVENEMENTS FERMUTURE DE LA FENETRE */
         private void BtnQuitter(object sender, EventArgs e)

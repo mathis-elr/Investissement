@@ -1,13 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using System;
 
 namespace Investissement
 {
     internal static class Program
     {
-        /// <summary>
-        /// Point d'entrée principal de l'application.
-        /// </summary>
+        // Point d'entrée principal de l'application.
         [STAThread]
         static void Main()
         {

@@ -1,8 +1,9 @@
-﻿using MetroFramework.Controls;
-using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
+using MetroFramework.Controls;
 using System.Windows.Forms;
+using System.Data;
+using System;
+
 
 namespace Investissement
 {
@@ -43,7 +44,6 @@ namespace Investissement
         {
             this.configurerGridAffichageActifs();
             this.afficherActifs();
-
             this.comboBoxChargerModeles();
 
             btnInterfaceAjoutActif.Click += btnAfficherInterfaceAjoutActif;
@@ -474,19 +474,19 @@ namespace Investissement
                 }
             }
 
+            DateTime date = this.dateInvest.Value;
+            long sommeQuantite = 0;
             foreach (DataGridViewRow transaction in this.gridActifs.Rows)
             {
                 string quantiteString = transaction.Cells[1].Value?.ToString();
                 string prixString = transaction.Cells[2].Value?.ToString();
 
                 if (string.IsNullOrEmpty(quantiteString) || string.IsNullOrEmpty(prixString)) { continue; }
-
-                DateTime date = this.dateInvest.Value;
+                
                 string actif = transaction.Cells[0].Value.ToString();
                 long quantite = long.Parse(quantiteString);
                 long prix = long.Parse(prixString);
-
-                Console.WriteLine(actif);
+                sommeQuantite += quantite;
 
                 Transaction nvltransaction = new Transaction(date, actif, quantite, prix);
                 try
@@ -498,6 +498,8 @@ namespace Investissement
                     MessageBox.Show(ex.Message, "Erreur");
                 }
             }
+
+            transactionController.ajouterInvestissementTotalParDate(date, sommeQuantite);
 
             this.afficherActifs();
             MessageBox.Show("Investissement effectué avec succès", "Investissement");

@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 namespace Investissement
 {
     public class Transaction
