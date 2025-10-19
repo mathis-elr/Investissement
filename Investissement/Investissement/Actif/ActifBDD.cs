@@ -11,11 +11,13 @@ namespace Investissement
         /*ATTRIBUT*/
         public BDD maBDD;
 
+
         /*CONSTRUCTEUR*/
         public ActifBDD(BDD bdd)
         {
             this.maBDD = bdd;
         }
+
 
         /*ENCAPSULATION*/
         public DataTable getActifsDataTable()
@@ -28,12 +30,11 @@ namespace Investissement
                 {
                     var noms = command.ExecuteReader();
                     actifsDataTable.Load(noms);
-                    return actifsDataTable;
                 }
             }
             catch (SQLiteException ex)
             {
-                MessageBox.Show(ex.Message, "Erreur selection actif bdd");
+                Console.Error.WriteLine($"Erreur selection DataTable actifs SQLite : {ex.Message}");
             }
             return actifsDataTable;
         }
@@ -57,16 +58,14 @@ namespace Investissement
             }
             catch (SQLiteException ex)
             {
-                MessageBox.Show(ex.Message, "Erreur selection actif bdd");
+                Console.Error.WriteLine($"Erreur selection liste actifs SQLite : {ex.Message}");
             }
             return actifs;
         }
 
 
-        /**************
-         ***METHODES***
-         **************/
-        public bool ajouterActif(Actif actif)
+        /*METHODES*/
+        public void ajouterActif(Actif actif)
         {
             try
             {
@@ -83,21 +82,18 @@ namespace Investissement
             }
             catch (SQLiteException ex)
             {
-                MessageBox.Show(ex.Message, "Erreur insertion actif bdd");
-                return false;
+                Console.Error.WriteLine($"Erreur insertion actif SQLite : {ex.Message}");
+                throw new Exception("une erreur est survenue lors de l'insertion d'un actif");
             }
-
-            return true;
         }
 
-        public bool modifActif()
+        public void modifActif()
         {
             //a faire
-            return false;
         }
 
 
-        public bool supprActif(string nom)
+        public void supprActif(string nom)
         {
             try
             {
@@ -108,12 +104,11 @@ namespace Investissement
                     commandInsertionActif.Parameters.AddWithValue("@nom", nom);
                     commandInsertionActif.ExecuteNonQuery();
                 }
-                return true;
             }
             catch (SQLiteException ex)
             {
-                MessageBox.Show(ex.Message, "Erreur suppresion actif bdd");
-                return false;
+                Console.Error.WriteLine($"Erreur suppression actif SQLite : {ex.Message}");
+                throw new Exception("une erreur est survenue lors de la suppression de l'actif");
             }
         }
     }

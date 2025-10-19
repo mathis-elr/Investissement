@@ -21,9 +21,9 @@ namespace Investissement
         /**************
          ***METHODES***
          **************/
-        public bool ajouterInvestissement(Transaction nvlTransaction)
+        public void ajouterTransaction(Transaction nvlTransaction)
         {
-            return transactionbdd.ajouterTransaction(nvlTransaction);
+            transactionbdd.ajouterTransaction(nvlTransaction);
         }
     }
 }

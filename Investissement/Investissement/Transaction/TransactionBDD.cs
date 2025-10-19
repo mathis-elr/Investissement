@@ -1,4 +1,5 @@
-﻿using System.Data.SQLite;
+﻿using System;
+using System.Data.SQLite;
 using System.Windows.Forms;
 
 namespace Investissement
@@ -18,7 +19,7 @@ namespace Investissement
          ***METHODES***
          **************/
 
-        public bool ajouterTransaction(Transaction transaction)
+        public void ajouterTransaction(Transaction transaction)
         {
             try
             {
@@ -31,13 +32,12 @@ namespace Investissement
                     command.Parameters.AddWithValue("@prix", transaction.prix);
 
                     command.ExecuteNonQuery();
-                    return true;
                 }
             }
             catch (SQLiteException ex)
             {
-                MessageBox.Show(ex.Message, "Erreur ajout Transaction");
-                return false;
+                Console.Error.WriteLine($"Erreur insertion transaction SQLite : {ex.Message}");
+                throw new Exception("une erreur est survenue lors de l'insertion d'une transaction");
             }
         }
     }

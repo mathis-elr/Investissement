@@ -12,24 +12,17 @@ namespace Investissement
     {
         /*ATTRIBUTS*/
         ModeleInvestBDD modeleInvestbdd;
-        TransactionModelesController transactionModelesController;
 
         /*CONSTRUCTEUR*/
         public ModeleInvestController(BDD bdd)
         {
             this.modeleInvestbdd = new ModeleInvestBDD(bdd);
-            this.transactionModelesController = new TransactionModelesController(bdd);
         }
 
-        /*ENCAPSUALTION*/
+        /*ENCAPSUALTION MODELE INVEST*/
         public string getDescriptionModeleInvest(string nomModele)
         {
             return modeleInvestbdd.getDescriptionModeleInvest(nomModele);
-        }
-
-        public List<(string actif, long quantite)> getTransactionsModele(string nomModele)
-        {
-            return transactionModelesController.getTransactionsModele(nomModele);
         }
 
         public DataTable getModelesDataTable()
@@ -37,60 +30,53 @@ namespace Investissement
             return modeleInvestbdd.getModelesDataTable();
         }
 
-
-        /**************
-         ***METHODES***
-         **************/
-
-        public bool ajouterModele(ModeleInvest modeleInvest)
+        /*ENCAPSULATION TRANSACTIONS MODELE*/
+        public List<(string actif, long quantite)> getTransactionsModele(string nomModele)
         {
-            if (string.IsNullOrWhiteSpace(modeleInvest.nom))
-                throw new Exception("Nom du modèle vide");
-            if (string.IsNullOrWhiteSpace(modeleInvest.description))
-                throw new Exception("Nom du modèle vide");
-
-            return modeleInvestbdd.ajouterModele(modeleInvest);
+            return modeleInvestbdd.getTransactionsModele(nomModele);
         }
 
-        public bool supprModele(string modeleInvest)
+
+        /*METHODES MODELE INVEST*/
+
+        public void ajouterModele(ModeleInvest modeleInvest)
         {
-            if(modeleInvestbdd.supprModele(modeleInvest))
-            {
-                return true;
-            }
-            return false;
+            if (string.IsNullOrEmpty(modeleInvest.nom)) { throw new ArgumentException("Nom du modèle vide"); }
+            modeleInvestbdd.ajouterModele(modeleInvest);
         }
 
+        public void majNomDescription(string ancienNomModele, ModeleInvest modeleInvestModifie)
+        {
+            if (string.IsNullOrEmpty(ancienNomModele)) { throw new ArgumentException("modele inconnu"); }
+            if (string.IsNullOrEmpty(modeleInvestModifie.nom)) { throw new ArgumentException("Nom du modèle vide"); }
+            modeleInvestbdd.majNomDescription(ancienNomModele, modeleInvestModifie);
+        }
+
+        public void supprModele(string modeleInvest)
+        {
+            if (string.IsNullOrEmpty(modeleInvest)) { throw new ArgumentException("modele inconnu"); }
+            modeleInvestbdd.supprModele(modeleInvest);
+        }
+
+
+        /*METHODES TRANSACTIONS MODELE*/
         public void ajouterTransactionsModele(TransactionModele transactionModele)
         {
-            transactionModelesController.ajouterTransactionsModele(transactionModele);
+            if (string.IsNullOrEmpty(transactionModele.actif)) { throw new ArgumentException("modele inconnu"); }
+            modeleInvestbdd.ajouterTransactionsModele(transactionModele);
         }
 
-        public bool majNomDescription(string ancienNomModele, ModeleInvest ModeleInvestModifie)
+        public void supprTransactionsModele(string modeleInvest)
         {
-            if (modeleInvestbdd.majNomDescription(ancienNomModele, ModeleInvestModifie))
-            {
-                return true;
-            }
-            return false;
+            if (string.IsNullOrEmpty(modeleInvest)) { throw new ArgumentException("modele inconnu"); }
+            modeleInvestbdd.supprTransactionsModele(modeleInvest);
         }
 
-        public bool editTransactionModele(string modeleInvest)
+        public void supprTransactionModele(long idModeleAssocie, string nomActif)
         {
-            if(transactionModelesController.editTransactionModele(modeleInvest))
-            {
-                return true;
-            }
-            return false;
+            if (string.IsNullOrEmpty(nomActif)) { throw new ArgumentException("Nom du modele vide"); }
+            modeleInvestbdd.supprTransactionModele(idModeleAssocie, nomActif);
         }
 
-        public bool supprTransactionModele(string nomActif)
-        {
-            if(transactionModelesController.supprTransactionModele(nomActif))
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }
