@@ -2,6 +2,7 @@
 using MetroFramework.Controls;
 using MetroFramework.Forms;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -44,7 +45,7 @@ namespace Investissement
 
             /*GESTION DES DIFFERENTES PAGES*/
             investirVue = new InvestirVue(actifController, modeleInvestController, transactionController);
-            patrimoineVue = new PatrimoineVue(transactionController);
+            patrimoineVue = new PatrimoineVue(actifController,transactionController);
             bourseVue = new BourseVue();
 
             /*LIAISON DES CHAQUE VUE A SA PAGE*/

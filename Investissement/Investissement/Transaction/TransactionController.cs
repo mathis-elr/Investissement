@@ -25,8 +25,38 @@ namespace Investissement
             return transactionbdd.getsommeQuantiteParDateInvest();
         }
 
+        public long getQuantiteTotale(string nomActif)
+        {
+            return transactionbdd.getQuantiteTotale(nomActif);
+        }
 
-         /*METHODES*/
+        public List<(string, long)> getListeActifQuantiteTotaleInvestit()
+        {
+            return transactionbdd.getListeActifQuantiteTotaleInvestit();
+        }
+
+        public long getValeurTotalePatrimoine()
+        {
+            long valeurTotalePatrimoine = 0;
+            foreach (string nomActif in transactionbdd.getListeActifs())
+            {
+                valeurTotalePatrimoine += transactionbdd.getQuantiteTotale(nomActif); //faudra faire * prix actuel de l'actif
+            }
+            return valeurTotalePatrimoine;
+        }
+
+        public long getValeurTotaleInvestit()
+        {
+            long valeurTotaleInvestit = 0;
+            foreach (long quantite in this.getQuantiteTransactions())
+            {
+                valeurTotaleInvestit += quantite;
+            }
+            return valeurTotaleInvestit;
+        }
+
+
+        /*METHODES*/
         public void ajouterTransaction(Transaction nvlTransaction)
         {
             transactionbdd.ajouterTransaction(nvlTransaction);
@@ -35,16 +65,6 @@ namespace Investissement
         public void ajouterInvestissementTotalParDate(DateTime date, long sommeQuantite)
         {
             transactionbdd.ajouterInvestissementTotalParDate(date,sommeQuantite);
-        }
-
-        public long calculerValeurTotaleInvestit()
-        {
-            long valeurTotaleInvestit = 0;
-            foreach (long quantite in this.getQuantiteTransactions())
-            {
-                valeurTotaleInvestit += quantite;
-            }
-            return valeurTotaleInvestit;
         }
     }
 }

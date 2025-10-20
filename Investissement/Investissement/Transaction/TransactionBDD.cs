@@ -63,6 +63,70 @@ namespace Investissement
             return listeQuantiteTransactionsParDateInvest;
         }
 
+        public long getQuantiteTotale(string nomActif)
+        {
+            long quantiteTotale = 0;
+            try
+            {
+                string selectionQuantiteTotalActif = "SELECT SUM(quantite) FROM [transaction] WHERE actif=@actif GROUP BY actif;";
+                using (var commandSelectionQuantiteTotalActif = new SQLiteCommand(selectionQuantiteTotalActif, this.maBDD.connexion))
+                {
+                    commandSelectionQuantiteTotalActif.Parameters.AddWithValue("@actif", nomActif);
+                    quantiteTotale = Convert.ToInt64(commandSelectionQuantiteTotalActif.ExecuteScalar());
+
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                Console.Error.WriteLine($"Erreur selection quantite totale d'un actif SQLite : {ex.Message}");
+            }
+            return quantiteTotale;
+        }
+
+        public List<string> getListeActifs()
+        {
+            List<string> listeNomsActifs = new List<string>();
+            try
+            {
+                string selectionNomActifs = "SELECT DISTINCT actif FROM [Transaction]";
+                using (var commandSelectionNomActifs = new SQLiteCommand(selectionNomActifs, this.maBDD.connexion))
+                {
+                    var quantiteTransactionParDate = commandSelectionNomActifs.ExecuteReader();
+                    while (quantiteTransactionParDate.Read())
+                    {
+                        listeNomsActifs.Add(quantiteTransactionParDate.GetString(0));
+                    }
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                Console.Error.WriteLine($"Erreur selection quantite transactions SQLite : {ex.Message}");
+            }
+            return listeNomsActifs;
+        }
+
+        public List<(string,long)> getListeActifQuantiteTotaleInvestit()
+        {
+            List<(string,long)> listeActifsQuantiteTotaleInvestit = new List<(string,long)>();
+            try
+            {
+                string selectionActifsQuantiteTotaleInvestit = "SELECT actif,SUM(quantite) FROM [Transaction] GROUP BY actif";
+                using (var commandSelectionActifsQuantiteTotaleInvestit = new SQLiteCommand(selectionActifsQuantiteTotaleInvestit, this.maBDD.connexion))
+                {
+                    var actifQuantiteTotaleInvestit = commandSelectionActifsQuantiteTotaleInvestit.ExecuteReader();
+                    while (actifQuantiteTotaleInvestit.Read())
+                    {
+                        listeActifsQuantiteTotaleInvestit.Add((actifQuantiteTotaleInvestit.GetString(0), actifQuantiteTotaleInvestit.GetInt64(1)));
+                    }
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                Console.Error.WriteLine($"Erreur selection actif et quantiteTotale(somme des quantite par actif) transactions SQLite : {ex.Message}");
+            }
+            return listeActifsQuantiteTotaleInvestit;
+        }
+
 
         /*METHODES*/
         public void ajouterTransaction(Transaction transaction)

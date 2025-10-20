@@ -1,21 +1,25 @@
-﻿using System.Windows.Forms.DataVisualization.Charting;
-using System.Collections.Generic;
-using MetroFramework.Controls;
-using System.Windows.Forms;
-using System.Drawing;
+﻿using MetroFramework.Controls;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 
 namespace Investissement
 {
     public partial class PatrimoineVue : UserControl
     {
+        private ActifController actifController;
         private TransactionController transactionController;
 
         public Series serieValeurInvestit;
-        public PatrimoineVue(TransactionController transactionController)
+        public Series serieActifs;
+        public PatrimoineVue(ActifController actifController, TransactionController transactionController)
         {
             this.transactionController = transactionController;
+            this.actifController = actifController;
 
             InitializeComponent();
         }
@@ -49,17 +53,8 @@ namespace Investissement
             chartAreaActifs.BackColor = Color.Black;
             pieChartActifs.ChartAreas.Add(chartAreaActifs);
 
-            Series serieActifs = new Series();
+            serieActifs = new Series();
             serieActifs.ChartType = SeriesChartType.Pie;
-            serieActifs.Points.AddXY("Action A", 10);
-            serieActifs.Points.AddXY("Action B", 20);
-            serieActifs.Points.AddXY("Action C", 10);
-            serieActifs.Points.AddXY("Action D", 30);
-            serieActifs.Points.AddXY("Action E", 10);
-            serieActifs.Points.AddXY("Action F", 5);
-            serieActifs.Points.AddXY("Action G", 5);
-            serieActifs.Points.AddXY("Action H", 10);
-
             pieChartActifs.Series.Add(serieActifs);
 
             this.pageActifs.Controls.Add(pieChartActifs);
@@ -103,25 +98,44 @@ namespace Investissement
             this.panelPatrimoine.SetColumnSpan(lineChartPatrimoine, 2);
             lineChartPatrimoine.Dock = DockStyle.Fill;
 
-            this.afficherValeurTotaleInvestit();
+            this.afficherLineGraphiqueValeurTotaleInvestit();
+            this.afficherValeurPatrimoineActuel();
+            this.afficherPieChartActifs();
         }
 
 
         /*METHODES*/
         public void majDonnees(object sender, EventArgs e)
         {
-            this.afficherValeurTotaleInvestit();
+            this.afficherLineGraphiqueValeurTotaleInvestit();
+            this.afficherValeurPatrimoineActuel();
+            this.afficherPieChartActifs();
         }
 
-        private void afficherValeurTotaleInvestit()
+        private void afficherValeurPatrimoineActuel()
+        {
+            this.labelValeurPatrimoineTotal.Text = $"{transactionController.getValeurTotalePatrimoine()} €";
+        }
+
+        private void afficherLineGraphiqueValeurTotaleInvestit()
         {
             //this.labelValeurPatrimoineTotal.Text = $"{transactionController.calculerValeurTotaleInvestit()} €";
-            serieValeurInvestit.Points.Clear();
-            foreach ((DateTime date,long quantite) in transactionController.getsommeQuantiteParDateInvest())
+            this.serieValeurInvestit.Points.Clear();
+            foreach ((DateTime date, long quantite) in transactionController.getsommeQuantiteParDateInvest())
             {
                 serieValeurInvestit.Points.AddXY(date.Day + "/" + date.Month, quantite);
             }
         }
 
+        private void afficherPieChartActifs()
+        {
+            this.serieActifs.Points.Clear();
+            long valeurTotalePatrimoine = transactionController.getValeurTotaleInvestit();
+            foreach ((string actif, long quantiteTotale) in transactionController.getListeActifQuantiteTotaleInvestit())
+            {
+                double proportion = Math.Round(((double)quantiteTotale / valeurTotalePatrimoine) * 100, 2);
+                serieActifs.Points.AddXY(actif + $"\n{proportion}%", proportion);
+            }
+        }
     }
 }
