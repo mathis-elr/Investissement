@@ -69,10 +69,11 @@ namespace Investissement
         {
             try
             {
-                string insertionActif = "INSERT INTO Actif VALUES(@nom,@type,@ISIN,@risque);";
+                string insertionActif = "INSERT INTO Actif VALUES(@nom,@symbole,@type,@ISIN,@risque);";
                 using (var commandInsertionActif = new SQLiteCommand(insertionActif, this.maBDD.connexion))
                 {
                     commandInsertionActif.Parameters.AddWithValue("@nom", actif.nom);
+                    commandInsertionActif.Parameters.AddWithValue("@symbole", actif.symbole);
                     commandInsertionActif.Parameters.AddWithValue("@type", actif.type);
                     commandInsertionActif.Parameters.AddWithValue("@ISIN", actif.isin);
                     commandInsertionActif.Parameters.AddWithValue("@risque", actif.risque);

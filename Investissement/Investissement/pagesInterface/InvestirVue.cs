@@ -125,9 +125,9 @@ namespace Investissement
         private void configurerGridAffichageActifs()
         {
             this.gridActifs.Columns.Clear();
-            this.gridActifs.Columns.Add("Nom", "Nom actif");
-            this.gridActifs.Columns.Add("quantite", "quantite (€)");
-            this.gridActifs.Columns.Add("prix", "prix (€)");
+            this.gridActifs.Columns.Add("Nom", "actif");
+            this.gridActifs.Columns.Add("nombre", "nombre d'actifs");
+            this.gridActifs.Columns.Add("prix", "prix EUR");
             this.gridActifs.Columns[0].ReadOnly = true;
             this.gridActifs.AllowUserToAddRows = false;
         }
@@ -284,12 +284,13 @@ namespace Investissement
         /*ACTIONS BOUTONS*/
         private void ajoutActif()
         {
-            Actif nvActif = new Actif(this.inputNomActif.Text, this.inputTypeActif.Text, this.inputISINActif.Text, this.inputRisqueActif.Text);
+            Actif nvActif = new Actif(this.inputNomActif.Text, this.inputSymboleActif.Text, this.inputTypeActif.Text, this.inputISINActif.Text, this.inputRisqueActif.Text);
             try
             {
                 actifController.ajoutActif(nvActif);
 
                 this.inputNomActif.Clear();
+                this.inputSymboleActif.Clear();
                 this.inputTypeActif.Clear();
                 this.inputISINActif.Clear();
                 this.inputRisqueActif.Clear();
@@ -458,8 +459,8 @@ namespace Investissement
 
                 if (string.IsNullOrEmpty(quantiteString) && string.IsNullOrEmpty(prixString)) { continue; }
 
-                bool quantiteOk = long.TryParse(quantiteString, out long quantiteLong);
-                bool prixOk = long.TryParse(prixString, out long prixLong);
+                bool quantiteOk = double.TryParse(quantiteString, out double quantiteLong);
+                bool prixOk = double.TryParse(prixString, out double prixLong);
                 if (!quantiteOk || !prixOk)
                 {
                     if (((DataRowView)comboBoxModelesInvest.SelectedItem)["nom"].ToString() != "liste actifs")
@@ -468,14 +469,14 @@ namespace Investissement
                     }
                     else
                     {
-                        MessageBox.Show("entier attendu pour le prix et la quantite des actifs choisis", "Erreur Transaction Invest");
+                        MessageBox.Show("double attendu pour le prix et la quantite des actifs choisis", "Erreur Transaction Invest");
                     }
                     return;
                 }
             }
 
             DateTime date = this.dateInvest.Value;
-            long sommeQuantite = 0;
+            double sommeQuantite = 0;
             foreach (DataGridViewRow transaction in this.gridActifs.Rows)
             {
                 string quantiteString = transaction.Cells[1].Value?.ToString();
@@ -484,8 +485,8 @@ namespace Investissement
                 if (string.IsNullOrEmpty(quantiteString) || string.IsNullOrEmpty(prixString)) { continue; }
                 
                 string actif = transaction.Cells[0].Value.ToString();
-                long quantite = long.Parse(quantiteString);
-                long prix = long.Parse(prixString);
+                double quantite = double.Parse(quantiteString);
+                double prix = double.Parse(prixString);
                 sommeQuantite += quantite;
 
                 Transaction nvltransaction = new Transaction(date, actif, quantite, prix);

@@ -9,13 +9,13 @@ namespace Investissement
         public long id { get; set; }
         public DateTime date { get; set; }
         public string actif { get; set; }
-        public long quantite { get; set; }
-        public long prix { get; set; }
+        public double quantite { get; set; }
+        public double prix { get; set; }
 
 
 
         /*CONSTRUCTEUR*/
-        public Transaction(DateTime date, string actif, long quantite, long prix)
+        public Transaction(DateTime date, string actif, double quantite, double prix)
         {
             this.date = date;
             this.actif = actif;

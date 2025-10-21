@@ -30,6 +30,8 @@
         {
             this.labelChoixModele = new MetroFramework.Controls.MetroLabel();
             this.panelAjoutActif = new System.Windows.Forms.TableLayoutPanel();
+            this.inputSymboleActif = new MetroFramework.Controls.MetroTextBox();
+            this.labelSymbole = new MetroFramework.Controls.MetroLabel();
             this.inputNomActif = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
@@ -91,24 +93,69 @@
             this.panelAjoutActif.ColumnCount = 2;
             this.panelAjoutActif.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.panelAjoutActif.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 301F));
+            this.panelAjoutActif.Controls.Add(this.inputSymboleActif, 1, 1);
+            this.panelAjoutActif.Controls.Add(this.labelSymbole, 0, 1);
             this.panelAjoutActif.Controls.Add(this.inputNomActif, 1, 0);
-            this.panelAjoutActif.Controls.Add(this.metroLabel4, 0, 3);
-            this.panelAjoutActif.Controls.Add(this.metroLabel3, 0, 2);
-            this.panelAjoutActif.Controls.Add(this.metroLabel2, 0, 1);
+            this.panelAjoutActif.Controls.Add(this.metroLabel4, 0, 4);
+            this.panelAjoutActif.Controls.Add(this.metroLabel3, 0, 3);
+            this.panelAjoutActif.Controls.Add(this.metroLabel2, 0, 2);
             this.panelAjoutActif.Controls.Add(this.metroLabel1, 0, 0);
-            this.panelAjoutActif.Controls.Add(this.inputRisqueActif, 1, 3);
-            this.panelAjoutActif.Controls.Add(this.inputISINActif, 1, 2);
-            this.panelAjoutActif.Controls.Add(this.inputTypeActif, 1, 1);
+            this.panelAjoutActif.Controls.Add(this.inputRisqueActif, 1, 4);
+            this.panelAjoutActif.Controls.Add(this.inputISINActif, 1, 3);
+            this.panelAjoutActif.Controls.Add(this.inputTypeActif, 1, 2);
             this.panelAjoutActif.Location = new System.Drawing.Point(705, 103);
             this.panelAjoutActif.Name = "panelAjoutActif";
-            this.panelAjoutActif.RowCount = 4;
+            this.panelAjoutActif.RowCount = 5;
             this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
-            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.panelAjoutActif.Size = new System.Drawing.Size(387, 157);
+            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.panelAjoutActif.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            this.panelAjoutActif.Size = new System.Drawing.Size(387, 160);
             this.panelAjoutActif.TabIndex = 14;
             this.panelAjoutActif.Visible = false;
+            // 
+            // inputSymboleActif
+            // 
+            // 
+            // 
+            // 
+            this.inputSymboleActif.CustomButton.Image = null;
+            this.inputSymboleActif.CustomButton.Location = new System.Drawing.Point(271, 1);
+            this.inputSymboleActif.CustomButton.Name = "";
+            this.inputSymboleActif.CustomButton.Size = new System.Drawing.Size(23, 23);
+            this.inputSymboleActif.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.inputSymboleActif.CustomButton.TabIndex = 1;
+            this.inputSymboleActif.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.inputSymboleActif.CustomButton.UseSelectable = true;
+            this.inputSymboleActif.CustomButton.Visible = false;
+            this.inputSymboleActif.Lines = new string[0];
+            this.inputSymboleActif.Location = new System.Drawing.Point(89, 36);
+            this.inputSymboleActif.MaxLength = 32767;
+            this.inputSymboleActif.Name = "inputSymboleActif";
+            this.inputSymboleActif.PasswordChar = '\0';
+            this.inputSymboleActif.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.inputSymboleActif.SelectedText = "";
+            this.inputSymboleActif.SelectionLength = 0;
+            this.inputSymboleActif.SelectionStart = 0;
+            this.inputSymboleActif.ShortcutsEnabled = true;
+            this.inputSymboleActif.Size = new System.Drawing.Size(295, 25);
+            this.inputSymboleActif.TabIndex = 17;
+            this.inputSymboleActif.UseSelectable = true;
+            this.inputSymboleActif.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.inputSymboleActif.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            // 
+            // labelSymbole
+            // 
+            this.labelSymbole.AutoSize = true;
+            this.labelSymbole.ForeColor = System.Drawing.Color.White;
+            this.labelSymbole.Location = new System.Drawing.Point(3, 33);
+            this.labelSymbole.Name = "labelSymbole";
+            this.labelSymbole.Size = new System.Drawing.Size(62, 20);
+            this.labelSymbole.TabIndex = 23;
+            this.labelSymbole.Text = "Symbole";
+            this.labelSymbole.UseCustomBackColor = true;
+            this.labelSymbole.UseCustomForeColor = true;
             // 
             // inputNomActif
             // 
@@ -144,7 +191,7 @@
             // 
             this.metroLabel4.AutoSize = true;
             this.metroLabel4.ForeColor = System.Drawing.Color.White;
-            this.metroLabel4.Location = new System.Drawing.Point(3, 112);
+            this.metroLabel4.Location = new System.Drawing.Point(3, 129);
             this.metroLabel4.Name = "metroLabel4";
             this.metroLabel4.Size = new System.Drawing.Size(50, 20);
             this.metroLabel4.TabIndex = 22;
@@ -156,7 +203,7 @@
             // 
             this.metroLabel3.AutoSize = true;
             this.metroLabel3.ForeColor = System.Drawing.Color.White;
-            this.metroLabel3.Location = new System.Drawing.Point(3, 73);
+            this.metroLabel3.Location = new System.Drawing.Point(3, 97);
             this.metroLabel3.Name = "metroLabel3";
             this.metroLabel3.Size = new System.Drawing.Size(33, 20);
             this.metroLabel3.TabIndex = 21;
@@ -168,7 +215,7 @@
             // 
             this.metroLabel2.AutoSize = true;
             this.metroLabel2.ForeColor = System.Drawing.Color.White;
-            this.metroLabel2.Location = new System.Drawing.Point(3, 37);
+            this.metroLabel2.Location = new System.Drawing.Point(3, 65);
             this.metroLabel2.Name = "metroLabel2";
             this.metroLabel2.Size = new System.Drawing.Size(39, 20);
             this.metroLabel2.TabIndex = 20;
@@ -203,7 +250,7 @@
             this.inputRisqueActif.CustomButton.UseSelectable = true;
             this.inputRisqueActif.CustomButton.Visible = false;
             this.inputRisqueActif.Lines = new string[0];
-            this.inputRisqueActif.Location = new System.Drawing.Point(89, 115);
+            this.inputRisqueActif.Location = new System.Drawing.Point(89, 132);
             this.inputRisqueActif.MaxLength = 32767;
             this.inputRisqueActif.Name = "inputRisqueActif";
             this.inputRisqueActif.PasswordChar = '\0';
@@ -233,7 +280,7 @@
             this.inputISINActif.CustomButton.UseSelectable = true;
             this.inputISINActif.CustomButton.Visible = false;
             this.inputISINActif.Lines = new string[0];
-            this.inputISINActif.Location = new System.Drawing.Point(89, 76);
+            this.inputISINActif.Location = new System.Drawing.Point(89, 100);
             this.inputISINActif.MaxLength = 32767;
             this.inputISINActif.Name = "inputISINActif";
             this.inputISINActif.PasswordChar = '\0';
@@ -263,7 +310,7 @@
             this.inputTypeActif.CustomButton.UseSelectable = true;
             this.inputTypeActif.CustomButton.Visible = false;
             this.inputTypeActif.Lines = new string[0];
-            this.inputTypeActif.Location = new System.Drawing.Point(89, 40);
+            this.inputTypeActif.Location = new System.Drawing.Point(89, 68);
             this.inputTypeActif.MaxLength = 32767;
             this.inputTypeActif.Name = "inputTypeActif";
             this.inputTypeActif.PasswordChar = '\0';
@@ -344,12 +391,12 @@
             this.panelAjoutModele.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 192F));
             this.panelAjoutModele.Controls.Add(this.inputDescriptionModeleInvest, 0, 1);
             this.panelAjoutModele.Controls.Add(this.inputNomModeleInvest, 0, 0);
-            this.panelAjoutModele.Location = new System.Drawing.Point(678, 106);
+            this.panelAjoutModele.Location = new System.Drawing.Point(681, 106);
             this.panelAjoutModele.Name = "panelAjoutModele";
             this.panelAjoutModele.RowCount = 2;
             this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35.05155F));
             this.panelAjoutModele.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 64.94846F));
-            this.panelAjoutModele.Size = new System.Drawing.Size(433, 157);
+            this.panelAjoutModele.Size = new System.Drawing.Size(430, 157);
             this.panelAjoutModele.TabIndex = 11;
             this.panelAjoutModele.Visible = false;
             // 
@@ -422,7 +469,7 @@
             // panelLigne1
             // 
             this.panelLigne1.BackColor = System.Drawing.Color.White;
-            this.panelLigne1.Location = new System.Drawing.Point(649, 11);
+            this.panelLigne1.Location = new System.Drawing.Point(658, 11);
             this.panelLigne1.Name = "panelLigne1";
             this.panelLigne1.Size = new System.Drawing.Size(1, 350);
             this.panelLigne1.TabIndex = 8;
@@ -479,12 +526,12 @@
             this.layoutActifs.Controls.Add(this.btnSupression, 0, 1);
             this.layoutActifs.Controls.Add(this.gridActifs, 1, 0);
             this.layoutActifs.Controls.Add(this.btnInterfaceAjoutActif, 0, 0);
-            this.layoutActifs.Location = new System.Drawing.Point(23, 28);
+            this.layoutActifs.Location = new System.Drawing.Point(20, 28);
             this.layoutActifs.Name = "layoutActifs";
             this.layoutActifs.RowCount = 2;
             this.layoutActifs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.29825F));
             this.layoutActifs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.70175F));
-            this.layoutActifs.Size = new System.Drawing.Size(590, 251);
+            this.layoutActifs.Size = new System.Drawing.Size(610, 251);
             this.layoutActifs.TabIndex = 5;
             // 
             // btnSupression
@@ -509,12 +556,12 @@
             this.gridActifs.BackgroundColor = System.Drawing.Color.White;
             this.gridActifs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridActifs.GridColor = System.Drawing.Color.Black;
-            this.gridActifs.Location = new System.Drawing.Point(48, 3);
+            this.gridActifs.Location = new System.Drawing.Point(50, 3);
             this.gridActifs.Name = "gridActifs";
             this.gridActifs.RowHeadersWidth = 51;
             this.layoutActifs.SetRowSpan(this.gridActifs, 2);
             this.gridActifs.RowTemplate.Height = 24;
-            this.gridActifs.Size = new System.Drawing.Size(539, 245);
+            this.gridActifs.Size = new System.Drawing.Size(557, 245);
             this.gridActifs.TabIndex = 2;
             // 
             // btnInterfaceAjoutActif
@@ -537,7 +584,7 @@
             this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 84.84849F));
             this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.15152F));
             this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52F));
-            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 83F));
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 85F));
             this.pannelChoixModeles.Controls.Add(this.btnInterfaceEditerModeleInvest, 3, 0);
             this.pannelChoixModeles.Controls.Add(this.btnSupprModele, 2, 0);
             this.pannelChoixModeles.Controls.Add(this.labelDescrModele, 0, 2);
@@ -559,7 +606,7 @@
             this.btnInterfaceEditerModeleInvest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.btnInterfaceEditerModeleInvest.Enabled = false;
             this.btnInterfaceEditerModeleInvest.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnInterfaceEditerModeleInvest.Location = new System.Drawing.Point(352, 3);
+            this.btnInterfaceEditerModeleInvest.Location = new System.Drawing.Point(350, 3);
             this.btnInterfaceEditerModeleInvest.Name = "btnInterfaceEditerModeleInvest";
             this.btnInterfaceEditerModeleInvest.Size = new System.Drawing.Size(50, 35);
             this.btnInterfaceEditerModeleInvest.TabIndex = 12;
@@ -574,7 +621,7 @@
             this.btnSupprModele.BackColor = System.Drawing.Color.Red;
             this.btnSupprModele.Enabled = false;
             this.btnSupprModele.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnSupprModele.Location = new System.Drawing.Point(300, 3);
+            this.btnSupprModele.Location = new System.Drawing.Point(298, 3);
             this.btnSupprModele.Name = "btnSupprModele";
             this.btnSupprModele.Size = new System.Drawing.Size(35, 35);
             this.btnSupprModele.TabIndex = 9;
@@ -595,7 +642,7 @@
             this.labelDescrModele.ForeColor = System.Drawing.Color.White;
             this.labelDescrModele.Location = new System.Drawing.Point(3, 75);
             this.labelDescrModele.Name = "labelDescrModele";
-            this.labelDescrModele.Size = new System.Drawing.Size(246, 85);
+            this.labelDescrModele.Size = new System.Drawing.Size(245, 85);
             this.labelDescrModele.TabIndex = 6;
             this.labelDescrModele.Text = "aucun modèle sélectionné";
             this.labelDescrModele.UseCustomBackColor = true;
@@ -613,7 +660,7 @@
             this.labelTitreDescrModele.ForeColor = System.Drawing.Color.White;
             this.labelTitreDescrModele.Location = new System.Drawing.Point(3, 43);
             this.labelTitreDescrModele.Name = "labelTitreDescrModele";
-            this.labelTitreDescrModele.Size = new System.Drawing.Size(246, 32);
+            this.labelTitreDescrModele.Size = new System.Drawing.Size(245, 32);
             this.labelTitreDescrModele.TabIndex = 5;
             this.labelTitreDescrModele.Text = "description modele";
             this.labelTitreDescrModele.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -625,7 +672,7 @@
             // 
             this.btnInterfaceCreationModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.btnInterfaceCreationModel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnInterfaceCreationModel.Location = new System.Drawing.Point(255, 3);
+            this.btnInterfaceCreationModel.Location = new System.Drawing.Point(254, 3);
             this.btnInterfaceCreationModel.Name = "btnInterfaceCreationModel";
             this.btnInterfaceCreationModel.Size = new System.Drawing.Size(35, 35);
             this.btnInterfaceCreationModel.TabIndex = 5;
@@ -641,7 +688,7 @@
             this.comboBoxModelesInvest.ItemHeight = 24;
             this.comboBoxModelesInvest.Location = new System.Drawing.Point(3, 3);
             this.comboBoxModelesInvest.Name = "comboBoxModelesInvest";
-            this.comboBoxModelesInvest.Size = new System.Drawing.Size(246, 30);
+            this.comboBoxModelesInvest.Size = new System.Drawing.Size(245, 30);
             this.comboBoxModelesInvest.TabIndex = 3;
             this.comboBoxModelesInvest.UseSelectable = true;
             // 
@@ -711,5 +758,7 @@
         private MetroFramework.Controls.MetroTextBox inputTypeActif;
         private MetroFramework.Controls.MetroTextBox inputNomActif;
         private MetroFramework.Controls.MetroLabel labelChoixModele;
+        private MetroFramework.Controls.MetroTextBox inputSymboleActif;
+        private MetroFramework.Controls.MetroLabel labelSymbole;
     }
 }
