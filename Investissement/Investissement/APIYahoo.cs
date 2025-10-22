@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using YahooFinanceApi;
+using System.Linq;
+using System;
+
 
 namespace Investissement
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using YahooFinanceApi; // Le package NuGet que tu viens d'installer
-
     public class ApiYahoo
     {
         /// <summary>

@@ -97,31 +97,33 @@ namespace Investissement
             this.panelPatrimoine.Controls.Add(lineChartPatrimoine, 0, 3);
             this.panelPatrimoine.SetColumnSpan(lineChartPatrimoine, 2);
             lineChartPatrimoine.Dock = DockStyle.Fill;
-
-            this.afficherLineGraphiqueValeurTotaleInvestitParDate();
-            this.afficherPieChartActifs();
-            this.afficherPieChartTypeActifs();
         }
 
 
         /*METHODES*/
         public async void majDonnees(object sender, EventArgs e)
         {
-            this.afficherLineGraphiqueValeurTotaleInvestitParDate();
-            this.afficherPieChartActifs();
-            this.afficherPieChartTypeActifs();
+            this.Cursor = Cursors.WaitCursor;
 
-            await this.afficherValeurPatrimoineActuel();
+            await transactionController.recupererPrixActifsActuel();
+            //↓ mise a jour en consequence ↓
+            this.afficherLineGraphiqueValeurTotaleInvestitParDate();
+            this.afficherPieChartProportionParActifs();
+            this.afficherPieChartProportionParTypeActifs();
+            this.afficherValeurPatrimoineActuel();
+
+            this.Cursor = Cursors.Default;
         }
 
-        private async Task afficherValeurPatrimoineActuel()
+        private void afficherValeurPatrimoineActuel()
         {
-            double valeur = await transactionController.getValeurTotalePatrimoineActuel();
-            this.labelValeurPatrimoineTotal.Text = $"{Math.Round(valeur,1)} €";
+            double valeur = transactionController.getValeurTotalePatrimoineActuel();
+            this.labelValeurPatrimoineTotal.Text = $"{valeur} €";
         }
 
         private void afficherLineGraphiqueValeurTotaleInvestitParDate()
         {
+            //a refaire car la quantite n'est pas estimé en € mais en quantite d'actif
             this.serieLineQuantiteInvestit.Points.Clear();
             foreach ((DateTime date, double quantite) in transactionController.getListeQuantiteTotaleInvestitParDate())
             {
@@ -129,26 +131,26 @@ namespace Investissement
             }
         }
 
-        private void afficherPieChartActifs()
+        private void afficherPieChartProportionParActifs()
         {
             this.seriePieChartActifs.Points.Clear();
-            long valeurTotalePatrimoine = transactionController.getValeurTotaleInvestit();
+            double valeurTotalePatrimoine = transactionController.getValeurTotaleInvestit();
             if (valeurTotalePatrimoine == 0) { Console.WriteLine("division 0");  return; }
-            foreach ((string actif, double quantiteTotale) in transactionController.getListePaireQuantiteTotaleInvestitParActif())
+            foreach ((string actif, double quantiteTotaleEnEUR) in transactionController.getListePaireQuantiteEnEURTotaleInvestitParActif())
             {
-                double proportion = Math.Round(quantiteTotale / valeurTotalePatrimoine * 100, 2);
+                double proportion = transactionController.getProportion(quantiteTotaleEnEUR, valeurTotalePatrimoine);
                 this.seriePieChartActifs.Points.AddXY(actif + $"\n{proportion}%", proportion);
             }
         }
 
-        private void afficherPieChartTypeActifs()
+        private void afficherPieChartProportionParTypeActifs()
         {
             this.seriePieChartTypeActif.Points.Clear();
-            long nbTransaction = transactionController.getNombreTransaction();
+            double nbTransaction = transactionController.getNombreTransaction();
             if (nbTransaction == 0) { Console.WriteLine("division 0"); return; }
-            foreach ((string typeActif, long nombre) in transactionController.getListePaireNombreTransactionParTypeActif())
+            foreach ((string typeActif, double nombre) in transactionController.getListePaireNombreTransactionParTypeActif())
             {
-                double proportion = Math.Round(((double)nombre/ nbTransaction) * 100, 2);
+                double proportion = transactionController.getProportion(nombre, nbTransaction);
                 this.seriePieChartTypeActif.Points.AddXY(typeActif + $"\n{proportion}%", proportion);
             }
         }

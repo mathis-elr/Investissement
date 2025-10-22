@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TwelveDataSharp.Api.ResponseModels;
 
 namespace Investissement
 {
@@ -8,6 +9,7 @@ namespace Investissement
     {
         /*ATTRIBUTS*/
         TransactionBDD transactionbdd;
+        Dictionary<string, double> dictionnairePrixActif;
 
         /*CONSTRUCTEUR*/
         public TransactionController(BDD bdd)
@@ -21,9 +23,9 @@ namespace Investissement
             return transactionbdd.getNombreTransaction();
         }
 
-        public List<double> getListeQuantiteParTransaction()
+        public List<(double,double)> getPaireQuantitePrixParTransaction()
         {
-            return transactionbdd.getListeQuantiteParTransaction();
+            return transactionbdd.getPaireQuantitePrixParTransaction();
         }
 
         public List<(DateTime,double)> getListeQuantiteTotaleInvestitParDate()
@@ -36,9 +38,9 @@ namespace Investissement
             return transactionbdd.getQuantiteTotaleDetenuDunActif(nomActif);
         }
 
-        public List<(string, double)> getListePaireQuantiteTotaleInvestitParActif()
+        public List<(string, double)> getListePaireQuantiteEnEURTotaleInvestitParActif()
         {
-            return transactionbdd.getListePaireQuantiteTotaleInvestitParActif();
+            return transactionbdd.getListePaireQuantiteEnEURTotaleInvestitParActif();
         }
 
         public List<(string, long)> getListePaireNombreTransactionParTypeActif()
@@ -46,40 +48,44 @@ namespace Investissement
             return transactionbdd.getListePaireNombreTransactionParTypeActif();
         }
 
-        public long getValeurTotaleInvestit()
+        public double getValeurTotaleInvestit()
         {
-            long valeurTotaleInvestit = 0;
-            foreach (long quantite in this.getListeQuantiteParTransaction())
+            double valeurTotaleInvestit = 0;
+            foreach ((double quantite, double prix) in this.getPaireQuantitePrixParTransaction())
             {
-                valeurTotaleInvestit += quantite;
+                valeurTotaleInvestit += quantite * prix;
             }
-            return valeurTotaleInvestit;
+            return Math.Round(valeurTotaleInvestit,1);
         }
 
-        public async Task<double> getValeurTotalePatrimoineActuel()
+        public double getValeurTotalePatrimoineActuel()
         {
-            List<string> listeSymboles = transactionbdd.getListeSymboleActif();
-            //Dictionary<string, double> dictionnaireActifPrix = await APIFinnhub.getPrixActifsInvestit(listeSymboles);
-            Dictionary<string, double> dictionnaireActifPrix = await ApiYahoo.GetPrixActifsInvestit(listeSymboles);
-
             double valeurTotalePatrimoine = 0;
             foreach ((string nomActif, string symboleActif) in transactionbdd.getListePaireNomSymboleActif())
             {
-                // On récupère la quantité
                 double quantite = transactionbdd.getQuantiteTotaleDetenuDunActif(nomActif);
 
-                // On récupère le prix depuis le dictionnaire 
                 double prix = 0;
-                if (dictionnaireActifPrix.ContainsKey(symboleActif))
+                if (this.dictionnairePrixActif.ContainsKey(symboleActif))
                 {
-                    prix = dictionnaireActifPrix[symboleActif];
+                    prix = this.dictionnairePrixActif[symboleActif];
                 }
 
-                // On additionne au total
                 Console.WriteLine($"{quantite}, {prix}");
                 valeurTotalePatrimoine += quantite * prix;
             }
-            return valeurTotalePatrimoine;
+            return Math.Round(valeurTotalePatrimoine, 1);
+        }
+
+        public double getProportion(double part, double partTotale)
+        {
+            return Math.Round(part/partTotale * 100, 2);
+        }
+
+        public async Task recupererPrixActifsActuel()
+        {
+            List<string> listeSymboles = transactionbdd.getListeSymboleActif();
+            this.dictionnairePrixActif = await GestionnairePrixActifs.GetPrixActifs(listeSymboles);
         }
 
 
@@ -89,9 +95,9 @@ namespace Investissement
             transactionbdd.ajouterTransaction(nvlTransaction);
         }
 
-        public void ajouterInvestissementTotalParDate(DateTime date, double sommeQuantite)
+        public void ajouterInvestissementTotalParDate(DateTime date, double quantiteTotaleEnEUR)
         {
-            transactionbdd.ajouterInvestissementTotalParDate(date,sommeQuantite);
+            transactionbdd.ajouterInvestissementTotalParDate(date, quantiteTotaleEnEUR);
         }
     }
 }

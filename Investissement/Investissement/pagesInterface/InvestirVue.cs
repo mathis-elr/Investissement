@@ -476,7 +476,7 @@ namespace Investissement
             }
 
             DateTime date = this.dateInvest.Value;
-            double sommeQuantite = 0;
+            double quantiteTotaleEnEUR = 0;
             foreach (DataGridViewRow transaction in this.gridActifs.Rows)
             {
                 string quantiteString = transaction.Cells[1].Value?.ToString();
@@ -487,7 +487,7 @@ namespace Investissement
                 string actif = transaction.Cells[0].Value.ToString();
                 double quantite = double.Parse(quantiteString);
                 double prix = double.Parse(prixString);
-                sommeQuantite += quantite;
+                quantiteTotaleEnEUR += quantite*prix;
 
                 Transaction nvltransaction = new Transaction(date, actif, quantite, prix);
                 try
@@ -500,7 +500,7 @@ namespace Investissement
                 }
             }
 
-            transactionController.ajouterInvestissementTotalParDate(date, sommeQuantite);
+            transactionController.ajouterInvestissementTotalParDate(date, quantiteTotaleEnEUR);
 
             this.afficherActifs();
             MessageBox.Show("Investissement effectué avec succès", "Investissement");

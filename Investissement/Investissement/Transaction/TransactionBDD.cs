@@ -38,18 +38,18 @@ namespace Investissement
             return nombreTransaction;
         }
 
-        public List<double> getListeQuantiteParTransaction()
+        public List<(double,double)> getPaireQuantitePrixParTransaction()
         {
-            List<double> listeQuantiteTransaction = new List<double>();
+            List<(double, double)> paireQuantitePrixTransaction = new List<(double, double)>();
             try
             {
-                string selectionQuantiteTransaction = "SELECT quantite FROM [Transaction];";
-                using (var commandSelectionQuantiteTransaction = new SQLiteCommand(selectionQuantiteTransaction, this.maBDD.connexion))
+                string selectionQuantitePrixTransaction = "SELECT quantite, prix FROM [Transaction];";
+                using (var commandSelectionQuantitePrixTransaction = new SQLiteCommand(selectionQuantitePrixTransaction, this.maBDD.connexion))
                 {
-                    var quantiteTransaction = commandSelectionQuantiteTransaction.ExecuteReader();
+                    var quantiteTransaction = commandSelectionQuantitePrixTransaction.ExecuteReader();
                     while(quantiteTransaction.Read())
                     {
-                        listeQuantiteTransaction.Add(quantiteTransaction.GetDouble(0));
+                        paireQuantitePrixTransaction.Add((quantiteTransaction.GetDouble(0), quantiteTransaction.GetDouble(1)));
                     }
                 }
             }
@@ -57,7 +57,7 @@ namespace Investissement
             {
                 Console.Error.WriteLine($"Erreur selection quantite transactions SQLite : {ex.Message}");
             }
-            return listeQuantiteTransaction;
+            return paireQuantitePrixTransaction;
         }
 
         public List<(DateTime,double)> getListeQuantiteTotaleInvestitParDate()
@@ -146,12 +146,12 @@ namespace Investissement
             return listeNomsEtSymboleActif;
         }
 
-        public List<(string,double)> getListePaireQuantiteTotaleInvestitParActif()
+        public List<(string,double)> getListePaireQuantiteEnEURTotaleInvestitParActif()
         {
             List<(string,double)> listeActifsQuantiteTotaleInvestit = new List<(string,double)>();
             try
             {
-                string selectionActifsQuantiteTotaleInvestit = "SELECT actif,SUM(quantite) FROM [Transaction] GROUP BY actif";
+                string selectionActifsQuantiteTotaleInvestit = "SELECT actif,SUM(quantite*prix) FROM [Transaction] GROUP BY actif";
                 using (var commandSelectionActifsQuantiteTotaleInvestit = new SQLiteCommand(selectionActifsQuantiteTotaleInvestit, this.maBDD.connexion))
                 {
                     var actifQuantiteTotaleInvestit = commandSelectionActifsQuantiteTotaleInvestit.ExecuteReader();
@@ -214,21 +214,21 @@ namespace Investissement
             }
         }
 
-        public void ajouterInvestissementTotalParDate(DateTime date, double sommeQuantite)
+        public void ajouterInvestissementTotalParDate(DateTime date, double quantiteTotaleEnEUR)
         {
             try
             {
-                double quantiteDernierInvest =  0;
-                string selectionQuantiteDernierInvest = "SELECT quantite FROM InvestissementTotalParDate ORDER BY date DESC LIMIT 1;"; //entre crochets car Transaction est un mot réservé en sql
+                double quantiteTotaleEURDernierInvest =  0;
+                string selectionQuantiteDernierInvest = "SELECT quantite FROM InvestissementTotalParDate ORDER BY date DESC LIMIT 1;";
                 using (var commandSelectionQuantiteDernierInvest = new SQLiteCommand(selectionQuantiteDernierInvest, this.maBDD.connexion))
                 {
-                    quantiteDernierInvest = (double)commandSelectionQuantiteDernierInvest.ExecuteScalar();
+                    quantiteTotaleEURDernierInvest = (double)commandSelectionQuantiteDernierInvest.ExecuteScalar();
                 }
 
-                string query = "INSERT INTO InvestissementTotalParDate (date,quantite) VALUES (@date,@sommeQuantite);"; //entre crochets car Transaction est un mot réservé en sql
+                string query = "INSERT INTO InvestissementTotalParDate (date,quantite) VALUES (@date,@sommeQuantite);"; 
                 using (var command = new SQLiteCommand(query, this.maBDD.connexion))
                 {
-                    double totalInvest = quantiteDernierInvest + sommeQuantite;
+                    double totalInvest = quantiteTotaleEURDernierInvest + quantiteTotaleEnEUR;
                     command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
                     command.Parameters.AddWithValue("@sommeQuantite", totalInvest);
 
