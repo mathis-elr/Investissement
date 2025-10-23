@@ -60,12 +60,12 @@ namespace Investissement
             return paireQuantitePrixTransaction;
         }
 
-        public List<(DateTime,double)> getListeQuantiteTotaleInvestitParDate()
+        public List<(DateTime,double)> getListeQuantiteTotaleInvestitEURParDate()
         {
             List<(DateTime, double)> listeQuantiteTransactionsParDateInvest = new List<(DateTime, double)>();
             try
             {
-                string selectionQuantiteTransactionParDate = "SELECT date, quantite FROM InvestissementTotalParDate ORDER BY date;";
+                string selectionQuantiteTransactionParDate = "SELECT date, quantiteEUR FROM InvestissementTotalParDate ORDER BY date;";
                 using (var commandSelectionQuantiteTransactionParDate = new SQLiteCommand(selectionQuantiteTransactionParDate, this.maBDD.connexion))
                 {
                     var quantiteTransactionParDate = commandSelectionQuantiteTransactionParDate.ExecuteReader();
@@ -146,18 +146,18 @@ namespace Investissement
             return listeNomsEtSymboleActif;
         }
 
-        public List<(string,double)> getListePaireQuantiteEnEURTotaleInvestitParActif()
+        public List<(string actif,string symbole,string type,double quantiteTotale)> getListeQuantiteTotaleInvestitParActif()
         {
-            List<(string,double)> listeActifsQuantiteTotaleInvestit = new List<(string,double)>();
+            List<(string,string,string,double)> listeActifsQuantiteTotaleInvestit = new List<(string,string,string,double)>();
             try
             {
-                string selectionActifsQuantiteTotaleInvestit = "SELECT actif,SUM(quantite*prix) FROM [Transaction] GROUP BY actif";
+                string selectionActifsQuantiteTotaleInvestit = "SELECT actif, symbole, type,SUM(quantite) FROM [Transaction] JOIN Actif ON Actif.nom = [Transaction].actif GROUP BY actif";
                 using (var commandSelectionActifsQuantiteTotaleInvestit = new SQLiteCommand(selectionActifsQuantiteTotaleInvestit, this.maBDD.connexion))
                 {
                     var actifQuantiteTotaleInvestit = commandSelectionActifsQuantiteTotaleInvestit.ExecuteReader();
                     while (actifQuantiteTotaleInvestit.Read())
                     {
-                        listeActifsQuantiteTotaleInvestit.Add((actifQuantiteTotaleInvestit.GetString(0), actifQuantiteTotaleInvestit.GetDouble(1)));
+                        listeActifsQuantiteTotaleInvestit.Add((actifQuantiteTotaleInvestit.GetString(0), actifQuantiteTotaleInvestit.GetString(1), actifQuantiteTotaleInvestit.GetString(2), actifQuantiteTotaleInvestit.GetDouble(3)));
                     }
                 }
             }
@@ -167,29 +167,6 @@ namespace Investissement
             }
             return listeActifsQuantiteTotaleInvestit;
         }
-
-        public List<(string,long)> getListePaireNombreTransactionParTypeActif()
-        {
-            List<(string, long)> listePaireNombreTransactionParTypeActif = new List<(string, long)>();
-            try
-            {
-                string selectionNombreTransactionParTypeActif = "SELECT Actif.type, COUNT([Transaction].id) FROM [Transaction] JOIN Actif ON Actif.nom = [Transaction].actif GROUP BY Actif.type;";
-                using (var commandSelectionNombreTransactionParTypeActif = new SQLiteCommand(selectionNombreTransactionParTypeActif, this.maBDD.connexion))
-                {
-                    var actifQuantiteTotaleInvestit = commandSelectionNombreTransactionParTypeActif.ExecuteReader();
-                    while (actifQuantiteTotaleInvestit.Read())
-                    {
-                        listePaireNombreTransactionParTypeActif.Add((actifQuantiteTotaleInvestit.GetString(0), actifQuantiteTotaleInvestit.GetInt64(1)));
-                    }
-                }
-            }
-            catch (SQLiteException ex)
-            {
-                Console.Error.WriteLine($"Erreur selection actif et quantiteTotale(somme des quantite par actif) transactions SQLite : {ex.Message}");
-            }
-            return listePaireNombreTransactionParTypeActif;
-        }
-
 
         /*METHODES*/
         public void ajouterTransaction(Transaction transaction)
@@ -219,13 +196,13 @@ namespace Investissement
             try
             {
                 double quantiteTotaleEURDernierInvest =  0;
-                string selectionQuantiteDernierInvest = "SELECT quantite FROM InvestissementTotalParDate ORDER BY date DESC LIMIT 1;";
+                string selectionQuantiteDernierInvest = "SELECT quantiteEUR FROM InvestissementTotalParDate ORDER BY date DESC LIMIT 1;";
                 using (var commandSelectionQuantiteDernierInvest = new SQLiteCommand(selectionQuantiteDernierInvest, this.maBDD.connexion))
                 {
                     quantiteTotaleEURDernierInvest = (double)commandSelectionQuantiteDernierInvest.ExecuteScalar();
                 }
 
-                string query = "INSERT INTO InvestissementTotalParDate (date,quantite) VALUES (@date,@sommeQuantite);"; 
+                string query = "INSERT INTO InvestissementTotalParDate (date,quantiteEUR) VALUES (@date,@sommeQuantite);"; 
                 using (var command = new SQLiteCommand(query, this.maBDD.connexion))
                 {
                     double totalInvest = quantiteTotaleEURDernierInvest + quantiteTotaleEnEUR;
@@ -233,6 +210,17 @@ namespace Investissement
                     command.Parameters.AddWithValue("@sommeQuantite", totalInvest);
 
                     command.ExecuteNonQuery();
+                }
+
+                string queryUpdate= "UPDATE InvestissementTotalParDate SET quantite = quantiteEUR + @ajoutQuantite WHERE date > @dateLimit;";
+
+                using (var commandUpdate = new SQLiteCommand(queryUpdate, this.maBDD.connexion))
+                {
+                    // @ajoutQuantite est la valeur que vous venez d'ajouter à l'historique
+                    commandUpdate.Parameters.AddWithValue("@ajoutQuantite", quantiteTotaleEnEUR);
+                    commandUpdate.Parameters.AddWithValue("@dateLimit", date);
+
+                    commandUpdate.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException ex)

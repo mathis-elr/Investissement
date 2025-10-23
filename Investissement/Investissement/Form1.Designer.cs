@@ -46,26 +46,26 @@
             this.panelTitre.Controls.Add(this.labelTitre);
             this.panelTitre.HorizontalScrollbarBarColor = true;
             this.panelTitre.HorizontalScrollbarHighlightOnWheel = false;
-            this.panelTitre.HorizontalScrollbarSize = 8;
-            this.panelTitre.Location = new System.Drawing.Point(-1, 3);
-            this.panelTitre.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panelTitre.HorizontalScrollbarSize = 10;
+            this.panelTitre.Location = new System.Drawing.Point(-1, 4);
+            this.panelTitre.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panelTitre.Name = "panelTitre";
-            this.panelTitre.Size = new System.Drawing.Size(866, 72);
+            this.panelTitre.Size = new System.Drawing.Size(1155, 89);
             this.panelTitre.TabIndex = 0;
             this.panelTitre.UseCustomBackColor = true;
             this.panelTitre.UseCustomForeColor = true;
             this.panelTitre.VerticalScrollbarBarColor = true;
             this.panelTitre.VerticalScrollbarHighlightOnWheel = false;
-            this.panelTitre.VerticalScrollbarSize = 8;
+            this.panelTitre.VerticalScrollbarSize = 11;
             // 
             // btnQuitter
             // 
             this.btnQuitter.BackColor = System.Drawing.Color.Red;
             this.btnQuitter.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnQuitter.Location = new System.Drawing.Point(809, 7);
-            this.btnQuitter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnQuitter.Location = new System.Drawing.Point(1079, 9);
+            this.btnQuitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnQuitter.Name = "btnQuitter";
-            this.btnQuitter.Size = new System.Drawing.Size(42, 46);
+            this.btnQuitter.Size = new System.Drawing.Size(56, 57);
             this.btnQuitter.TabIndex = 8;
             this.btnQuitter.Text = "x";
             this.btnQuitter.UseCustomBackColor = true;
@@ -78,10 +78,9 @@
             this.labelTitre.AutoSize = true;
             this.labelTitre.Font = new System.Drawing.Font("Modern No. 20", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTitre.ForeColor = System.Drawing.Color.White;
-            this.labelTitre.Location = new System.Drawing.Point(11, 18);
-            this.labelTitre.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelTitre.Location = new System.Drawing.Point(15, 22);
             this.labelTitre.Name = "labelTitre";
-            this.labelTitre.Size = new System.Drawing.Size(186, 29);
+            this.labelTitre.Size = new System.Drawing.Size(224, 34);
             this.labelTitre.TabIndex = 1;
             this.labelTitre.Text = "Investissement";
             // 
@@ -93,11 +92,11 @@
             this.navigation.Controls.Add(this.pageBourse);
             this.navigation.FontWeight = MetroFramework.MetroTabControlWeight.Bold;
             this.navigation.ItemSize = new System.Drawing.Size(54, 35);
-            this.navigation.Location = new System.Drawing.Point(-4, 65);
-            this.navigation.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.navigation.Location = new System.Drawing.Point(-4, 80);
+            this.navigation.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.navigation.Name = "navigation";
             this.navigation.SelectedIndex = 0;
-            this.navigation.Size = new System.Drawing.Size(870, 376);
+            this.navigation.Size = new System.Drawing.Size(1155, 673);
             this.navigation.TabIndex = 2;
             this.navigation.UseCustomBackColor = true;
             this.navigation.UseCustomForeColor = true;
@@ -111,9 +110,9 @@
             this.pageInvestir.HorizontalScrollbarHighlightOnWheel = false;
             this.pageInvestir.HorizontalScrollbarSize = 0;
             this.pageInvestir.Location = new System.Drawing.Point(4, 39);
-            this.pageInvestir.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pageInvestir.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pageInvestir.Name = "pageInvestir";
-            this.pageInvestir.Size = new System.Drawing.Size(862, 333);
+            this.pageInvestir.Size = new System.Drawing.Size(1147, 630);
             this.pageInvestir.TabIndex = 0;
             this.pageInvestir.Text = "Investir";
             this.pageInvestir.UseCustomBackColor = true;
@@ -130,9 +129,9 @@
             this.pagePatrimoine.HorizontalScrollbarHighlightOnWheel = false;
             this.pagePatrimoine.HorizontalScrollbarSize = 0;
             this.pagePatrimoine.Location = new System.Drawing.Point(4, 39);
-            this.pagePatrimoine.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pagePatrimoine.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pagePatrimoine.Name = "pagePatrimoine";
-            this.pagePatrimoine.Size = new System.Drawing.Size(862, 333);
+            this.pagePatrimoine.Size = new System.Drawing.Size(1147, 584);
             this.pagePatrimoine.TabIndex = 1;
             this.pagePatrimoine.Text = "Patrimoine";
             this.pagePatrimoine.UseCustomBackColor = true;
@@ -151,10 +150,10 @@
             this.pageBourse.HorizontalScrollbarHighlightOnWheel = false;
             this.pageBourse.HorizontalScrollbarSize = 0;
             this.pageBourse.Location = new System.Drawing.Point(4, 39);
-            this.pageBourse.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pageBourse.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pageBourse.Name = "pageBourse";
             this.pageBourse.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.pageBourse.Size = new System.Drawing.Size(862, 333);
+            this.pageBourse.Size = new System.Drawing.Size(1147, 584);
             this.pageBourse.TabIndex = 3;
             this.pageBourse.Text = "Bourse ";
             this.pageBourse.UseCustomBackColor = true;
@@ -167,14 +166,14 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(861, 436);
+            this.ClientSize = new System.Drawing.Size(1147, 730);
             this.Controls.Add(this.navigation);
             this.Controls.Add(this.panelTitre);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
-            this.Padding = new System.Windows.Forms.Padding(15, 49, 15, 16);
+            this.Padding = new System.Windows.Forms.Padding(20, 74, 20, 20);
             this.Style = MetroFramework.MetroColorStyle.Black;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panelTitre.ResumeLayout(false);

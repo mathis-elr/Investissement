@@ -1,26 +1,23 @@
-﻿using MetroFramework.Controls;
-using System;
+﻿using System.Windows.Forms.DataVisualization.Charting;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Threading.Tasks;
+using MetroFramework.Controls;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
+using System.Drawing;
+using System;
 
 
 namespace Investissement
 {
     public partial class PatrimoineVue : UserControl
     {
-        private ActifController actifController;
         private TransactionController transactionController;
+        private Series serieLineQuantiteInvestit;
+        private Series seriePieChartTypeActif;
+        private Series seriePieChartActifs;
 
-        public Series seriePieChartActifs;
-        public Series seriePieChartTypeActif;
-        public Series serieLineQuantiteInvestit;
         public PatrimoineVue(ActifController actifController, TransactionController transactionController)
         {
             this.transactionController = transactionController;
-            this.actifController = actifController;
 
             InitializeComponent();
         }
@@ -35,9 +32,15 @@ namespace Investissement
             chartAreaTypes.BackColor = Color.Black;
             pieChartTypes.ChartAreas.Add(chartAreaTypes);
 
+            Legend legendTypes = new Legend();
+            legendTypes.BackColor = Color.Black;
+            legendTypes.ForeColor = Color.White;
+            legendTypes.Docking = Docking.Right;
+            legendTypes.Alignment = StringAlignment.Center;
+            pieChartTypes.Legends.Add(legendTypes);
+
             this.seriePieChartTypeActif = new Series();
             this.seriePieChartTypeActif.ChartType = SeriesChartType.Pie;
-
             pieChartTypes.Series.Add(seriePieChartTypeActif);
 
             this.pageTypes.Controls.Add(pieChartTypes);
@@ -51,6 +54,13 @@ namespace Investissement
             ChartArea chartAreaActifs = new ChartArea();
             chartAreaActifs.BackColor = Color.Black;
             pieChartActifs.ChartAreas.Add(chartAreaActifs);
+
+            Legend legendActifs = new Legend();
+            legendActifs.BackColor = Color.Black;
+            legendActifs.ForeColor = Color.White;
+            legendActifs.Docking = Docking.Right;
+            legendActifs.Alignment = StringAlignment.Center;
+            pieChartActifs.Legends.Add(legendActifs);
 
             this.seriePieChartActifs = new Series();
             this.seriePieChartActifs.ChartType = SeriesChartType.Pie;
@@ -73,14 +83,21 @@ namespace Investissement
             chartAreaPatrimoine.AxisY.LabelStyle.ForeColor = Color.White;
             lineChartPatrimoine.ChartAreas.Add(chartAreaPatrimoine);
 
+            Legend legendLineChartPatrimoine = new Legend();
+            legendLineChartPatrimoine.BackColor = Color.Black;
+            legendLineChartPatrimoine.ForeColor = Color.White;
+            legendLineChartPatrimoine.Docking = Docking.Bottom;
+            legendLineChartPatrimoine.Alignment = StringAlignment.Center;
+            lineChartPatrimoine.Legends.Add(legendLineChartPatrimoine);
+
             /*1ere ligne du graphique montant total investit par rapport au temps*/
             this.serieLineQuantiteInvestit = new Series()
             {
                 ChartType = SeriesChartType.Line,
                 Color = Color.DeepSkyBlue,
                 BorderWidth = 3,
+                Name = "Total Investit"
             };
-
             lineChartPatrimoine.Series.Add(this.serieLineQuantiteInvestit);
 
             //Series series2 = new Series()
@@ -94,8 +111,7 @@ namespace Investissement
             //series2.Points.AddXY("Mars", 230);
             //lineChartPatrimoine.Series.Add(series2);
 
-            this.panelPatrimoine.Controls.Add(lineChartPatrimoine, 0, 3);
-            this.panelPatrimoine.SetColumnSpan(lineChartPatrimoine, 2);
+            this.pageGraphique.Controls.Add(lineChartPatrimoine);
             lineChartPatrimoine.Dock = DockStyle.Fill;
         }
 
@@ -123,22 +139,40 @@ namespace Investissement
 
         private void afficherLineGraphiqueValeurTotaleInvestitParDate()
         {
-            //a refaire car la quantite n'est pas estimé en € mais en quantite d'actif
             this.serieLineQuantiteInvestit.Points.Clear();
-            foreach ((DateTime date, double quantite) in transactionController.getListeQuantiteTotaleInvestitParDate())
+            foreach ((DateTime date, double quantiteEUR) in transactionController.getListeQuantiteTotaleInvestitEURParDate())
             {
-                this.serieLineQuantiteInvestit.Points.AddXY(date.Day + "/" + date.Month, quantite);
+                if (quantiteEUR == 0)
+                {
+                    this.serieLineQuantiteInvestit.Points.AddXY("j-1", quantiteEUR);
+                    continue;
+                }
+                this.serieLineQuantiteInvestit.Points.AddXY(date.Day + "/" + date.Month, quantiteEUR);
             }
+        }
+
+        private void afficherLineGraphiqueValeurTotaleEnFonctionDuPrixParDate()
+        {
+            //this.serieLineQuantiteValeurTotaleEnFonctionDuPrix.Points.Clear();
+            //foreach ((DateTime date, double quantiteEUR) in transactionController.getListeQuantiteTotaleInvestitEURParDate())
+            //{
+            //    if (quantiteEUR == 0)
+            //    {
+            //        this.serieLineQuantiteInvestit.Points.AddXY("j-1", quantiteEUR);
+            //        continue;
+            //    }
+            //    this.serieLineQuantiteInvestit.Points.AddXY(date.Day + "/" + date.Month, quantiteEUR);
+            //}
         }
 
         private void afficherPieChartProportionParActifs()
         {
             this.seriePieChartActifs.Points.Clear();
-            double valeurTotalePatrimoine = transactionController.getValeurTotaleInvestit();
-            if (valeurTotalePatrimoine == 0) { Console.WriteLine("division 0");  return; }
+            double valeurTotalePatrimoineActuel = transactionController.getValeurTotalePatrimoineActuel();
+            if (valeurTotalePatrimoineActuel == 0) { return; }
             foreach ((string actif, double quantiteTotaleEnEUR) in transactionController.getListePaireQuantiteEnEURTotaleInvestitParActif())
             {
-                double proportion = transactionController.getProportion(quantiteTotaleEnEUR, valeurTotalePatrimoine);
+                double proportion = transactionController.getProportion(quantiteTotaleEnEUR, valeurTotalePatrimoineActuel);
                 this.seriePieChartActifs.Points.AddXY(actif + $"\n{proportion}%", proportion);
             }
         }
@@ -146,12 +180,11 @@ namespace Investissement
         private void afficherPieChartProportionParTypeActifs()
         {
             this.seriePieChartTypeActif.Points.Clear();
-            double nbTransaction = transactionController.getNombreTransaction();
-            if (nbTransaction == 0) { Console.WriteLine("division 0"); return; }
-            foreach ((string typeActif, double nombre) in transactionController.getListePaireNombreTransactionParTypeActif())
+            double valeurTotalePatrimoineActuel = transactionController.getValeurTotalePatrimoineActuel();
+            foreach (KeyValuePair<string,double> type in transactionController.getDictionnaireQuantiteEnEURTotaleInvestitParTypeActif())
             {
-                double proportion = transactionController.getProportion(nombre, nbTransaction);
-                this.seriePieChartTypeActif.Points.AddXY(typeActif + $"\n{proportion}%", proportion);
+                double proportion = transactionController.getProportion(type.Value, valeurTotalePatrimoineActuel);
+                this.seriePieChartTypeActif.Points.AddXY(type.Key + $"\n{proportion}%", proportion);
             }
         }
     }

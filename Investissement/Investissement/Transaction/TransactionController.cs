@@ -28,9 +28,9 @@ namespace Investissement
             return transactionbdd.getPaireQuantitePrixParTransaction();
         }
 
-        public List<(DateTime,double)> getListeQuantiteTotaleInvestitParDate()
+        public List<(DateTime,double)> getListeQuantiteTotaleInvestitEURParDate()
         {
-            return transactionbdd.getListeQuantiteTotaleInvestitParDate();
+            return transactionbdd.getListeQuantiteTotaleInvestitEURParDate();
         }
 
         public double getQuantiteTotaleDetenuDunActif(string nomActif)
@@ -40,12 +40,34 @@ namespace Investissement
 
         public List<(string, double)> getListePaireQuantiteEnEURTotaleInvestitParActif()
         {
-            return transactionbdd.getListePaireQuantiteEnEURTotaleInvestitParActif();
+            List<(string, double)> listePaireQuantiteEnEURTotaleInvestitParActif = new List<(string, double)>();
+            foreach ((string actif, string symbole, string type, double quantiteTotale) in transactionbdd.getListeQuantiteTotaleInvestitParActif())
+            {
+                double prixActuelActif = this.dictionnairePrixActif[symbole];
+                double quantiteEUR = quantiteTotale * prixActuelActif;
+                listePaireQuantiteEnEURTotaleInvestitParActif.Add((actif, quantiteEUR));
+            }
+            return listePaireQuantiteEnEURTotaleInvestitParActif;
         }
 
-        public List<(string, long)> getListePaireNombreTransactionParTypeActif()
+        public Dictionary<string, double> getDictionnaireQuantiteEnEURTotaleInvestitParTypeActif()
         {
-            return transactionbdd.getListePaireNombreTransactionParTypeActif();
+            Dictionary<string, double> dictionnaireQuantiteEnEURTotaleInvestitParTypeActif = new Dictionary<string, double>();
+            foreach ((string actif,string symbole,string type,double quantiteTotale) in transactionbdd.getListeQuantiteTotaleInvestitParActif())
+            {
+                double prixActuelActif = this.dictionnairePrixActif[symbole];
+                double quantiteEUR = quantiteTotale * prixActuelActif;
+                if(dictionnaireQuantiteEnEURTotaleInvestitParTypeActif.ContainsKey(type))
+                {
+                    dictionnaireQuantiteEnEURTotaleInvestitParTypeActif[type] += quantiteEUR;
+                }
+                else
+                {
+                    dictionnaireQuantiteEnEURTotaleInvestitParTypeActif.Add(type, quantiteEUR);
+                }
+
+            }
+            return dictionnaireQuantiteEnEURTotaleInvestitParTypeActif;
         }
 
         public double getValeurTotaleInvestit()
@@ -71,7 +93,6 @@ namespace Investissement
                     prix = this.dictionnairePrixActif[symboleActif];
                 }
 
-                Console.WriteLine($"{quantite}, {prix}");
                 valeurTotalePatrimoine += quantite * prix;
             }
             return Math.Round(valeurTotalePatrimoine, 1);
