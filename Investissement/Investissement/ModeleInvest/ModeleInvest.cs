@@ -13,6 +13,7 @@
         {
             this.nom = nom;
             this.description = description;
+            //l'id est recuperé une fois l'actif ajouté pour avoir le meme que celui de la bdd
         }
     }
 }

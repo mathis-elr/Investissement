@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.SQLite;
 using System;
-using System.ComponentModel.Design;
 
 
 namespace Investissement
@@ -19,47 +18,6 @@ namespace Investissement
 
 
         /*ENCAPSULATION*/
-        public long getNombreTransaction()
-        {
-            long nombreTransaction = 0;
-            try
-            {
-                string selectionQuantiteTotalActif = "SELECT COUNT(*) FROM [transaction];";
-                using (var commandSelectionQuantiteTotalActif = new SQLiteCommand(selectionQuantiteTotalActif, this.maBDD.connexion))
-                {
-                    nombreTransaction = Convert.ToInt64(commandSelectionQuantiteTotalActif.ExecuteScalar());
-
-                }
-            }
-            catch (SQLiteException ex)
-            {
-                Console.Error.WriteLine($"Erreur selection quantite totale d'un actif SQLite : {ex.Message}");
-            }
-            return nombreTransaction;
-        }
-
-        public List<(double,double)> getPaireQuantitePrixParTransaction()
-        {
-            List<(double, double)> paireQuantitePrixTransaction = new List<(double, double)>();
-            try
-            {
-                string selectionQuantitePrixTransaction = "SELECT quantite, prix FROM [Transaction];";
-                using (var commandSelectionQuantitePrixTransaction = new SQLiteCommand(selectionQuantitePrixTransaction, this.maBDD.connexion))
-                {
-                    var quantiteTransaction = commandSelectionQuantitePrixTransaction.ExecuteReader();
-                    while(quantiteTransaction.Read())
-                    {
-                        paireQuantitePrixTransaction.Add((quantiteTransaction.GetDouble(0), quantiteTransaction.GetDouble(1)));
-                    }
-                }
-            }
-            catch (SQLiteException ex)
-            {
-                Console.Error.WriteLine($"Erreur selection quantite transactions SQLite : {ex.Message}");
-            }
-            return paireQuantitePrixTransaction;
-        }
-
         public List<(DateTime,double)> getListeQuantiteTotaleInvestitEURParDate()
         {
             List<(DateTime, double)> listeQuantiteTransactionsParDateInvest = new List<(DateTime, double)>();
@@ -81,7 +39,6 @@ namespace Investissement
             }
             return listeQuantiteTransactionsParDateInvest;
         }
-
         public double getQuantiteTotaleDetenuDunActif(string nomActif)
         {
             double quantiteTotale = 0;
@@ -101,7 +58,6 @@ namespace Investissement
             }
             return quantiteTotale;
         }
-
         public List<(string,string)> getListePaireNomSymboleActif()
         {
             List<(string, string)> listeNomsEtSymboleActif = new List<(string, string)>();
@@ -123,7 +79,6 @@ namespace Investissement
             }
             return listeNomsEtSymboleActif;
         }
-
         public List<string> getListeSymboleActif()
         {
             List<string> listeNomsEtSymboleActif = new List<string>();
@@ -190,7 +145,6 @@ namespace Investissement
                 throw new Exception("une erreur est survenue lors de l'insertion d'une transaction");
             }
         }
-
         public void ajouterInvestissementTotalParDate(DateTime date, double quantiteTotaleEnEUR)
         {
             try

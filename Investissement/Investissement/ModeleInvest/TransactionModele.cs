@@ -3,7 +3,6 @@
     public class TransactionModele
     {
         /*ATTRIBUTS*/
-        public long id { get; set; }
         public string actif { get; set; }
         public long quantite { get; set; }
         public long? id_modele { get; set; }

@@ -4,15 +4,20 @@ using System.Windows.Forms;
 using System.Data;
 using System;
 
+/*
+A FAIRE
+- regarder dans toutes les fonctions si on peut pas cree des fonctions plus parlantes (moins de if imbriquer et division en sous fonctions))
+- lors de l'ajout d'un actif chercher le symbole correspondant et non le demander à l'utilisateur
+*/
 
 namespace Investissement
 {
     public partial class InvestirVue : UserControl
     {
+        /*ATTRIBUTS*/
         private readonly ActifController actifController;
         private readonly ModeleInvestController modeleInvestController;
         private readonly TransactionController transactionController;
-
 
         private enum EtatBoutonValidation
         {
@@ -43,26 +48,33 @@ namespace Investissement
         private void InvestirVue_Load(object sender, EventArgs e)
         {
             this.configurerGridAffichageActifs();
-            this.afficherActifs();
-            this.comboBoxChargerModeles();
+            this.afficherActifsDansGrid();
+            this.chargerModeles();
 
-            btnInterfaceAjoutActif.Click += btnAfficherInterfaceAjoutActif;
-            btnInterfaceCreationModel.Click += btnAfficherInterfaceCreationModele;
-            btnInterfaceEditerModeleInvest.Click += btnAfficherInterfaceEditerModeleInvest;
-            btnQuittInterface.Click += btnActionQuitterInterface;
+            btnInterfaceAjoutActif.Click += afficherInterfaceAjoutActif;
+            btnInterfaceCreationModel.Click += afficherInterfaceCreationModele;
+            btnInterfaceEditerModeleInvest.Click += afficherInterfaceEditerModeleInvest;
+            btnQuittInterface.Click += quitterInterface;
+            btnValidation.Click += choixActionValidation;
+            btnSupression.Click += choixActionSuppression;
+            btnSupprModele.Click += supprModele;
+            btnInvest.Click += validerInvest;
+            comboBoxModelesInvest.SelectedIndexChanged += changerModele;
+        }
 
-            btnValidation.Click += btnChoixActionValidation;
-            btnSupression.Click += btnChoixActionSuppression;
-
-            btnSupprModele.Click += btnActionSupprModele;
-            btnInvest.Click += btnActionValiderInvest;
-
-            comboBoxModelesInvest.SelectedIndexChanged += (s, _) => comboBoxActionChangerModele();
+        /*ENCAPSULATION*/
+        private string getNomModeleSelectionne()
+        {
+            return ((DataRowView)this.comboBoxModelesInvest.SelectedItem)["nom"].ToString();
+        }
+        private long getIdModeleSelectionne()
+        {
+            return Convert.ToInt64(comboBoxModelesInvest.SelectedValue);
         }
 
 
         /*METHODES*/
-        private void afficherActifs()
+        private void afficherActifsDansGrid()
         {
             this.gridActifs.Rows.Clear();
             foreach (string nom in actifController.getListeActifs())
@@ -70,28 +82,14 @@ namespace Investissement
                 this.gridActifs.Rows.Add(nom);
             }
         }
-
-        private void afficherTransactionsModele(string modele)
+        private void changerModele(object sender, EventArgs e)
         {
-            this.gridActifs.Rows.Clear();
-            List<(string actif, long quantite)> transactions = modeleInvestController.getTransactionsModele(modele);
-            if (transactions.Count != 0)
-            {
-                foreach (var (actif, quantite) in transactions)
-                {
-                    gridActifs.Rows.Add(actif, quantite);
-                }
-            }
-        }
+            long idModeleChoisi = this.getIdModeleSelectionne();
+            this.labelDescrModele.Text = modeleInvestController.getDescriptionModeleInvest(idModeleChoisi);
 
-        private void comboBoxActionChangerModele()
-        {
-            string modeleChoisi = ((DataRowView)comboBoxModelesInvest.SelectedItem)["nom"].ToString();
-            this.labelDescrModele.Text = modeleInvestController.getDescriptionModeleInvest(modeleChoisi);
-
-            if (modeleChoisi == "liste actifs")
+            if (idModeleChoisi == 0) //0 = liste des actifs
             {
-                this.afficherActifs();
+                this.afficherActifsDansGrid();
 
                 this.btnSupression.Visible = true;
                 this.btnInterfaceAjoutActif.Visible = true;
@@ -101,7 +99,7 @@ namespace Investissement
             }
             else
             {
-                this.afficherTransactionsModele(modeleChoisi);
+                this.afficherTransactionsModele(idModeleChoisi);
 
                 this.btnSupprModele.Enabled = true;
                 this.btnInterfaceEditerModeleInvest.Enabled = true;
@@ -110,8 +108,19 @@ namespace Investissement
                 this.btnSupression.Visible = false;
             }
         }
-
-        private void comboBoxChargerModeles()
+        private void afficherTransactionsModele(long idModele)
+        {
+            this.gridActifs.Rows.Clear();
+            List<(string actif, long quantite)> transactions = modeleInvestController.getTransactionsModele(idModele);
+            if (transactions.Count != 0)
+            {
+                foreach (var (actif, quantite) in transactions)
+                {
+                    gridActifs.Rows.Add(actif, quantite);
+                }
+            }
+        }
+        private void chargerModeles()
         {
             MetroComboBox modeles = this.comboBoxModelesInvest;
             DataTable modeleInvest = modeleInvestController.getModelesDataTable();
@@ -131,7 +140,6 @@ namespace Investissement
             this.gridActifs.Columns[0].ReadOnly = true;
             this.gridActifs.AllowUserToAddRows = false;
         }
-
         private void configurerGridCreationModele()
         {
             this.gridActifs.Columns.Clear();
@@ -146,9 +154,8 @@ namespace Investissement
             comboCol.DisplayMember = "Nom";
 
             gridActifs.Columns.Add(comboCol);
-            this.gridActifs.Columns.Add("quantite", "quantite (€)");
+            this.gridActifs.Columns.Add("quantite","quantite");
         }
-
         private void configurerGridEditerModele()
         {
             this.gridActifs.Columns.Clear();
@@ -163,15 +170,14 @@ namespace Investissement
             comboCol.DisplayMember = "Nom";
 
             gridActifs.Columns.Add(comboCol);
-            this.gridActifs.Columns.Add("quantite", "quantite (€)");
+            this.gridActifs.Columns.Add("quantite", "quantite");
 
-            string modeleChoisi = ((DataRowView)comboBoxModelesInvest.SelectedItem)["nom"].ToString();
-            this.afficherTransactionsModele(modeleChoisi);
+            this.afficherTransactionsModele(this.getIdModeleSelectionne());
         }
 
 
-        /*BOUTONS CHANGEMENTS D'INTERFACE*/
-        private void btnAfficherInterfaceAjoutActif(object sender, EventArgs e)
+        /*CHANGEMENTS D'INTERFACE*/
+        private void afficherInterfaceAjoutActif(object sender, EventArgs e)
         {
             this.labelTitreInterface.Text = "Ajouter un actif";
             this.btnValidation.Text = "Ajouter l'actif";
@@ -187,8 +193,7 @@ namespace Investissement
             this.etatBoutonValidation = EtatBoutonValidation.ajouterActif;
 
         }
-
-        private void btnAfficherInterfaceCreationModele(object sender, EventArgs e)
+        private void afficherInterfaceCreationModele(object sender, EventArgs e)
         {
             this.configurerGridCreationModele();
             this.labelTitreInterface.Text = "Cree un modele";
@@ -205,8 +210,7 @@ namespace Investissement
 
             this.etatBoutonValidation = EtatBoutonValidation.ajouterModele;
         }
-
-        private void btnAfficherInterfaceEditerModeleInvest(object sender, EventArgs e)
+        private void afficherInterfaceEditerModeleInvest(object sender, EventArgs e)
         {
             this.configurerGridEditerModele();
             this.labelTitreInterface.Text = "Edition d'un modele";
@@ -222,19 +226,17 @@ namespace Investissement
             this.pannelChoixModeles.Visible = false;
             this.labelChoixModele.Visible = false;
 
-            string nomModele = ((DataRowView)this.comboBoxModelesInvest.SelectedItem)["nom"].ToString();
-            string description = modeleInvestController.getDescriptionModeleInvest(nomModele);
-            this.inputNomModeleInvest.Text = nomModele;
-            this.inputDescriptionModeleInvest.Text = description;
+            long idModeleSelectionne = this.getIdModeleSelectionne();
+            this.inputNomModeleInvest.Text = this.getNomModeleSelectionne();
+            this.inputDescriptionModeleInvest.Text = modeleInvestController.getDescriptionModeleInvest(idModeleSelectionne);
 
             this.etatBoutonSuppression = EtatBoutonSuppression.supprTransactionModele;
             this.etatBoutonValidation = EtatBoutonValidation.editerModele;
         }
-
-        private void btnActionQuitterInterface(object sender, EventArgs e)
+        private void quitterInterface(object sender, EventArgs e)
         {
             this.configurerGridAffichageActifs();
-            this.afficherActifs();
+            this.afficherActifsDansGrid();
 
             this.btnSupression.Visible = true;
             this.labelChoixModele.Visible = true;
@@ -251,7 +253,7 @@ namespace Investissement
 
 
         /*ROLE BOUTONS EN FONCTION DE L'INTERFACE*/
-        private void btnChoixActionValidation(object sender, EventArgs e)
+        private void choixActionValidation(object sender, EventArgs e)
         {
             switch (this.etatBoutonValidation)
             {
@@ -266,8 +268,7 @@ namespace Investissement
                     return;
             }
         }
-
-        private void btnChoixActionSuppression(object sender, EventArgs e)
+        private void choixActionSuppression(object sender, EventArgs e)
         {
             switch (this.etatBoutonSuppression)
             {
@@ -305,33 +306,33 @@ namespace Investissement
         }
         private void supprActif()
         {
-            if (this.gridActifs.SelectedRows.Count > 0)
+            if(this.aucuneSelectionDansGrid())
             {
-                DataGridViewRow row = this.gridActifs.SelectedRows[0];
-                string nom = row.Cells["Nom"].Value.ToString();
-                DialogResult result = MessageBox.Show(
-                    "Voulez-vous vraiment supprimer cet actif ?",
-                    "Confirmation",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
+                MessageBox.Show("aucune actif selectionné", "Erreur suppression actif");
+                return;
+            }
 
-                if (result == DialogResult.Yes)
-                {
-                    try
-                    {
-                        actifController.supprActif(nom);
-                        this.afficherActifs();
-                        MessageBox.Show("Actif supprimé avec succès", "Actif");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Erreur");
-                    }
-                }
+            if (this.reponsePositiveUtilisateur("Voulez-vous vraiment supprimer cet actif ?"))
+            {
+                this.supprActifSelectionne();
             }
         }
+        private void supprActifSelectionne()
+        {
+            DataGridViewRow row = this.gridActifs.SelectedRows[0];
+            string nom = row.Cells["Nom"].Value.ToString();
 
+            try
+            {
+                actifController.supprActif(nom);
+                this.afficherActifsDansGrid();
+                MessageBox.Show("Actif supprimé avec succès", "Actif");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Erreur");
+            }
+        }
         private void ajouterModeleInvest()
         {
             ModeleInvest modeleInvest = new ModeleInvest(this.inputNomModeleInvest.Text, this.inputDescriptionModeleInvest.Text);
@@ -339,7 +340,7 @@ namespace Investissement
             { 
                 modeleInvestController.ajouterModele(modeleInvest);
                 this.ajouterTransactionsModele(modeleInvest);
-                afficherInterfaceApresAjoutModele();
+                this.afficherInterfaceApresAjoutModele();
                 MessageBox.Show("Modele ajouté avec succès", "Modele");
             }
             catch (Exception ex)
@@ -347,7 +348,6 @@ namespace Investissement
                 MessageBox.Show(ex.Message, "Erreur");
             }
         }
-
         private void ajouterTransactionsModele(ModeleInvest modeleInvest)
         {
             foreach (DataGridViewRow transaction in this.gridActifs.Rows)
@@ -363,25 +363,24 @@ namespace Investissement
                 modeleInvestController.ajouterTransactionsModele(transactionModele);
             }
         }
-
         private void enregistrerEditModeleInvest()
         {
             //pour la modification d'un modele on supprime toutes les transaction associées et on rajoute les nouvelles/modifiées
             //pour le nom et la description on fait une mise a jour directement
 
-            string nomModele = ((DataRowView)this.comboBoxModelesInvest.SelectedItem)["nom"].ToString();
+            long idModele = this.getIdModeleSelectionne();
             ModeleInvest ModeleInvestModifie = new ModeleInvest(this.inputNomModeleInvest.Text, this.inputDescriptionModeleInvest.Text);
-            ModeleInvestModifie.id = Convert.ToInt64(comboBoxModelesInvest.SelectedValue);
+            ModeleInvestModifie.id = this.getIdModeleSelectionne();
 
             try
             {
-                modeleInvestController.supprTransactionsModele(nomModele);
+                modeleInvestController.supprToutesTransactionsModele(idModele);
                 this.ajouterTransactionsModele(ModeleInvestModifie);
-                modeleInvestController.majNomDescription(nomModele, ModeleInvestModifie);
+                modeleInvestController.majNomDescription(idModele, ModeleInvestModifie);
 
                 this.inputNomModeleInvest.Clear();
                 this.inputDescriptionModeleInvest.Clear();
-                afficherInterfaceApresEditModele();
+                this.afficherInterfaceApresEditModele();
                 MessageBox.Show("modifications effectuées avec succès", "Modele Invest");
             }
             catch (Exception ex)
@@ -389,23 +388,14 @@ namespace Investissement
                 MessageBox.Show(ex.Message, "Erreur");
             }
         }
-
-        private void btnActionSupprModele(object sender, EventArgs e)
+        private void supprModele(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(
-                "Voulez-vous vraiment supprimer ce modele ?",
-                "Confirmation",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-            if (result == DialogResult.Yes)
+            if (this.reponsePositiveUtilisateur("Voulez-vous vraiment supprimer ce modele ?"))
             {
-                string nomModele = ((DataRowView)comboBoxModelesInvest.SelectedItem)["nom"].ToString();
                 try
                 {
-                    modeleInvestController.supprModele(nomModele);
-
-                    this.comboBoxChargerModeles();
+                    modeleInvestController.supprModele(this.getIdModeleSelectionne());
+                    this.chargerModeles();
                     MessageBox.Show("modele supprimé avec succès", "Modele");
                 }
                 catch (Exception ex)
@@ -414,42 +404,106 @@ namespace Investissement
                 }
             }
         }
-
         private void supprTransactionModele()
         {
-            if (!this.gridActifs.SelectedRows[0].IsNewRow && this.gridActifs.SelectedRows.Count > 0)
+            if (this.aucuneSelectionDansGrid()) 
             {
-                long idModeleAssocie = Convert.ToInt64(comboBoxModelesInvest.SelectedValue);
-                string nomModeleAssocie = ((DataRowView)comboBoxModelesInvest.SelectedItem)["nom"].ToString();
-                DataGridViewRow row = this.gridActifs.SelectedRows[0];
-                string nomActif = row.Cells["Nom"].Value.ToString();
-                DialogResult result = MessageBox.Show(
-                    "Voulez-vous vraiment supprimer cette transaction ?",
-                    "Confirmation",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-                if (result == DialogResult.Yes)
-                {
-                    try
-                    {
-                        modeleInvestController.supprTransactionModele(idModeleAssocie, nomActif);
-                        this.afficherTransactionsModele(nomModeleAssocie);
-                        MessageBox.Show("transaction de modele supprimé avec succès", "Transaction Modele");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Erreur");
-                    }
-                }
+                MessageBox.Show("aucune transaction selectionné", "Erreur suppression transaction modele");
+                return;
             }
-            else
+
+            if (this.reponsePositiveUtilisateur("Voulez-vous vraiment supprimer cette transaction ?"))
             {
-                MessageBox.Show("aucune transaction", "Erreur suppression transaction modele");
+                this.supprTransactionModeleSelectionne();
             }
         }
+        private void supprTransactionModeleSelectionne()
+        {
+            long idModeleAssocie = this.getIdModeleSelectionne();;
+            DataGridViewRow row = this.gridActifs.SelectedRows[0];
+            string nomActif = row.Cells["Nom"].Value.ToString();
 
-        private void btnActionValiderInvest(object sender, EventArgs e)
+            try
+            {
+                modeleInvestController.supprUneTransactionModele(idModeleAssocie, nomActif);
+                this.afficherTransactionsModele(idModeleAssocie);
+                MessageBox.Show("transaction de modele supprimé avec succès", "Transaction Modele");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Erreur");
+            }
+        }
+        private bool aucuneSelectionDansGrid()
+        {
+            return !this.gridActifs.SelectedRows[0].IsNewRow && this.gridActifs.SelectedRows.Count > 0;
+        }
+        private void validerInvest(object sender, EventArgs e)
+        {
+            if (!validerSaisieTransactions())
+                return;
+
+            DateTime dateInvestSaisie = this.dateInvest.Value;
+            double quantiteTotaleEnEUR = 0;
+
+            foreach (DataGridViewRow transaction in this.gridActifs.Rows)
+            {
+                string quantiteString = transaction.Cells[1].Value?.ToString();
+                string prixString = transaction.Cells[2].Value?.ToString();
+                if (this.infoTransactionCouranteInexistante(quantiteString, prixString)) { continue; }
+
+                Transaction nouvelleTransaction = creerTransaction(dateInvestSaisie, transaction);
+                this.ajouterTransaction(nouvelleTransaction);
+                quantiteTotaleEnEUR += nouvelleTransaction.quantite * nouvelleTransaction.prix;
+            }
+
+            transactionController.ajouterInvestissementTotalParDate(dateInvestSaisie, quantiteTotaleEnEUR);
+            MessageBox.Show("Investissement effectué avec succès", "Investissement");
+            this.afficherActifsDansGrid();
+        }
+        private bool validerSaisieTransactions()
+        {
+            if (this.mauvaisTypeSaisie())
+            {
+                MessageBox.Show("double attendu pour le prix et la quantite des actifs choisis", "Erreur Transaction Invest");
+                return false;
+            }
+            return true;
+        }
+        private Transaction creerTransaction(DateTime date, DataGridViewRow row)
+        {
+            string nomActif = row.Cells[0].Value.ToString();
+            double quantite = double.Parse(row.Cells[1].Value?.ToString());
+            double prix = double.Parse(row.Cells[2].Value?.ToString());
+            return new Transaction(date, nomActif, quantite, prix);
+        }
+        private void ajouterTransaction(Transaction transaction)
+        {
+            try
+            {
+                transactionController.ajouterTransaction(transaction);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Erreur");
+            }
+        }
+        private bool reponsePositiveUtilisateur(string message)
+        {
+            DialogResult reponse = MessageBox.Show(
+            message,
+            "Confirmation",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question
+            );
+
+            if (reponse == DialogResult.Yes)
+            {
+                return true;
+            }
+            return false;
+        }
+        private bool mauvaisTypeSaisie()
         {
             /*On est obliger de verifier avant toutes les lignes sinon ca peut ajouter certaines transactions et pas d'autre, donc on insere que si il n'y a pas d'erreur*/
             foreach (DataGridViewRow transaction in this.gridActifs.Rows)
@@ -463,54 +517,21 @@ namespace Investissement
                 bool prixOk = double.TryParse(prixString, out double prixLong);
                 if (!quantiteOk || !prixOk)
                 {
-                    if (((DataRowView)comboBoxModelesInvest.SelectedItem)["nom"].ToString() != "liste actifs")
-                    {
-                        MessageBox.Show("vous devez remplir toutes les transactions du modele courant", "Erreur Transaction Invest");
-                    }
-                    else
-                    {
-                        MessageBox.Show("double attendu pour le prix et la quantite des actifs choisis", "Erreur Transaction Invest");
-                    }
-                    return;
+                    return false;
                 }
             }
-
-            DateTime date = this.dateInvest.Value;
-            double quantiteTotaleEnEUR = 0;
-            foreach (DataGridViewRow transaction in this.gridActifs.Rows)
-            {
-                string quantiteString = transaction.Cells[1].Value?.ToString();
-                string prixString = transaction.Cells[2].Value?.ToString();
-
-                if (string.IsNullOrEmpty(quantiteString) || string.IsNullOrEmpty(prixString)) { continue; }
-                
-                string actif = transaction.Cells[0].Value.ToString();
-                double quantite = double.Parse(quantiteString);
-                double prix = double.Parse(prixString);
-                quantiteTotaleEnEUR += quantite*prix;
-
-                Transaction nvltransaction = new Transaction(date, actif, quantite, prix);
-                try
-                {
-                    transactionController.ajouterTransaction(nvltransaction);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Erreur");
-                }
-            }
-
-            transactionController.ajouterInvestissementTotalParDate(date, quantiteTotaleEnEUR);
-
-            this.afficherActifs();
-            MessageBox.Show("Investissement effectué avec succès", "Investissement");
+            return true;
+        }
+        private bool infoTransactionCouranteInexistante(string quantite, string prix)
+        {
+            return string.IsNullOrEmpty(quantite) || string.IsNullOrEmpty(prix);
         }
 
 
         /*changements d'interface*/
         private void afficherInterfaceApresAjoutActif()
         {
-            this.afficherActifs();
+            this.afficherActifsDansGrid();
             this.labelChoixModele.Visible = true;
             this.pannelChoixModeles.Visible = true;
             this.btnInterfaceAjoutActif.Visible = true;
@@ -519,29 +540,26 @@ namespace Investissement
             this.panelTitreQuitter.Visible = false;
             this.panelAjoutActif.Visible = false;
         }
-
         private void afficherInterfaceApresAjoutModele()
         {
-            this.comboBoxChargerModeles();
+            this.chargerModeles();
             this.configurerGridAffichageActifs();
-            this.afficherActifs();
+            this.afficherActifsDansGrid();
             this.labelTitreInterface.Text = "Choix du modele";
             this.pannelChoixModeles.Visible = true;
             this.panelConfirmationInvest.Visible = true;
             this.panelTitreQuitter.Visible = false;
             this.panelAjoutModele.Visible = false;
         }
-
         private void afficherInterfaceApresEditModele()
         {
             this.configurerGridAffichageActifs();
-            this.comboBoxChargerModeles();
+            this.chargerModeles();
             this.labelTitreInterface.Text = "Choix du modele";
             this.pannelChoixModeles.Visible = true;
             this.panelConfirmationInvest.Visible = true;
             this.panelTitreQuitter.Visible = false;
             this.panelAjoutModele.Visible = false;
         }
-
     }
 }

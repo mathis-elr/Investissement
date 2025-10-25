@@ -37,35 +37,15 @@ namespace Investissement
             }
             return modeleInvest;
         }
-
-        public long? getIdModeleInvest(string nom)
-        {
-            long? idModele = null;
-            try
-            {
-                var query = "SELECT id FROM ModeleInvest WHERE nom=@nom;";
-                using (var command = new SQLiteCommand(query, this.maBDD.connexion))
-                {
-                    command.Parameters.AddWithValue("@nom", nom);
-                    idModele = Convert.ToInt64(command.ExecuteScalar());
-                }
-            }
-            catch (SQLiteException ex)
-            {
-                Console.Error.WriteLine($"Erreur selection id modele SQLite : {ex.Message}");
-            }
-            return idModele;
-        }
-
-        public string getDescriptionModeleInvest(string nom)
+        public string getDescriptionModeleInvest(long idModele)
         {
             string description = null;
             try
             {
-                var query = "SELECT description FROM ModeleInvest WHERE nom=@nom;";
+                var query = "SELECT description FROM ModeleInvest WHERE id=@id;";
                 using (var command = new SQLiteCommand(query, this.maBDD.connexion))
                 {
-                    command.Parameters.AddWithValue("@nom", nom);
+                    command.Parameters.AddWithValue("@id", idModele);
                     description = command.ExecuteScalar().ToString();
                 }
             }
@@ -77,41 +57,20 @@ namespace Investissement
 
         }
 
-        public (long?,string) getIdEtDescriptionModeleInvest(string nom)
-        {
-            try
-            {
-                var query = "SELECT id,description FROM ModeleInvest WHERE nom=@nom;";
-                using (var command = new SQLiteCommand(query, this.maBDD.connexion))
-                {
-                    command.Parameters.AddWithValue("@nom", nom);
-                    var modele = command.ExecuteReader();
-                    modele.Read();
-                    return (modele.GetInt64(0), modele.GetString(1));
-                }
-            }
-            catch (SQLiteException ex)
-            {
-                Console.Error.WriteLine($"Erreur selection id et description modele SQLite : {ex.Message}");
-                return (null, null);
-            }
-        }
-
 
         /*ENCAPSULATION TRANSACTIONS MODELE*/
-        public List<(string actif, long quantite)> getTransactionsModele(string nomModele)
+        public List<(string actif, long quantite)> getTransactionsModele(long idModele)
         {
             var listeTransactions = new List<(string actif, long quantite)>();
             try
             {
-                var queryTransactions = "SELECT actif,quantite FROM TransactionsModele JOIN ModeleInvest ON ModeleInvest.id=TransactionsModele.idModele WHERE nom=@nom;";
+                var queryTransactions = "SELECT actif,quantite FROM TransactionsModele WHERE idModele=@id;";
                 using (var commandTransactions = new SQLiteCommand(queryTransactions, this.maBDD.connexion))
                 {
-                    commandTransactions.Parameters.AddWithValue("@nom", nomModele);
+                    commandTransactions.Parameters.AddWithValue("@id", idModele);
 
                     using (var transactions = commandTransactions.ExecuteReader())
                     {
-
                         while (transactions.Read())
                         {
                             listeTransactions.Add((transactions.GetString(0), transactions.GetInt64(1)));
@@ -148,19 +107,19 @@ namespace Investissement
             }
         }
 
-        public void supprModele(string modeleInvest)
+        public void supprModele(long idModele)
         {
             try
             {
-                if (this.transactionDependante(modeleInvest))
+                if (this.transactionDependante(idModele))
                 { 
                     return;
                 } 
 
-                var suppressionModele = "DELETE FROM ModeleInvest WHERE nom=@nom;";
+                var suppressionModele = "DELETE FROM ModeleInvest WHERE id=@id;";
                 using (var commandeSuppressionModele = new SQLiteCommand(suppressionModele, this.maBDD.connexion))
                 {
-                    commandeSuppressionModele.Parameters.AddWithValue("@nom", modeleInvest);
+                    commandeSuppressionModele.Parameters.AddWithValue("@id", idModele);
                     commandeSuppressionModele.ExecuteNonQuery();
                 }
             }
@@ -171,16 +130,16 @@ namespace Investissement
             }
         }
 
-        public void majNomDescription(string ancienNomModele,ModeleInvest ModeleInvestModifie)
+        public void majNomDescription(long idAncienModele,ModeleInvest ModeleInvestModifie)
         {
             try
             {
-                string insertionModele = "UPDATE ModeleInvest SET nom=@nom, description=@description WHERE nom=@nomModele;";
+                string insertionModele = "UPDATE ModeleInvest SET nom=@nom, description=@description WHERE id=@idModele;";
                 using (var commandInsertionModele = new SQLiteCommand(insertionModele, this.maBDD.connexion))
                 {
                     commandInsertionModele.Parameters.AddWithValue("@nom", ModeleInvestModifie.nom);
                     commandInsertionModele.Parameters.AddWithValue("@description", ModeleInvestModifie.description);
-                    commandInsertionModele.Parameters.AddWithValue("@nomModele", ancienNomModele);
+                    commandInsertionModele.Parameters.AddWithValue("@idModele", idAncienModele);
                     commandInsertionModele.ExecuteNonQuery();
                 }
             }
@@ -193,14 +152,14 @@ namespace Investissement
 
 
         /*METHODES TRANSACTIONS MODELE*/
-        private bool transactionDependante(string modeleInvest)
+        private bool transactionDependante(long idModeleInvest)
         {
             try
             {
-                var selectionTransactionDependantes = "SELECT COUNT(*) FROM TransactionsModele JOIN ModeleInvest ON ModeleInvest.id=TransactionsModele.idModele WHERE nom=@nom;";
+                var selectionTransactionDependantes = "SELECT COUNT(*) FROM TransactionsModele WHERE idModele=@id;";
                 using (var commandeselectionTransactionDependantes = new SQLiteCommand(selectionTransactionDependantes, this.maBDD.connexion))
                 {
-                    commandeselectionTransactionDependantes.Parameters.AddWithValue("@nom", modeleInvest);
+                    commandeselectionTransactionDependantes.Parameters.AddWithValue("@id", idModeleInvest);
                     long nbTransactions = Convert.ToInt64(commandeselectionTransactionDependantes.ExecuteScalar());
                     if (nbTransactions > 0) { throw new Exception("impossible de supprimer le modele, des transactions en dépendent"); }
                     return false;
@@ -232,7 +191,7 @@ namespace Investissement
             }
         }
 
-        public void supprTransactionModele(long idModeleAssocie, string nomActif)
+        public void supprUneTransactionModele(long idModeleAssocie, string nomActif)
         {
             try
             {
@@ -251,14 +210,14 @@ namespace Investissement
             }
         }
 
-        public void supprTransactionsModele(string nomModele)
+        public void supprToutesTransactionsModele(long idModele)
         {
             try
             {
-                var suppressionTransactionModele = "DELETE FROM TransactionsModele WHERE idModele=(SELECT id FROM ModeleInvest WHERE nom=@nom);";
+                var suppressionTransactionModele = "DELETE FROM TransactionsModele WHERE idModele=@id);";
                 using (var commandeSuppressionTransactionModele = new SQLiteCommand(suppressionTransactionModele, this.maBDD.connexion))
                 {
-                    commandeSuppressionTransactionModele.Parameters.AddWithValue("@nom", nomModele);
+                    commandeSuppressionTransactionModele.Parameters.AddWithValue("@id", idModele);
                     commandeSuppressionTransactionModele.ExecuteNonQuery();
                 }
             }

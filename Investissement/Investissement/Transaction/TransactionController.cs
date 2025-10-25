@@ -1,7 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TwelveDataSharp.Api.ResponseModels;
+using System;
+
+/*
+ A FAIRE :
+- recupererPrixActifsActuel gestion d'erreur (ex quand on est hors connexion, que ca affiche un message d'erreur et pas un crash de l'application
+- manque de gestion d'erreur en general
+ */
 
 namespace Investissement
 {
@@ -18,27 +23,11 @@ namespace Investissement
         }
 
         /*ENCAPSULATION*/
-        public long getNombreTransaction()
-        {
-            return transactionbdd.getNombreTransaction();
-        }
-
-        public List<(double,double)> getPaireQuantitePrixParTransaction()
-        {
-            return transactionbdd.getPaireQuantitePrixParTransaction();
-        }
-
-        public List<(DateTime,double)> getListeQuantiteTotaleInvestitEURParDate()
+        public List<(DateTime,double)> getPaireQuantiteTotaleInvestitEURParDate()
         {
             return transactionbdd.getListeQuantiteTotaleInvestitEURParDate();
         }
-
-        public double getQuantiteTotaleDetenuDunActif(string nomActif)
-        {
-            return transactionbdd.getQuantiteTotaleDetenuDunActif(nomActif);
-        }
-
-        public List<(string, double)> getListePaireQuantiteEnEURTotaleInvestitParActif()
+        public List<(string, double)> getPaireQuantiteEnEURTotaleInvestitParActif()
         {
             List<(string, double)> listePaireQuantiteEnEURTotaleInvestitParActif = new List<(string, double)>();
             foreach ((string actif, string symbole, string type, double quantiteTotale) in transactionbdd.getListeQuantiteTotaleInvestitParActif())
@@ -49,7 +38,6 @@ namespace Investissement
             }
             return listePaireQuantiteEnEURTotaleInvestitParActif;
         }
-
         public Dictionary<string, double> getDictionnaireQuantiteEnEURTotaleInvestitParTypeActif()
         {
             Dictionary<string, double> dictionnaireQuantiteEnEURTotaleInvestitParTypeActif = new Dictionary<string, double>();
@@ -69,17 +57,6 @@ namespace Investissement
             }
             return dictionnaireQuantiteEnEURTotaleInvestitParTypeActif;
         }
-
-        public double getValeurTotaleInvestit()
-        {
-            double valeurTotaleInvestit = 0;
-            foreach ((double quantite, double prix) in this.getPaireQuantitePrixParTransaction())
-            {
-                valeurTotaleInvestit += quantite * prix;
-            }
-            return Math.Round(valeurTotaleInvestit,1);
-        }
-
         public double getValeurTotalePatrimoineActuel()
         {
             double valeurTotalePatrimoine = 0;
@@ -97,16 +74,14 @@ namespace Investissement
             }
             return Math.Round(valeurTotalePatrimoine, 1);
         }
-
         public double getProportion(double part, double partTotale)
         {
             return Math.Round(part/partTotale * 100, 2);
         }
-
         public async Task recupererPrixActifsActuel()
         {
             List<string> listeSymboles = transactionbdd.getListeSymboleActif();
-            this.dictionnairePrixActif = await GestionnairePrixActifs.GetPrixActifs(listeSymboles);
+            this.dictionnairePrixActif = await GestionnaireYahoo.GetPrixActifs(listeSymboles);
         }
 
 
@@ -115,7 +90,6 @@ namespace Investissement
         {
             transactionbdd.ajouterTransaction(nvlTransaction);
         }
-
         public void ajouterInvestissementTotalParDate(DateTime date, double quantiteTotaleEnEUR)
         {
             transactionbdd.ajouterInvestissementTotalParDate(date, quantiteTotaleEnEUR);

@@ -1,10 +1,8 @@
 ﻿using MetroFramework.Components;
-using MetroFramework.Controls;
 using MetroFramework.Forms;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
+using System;
+
 
 namespace Investissement
 {
@@ -30,55 +28,50 @@ namespace Investissement
 
             styleManager = new MetroStyleManager();
             styleManager.Owner = this;
-
+            string cheminAbsolueFichierBDD = "Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions.db";
 
             /*GESTION DE LA CONNECTION A LA BASE DE DONNEE*/
-            this.maBDD = new BDD("Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions.db");
+            this.maBDD = new BDD(cheminAbsolueFichierBDD);
             maBDD.ouvrirBDD();
 
-            /*LIAISON AVEC LES PRESENTATIONS*/
+            /*LA VUE CONNAIT LES CONTROLLERS*/
             actifController = new ActifController(this.maBDD);
             modeleInvestController = new ModeleInvestController(this.maBDD);
             transactionController = new TransactionController(this.maBDD);
-
-            this.FormClosing += MyForm_FormClosing;
 
             /*GESTION DES DIFFERENTES PAGES*/
             investirVue = new InvestirVue(actifController, modeleInvestController, transactionController);
             patrimoineVue = new PatrimoineVue(actifController,transactionController);
             bourseVue = new BourseVue();
 
-            /*LIAISON DES CHAQUE VUE A SA PAGE*/
+            /*CHAQUE PAGE DE NAVIGUATION A SON PROPRE FICHIER*/
             this.pageInvestir.Controls.Add(investirVue);
-            this.pagePatrimoine.Controls.Add(patrimoineVue);
-            this.pageBourse.Controls.Add(bourseVue);
-
             investirVue.Dock = DockStyle.Fill;
+            this.pagePatrimoine.Controls.Add(patrimoineVue);
             patrimoineVue.Dock = DockStyle.Fill;
+            this.pageBourse.Controls.Add(bourseVue);
             bourseVue.Dock = DockStyle.Fill;
+
+            this.FormClosing += fermerBDD;
         }
 
         /*INITIALISATION*/
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.pageInvestir.VerticalScrollbarBarColor = false;
-            this.pageInvestir.VerticalScrollbarSize = 0;
-
             navigation.Style = MetroFramework.MetroColorStyle.Yellow;
             navigation.Theme = MetroFramework.MetroThemeStyle.Dark;
 
-            btnQuitter.Click += BtnQuitter;
-
-            navigation.SelectedIndexChanged += patrimoineVue.majDonnees;
+            btnQuitter.Click += quitterInterface;
+            navigation.SelectedIndexChanged += patrimoineVue.majGraphiquesInterface;
         }
 
-
-        /* EVENEMENTS FERMUTURE DE LA FENETRE */
-        private void BtnQuitter(object sender, EventArgs e)
+        /*METHODES*/
+        private void quitterInterface(object sender, EventArgs e)
         {
             this.Close();
         }
-        private void MyForm_FormClosing(object sender, FormClosingEventArgs e)
+
+        private void fermerBDD(object sender, FormClosingEventArgs e)
         {
             maBDD.fermerBDD();
         }

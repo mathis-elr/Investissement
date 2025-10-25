@@ -117,18 +117,14 @@ namespace Investissement
 
 
         /*METHODES*/
-        public async void majDonnees(object sender, EventArgs e)
+        public async void majGraphiquesInterface(object sender, EventArgs e)
         {
-            this.Cursor = Cursors.WaitCursor;
-
             await transactionController.recupererPrixActifsActuel();
             //↓ mise a jour en consequence ↓
             this.afficherLineGraphiqueValeurTotaleInvestitParDate();
             this.afficherPieChartProportionParActifs();
             this.afficherPieChartProportionParTypeActifs();
             this.afficherValeurPatrimoineActuel();
-
-            this.Cursor = Cursors.Default;
         }
 
         private void afficherValeurPatrimoineActuel()
@@ -140,7 +136,7 @@ namespace Investissement
         private void afficherLineGraphiqueValeurTotaleInvestitParDate()
         {
             this.serieLineQuantiteInvestit.Points.Clear();
-            foreach ((DateTime date, double quantiteEUR) in transactionController.getListeQuantiteTotaleInvestitEURParDate())
+            foreach ((DateTime date, double quantiteEUR) in transactionController.getPaireQuantiteTotaleInvestitEURParDate())
             {
                 if (quantiteEUR == 0)
                 {
@@ -170,7 +166,7 @@ namespace Investissement
             this.seriePieChartActifs.Points.Clear();
             double valeurTotalePatrimoineActuel = transactionController.getValeurTotalePatrimoineActuel();
             if (valeurTotalePatrimoineActuel == 0) { return; }
-            foreach ((string actif, double quantiteTotaleEnEUR) in transactionController.getListePaireQuantiteEnEURTotaleInvestitParActif())
+            foreach ((string actif, double quantiteTotaleEnEUR) in transactionController.getPaireQuantiteEnEURTotaleInvestitParActif())
             {
                 double proportion = transactionController.getProportion(quantiteTotaleEnEUR, valeurTotalePatrimoineActuel);
                 this.seriePieChartActifs.Points.AddXY(actif + $"\n{proportion}%", proportion);

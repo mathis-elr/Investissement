@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Investissement
 {
-    public class GestionnairePrixActifs
+    public class GestionnaireYahoo
     {
         public static async Task<Dictionary<string, double>> GetPrixActifs(List<string> symboles)
         {
