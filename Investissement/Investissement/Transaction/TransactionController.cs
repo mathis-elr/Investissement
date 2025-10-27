@@ -4,7 +4,6 @@ using System;
 
 /*
  A FAIRE :
-- recupererPrixActifsActuel gestion d'erreur (ex quand on est hors connexion, que ca affiche un message d'erreur et pas un crash de l'application
 - manque de gestion d'erreur en general
  */
 
@@ -23,65 +22,43 @@ namespace Investissement
         }
 
         /*ENCAPSULATION*/
-        public List<(DateTime,double)> getPaireQuantiteTotaleInvestitEURParDate()
+        public Dictionary<string, double> getValeurActuelleParActif()
         {
-            return transactionbdd.getListeQuantiteTotaleInvestitEURParDate();
-        }
-        public List<(string, double)> getPaireQuantiteEnEURTotaleInvestitParActif()
-        {
-            List<(string, double)> listePaireQuantiteEnEURTotaleInvestitParActif = new List<(string, double)>();
-            foreach ((string actif, string symbole, string type, double quantiteTotale) in transactionbdd.getListeQuantiteTotaleInvestitParActif())
+            Dictionary<string, double> dictionaireValeurActuelle = new Dictionary<string, double>();
+            foreach (SyntheseDetentionActif syntheseDetentionActif in transactionbdd.getSynthesesDetentionActifs())
             {
-                double prixActuelActif = this.dictionnairePrixActif[symbole];
-                double quantiteEUR = quantiteTotale * prixActuelActif;
-                listePaireQuantiteEnEURTotaleInvestitParActif.Add((actif, quantiteEUR));
+                double prixActuelActif = this.dictionnairePrixActif[syntheseDetentionActif.symboleActif];
+                double quantiteEUR = syntheseDetentionActif.quantiteTotaleDetenue * prixActuelActif;
+                dictionaireValeurActuelle[syntheseDetentionActif.nomActif] = quantiteEUR;
             }
-            return listePaireQuantiteEnEURTotaleInvestitParActif;
+            return dictionaireValeurActuelle;
         }
-        public Dictionary<string, double> getDictionnaireQuantiteEnEURTotaleInvestitParTypeActif()
+        public Dictionary<string, double> getQuantiteInvestitParTypeActif()
         {
-            Dictionary<string, double> dictionnaireQuantiteEnEURTotaleInvestitParTypeActif = new Dictionary<string, double>();
-            foreach ((string actif,string symbole,string type,double quantiteTotale) in transactionbdd.getListeQuantiteTotaleInvestitParActif())
+            Dictionary<string, double> dictionnaireQuantiteInvestitParTypeActif = new Dictionary<string, double>();
+            foreach (SyntheseDetentionActif syntheseDetentionActif in transactionbdd.getSynthesesDetentionActifs())
             {
-                double prixActuelActif = this.dictionnairePrixActif[symbole];
-                double quantiteEUR = quantiteTotale * prixActuelActif;
-                if(dictionnaireQuantiteEnEURTotaleInvestitParTypeActif.ContainsKey(type))
+                double prixActuelActif = this.dictionnairePrixActif[syntheseDetentionActif.symboleActif];
+                double quantiteEUR = syntheseDetentionActif.quantiteTotaleDetenue * prixActuelActif;
+                if(dictionnaireQuantiteInvestitParTypeActif.ContainsKey(syntheseDetentionActif.typeActif))
                 {
-                    dictionnaireQuantiteEnEURTotaleInvestitParTypeActif[type] += quantiteEUR;
+                    dictionnaireQuantiteInvestitParTypeActif[syntheseDetentionActif.typeActif] += quantiteEUR;
                 }
                 else
                 {
-                    dictionnaireQuantiteEnEURTotaleInvestitParTypeActif.Add(type, quantiteEUR);
+                    dictionnaireQuantiteInvestitParTypeActif.Add(syntheseDetentionActif.typeActif, quantiteEUR);
                 }
 
             }
-            return dictionnaireQuantiteEnEURTotaleInvestitParTypeActif;
+            return dictionnaireQuantiteInvestitParTypeActif;
         }
-        public double getValeurTotalePatrimoineActuel()
+        public Dictionary<DateTime, double> getQuantiteInvestitParDate()
         {
-            double valeurTotalePatrimoine = 0;
-            foreach ((string nomActif, string symboleActif) in transactionbdd.getListePaireNomSymboleActif())
-            {
-                double quantite = transactionbdd.getQuantiteTotaleDetenuDunActif(nomActif);
-
-                double prix = 0;
-                if (this.dictionnairePrixActif.ContainsKey(symboleActif))
-                {
-                    prix = this.dictionnairePrixActif[symboleActif];
-                }
-
-                valeurTotalePatrimoine += quantite * prix;
-            }
-            return Math.Round(valeurTotalePatrimoine, 1);
+            return transactionbdd.getQuantiteInvestitParDate();
         }
-        public double getProportion(double part, double partTotale)
+        public Dictionary<DateTime, double> getMoyenneValeurPatrimoineParJour()
         {
-            return Math.Round(part/partTotale * 100, 2);
-        }
-        public async Task recupererPrixActifsActuel()
-        {
-            List<string> listeSymboles = transactionbdd.getListeSymboleActif();
-            this.dictionnairePrixActif = await GestionnaireYahoo.GetPrixActifs(listeSymboles);
+            return transactionbdd.getMoyenneValeurPatrimoineParJour();
         }
 
 
@@ -93,6 +70,39 @@ namespace Investissement
         public void ajouterInvestissementTotalParDate(DateTime date, double quantiteTotaleEnEUR)
         {
             transactionbdd.ajouterInvestissementTotalParDate(date, quantiteTotaleEnEUR);
+        }
+        public async Task recupererPrixActifsActuel()
+        {
+            List<string> listeSymboles = transactionbdd.getSymbolesActif();
+            this.dictionnairePrixActif = await GestionnaireYahoo.GetPrixActifs(listeSymboles);
+        }
+        public double calculerEnregistrerValeurPatrimoineActuel()
+        {
+            double valeurPatrimoine = this.calculerValeurPatrimoineActuel();
+            if(valeurPatrimoine == 0) { throw new Exception("Auncun investissement effectué"); }
+            transactionbdd.enregistrerValeurPatrimoineActuel(valeurPatrimoine);
+            return valeurPatrimoine;
+        }
+        private double calculerValeurPatrimoineActuel()
+        {
+            double valeurTotalePatrimoine = 0;
+            foreach (KeyValuePair<string,string> symboleParActif in transactionbdd.getSymboleParActif())
+            {
+                double quantite = transactionbdd.getQuantiteTotaleDetenuDunActif(symboleParActif.Key);
+
+                double prix = 0;
+                if (this.dictionnairePrixActif.ContainsKey(symboleParActif.Value))
+                {
+                    prix = this.dictionnairePrixActif[symboleParActif.Value];
+                }
+
+                valeurTotalePatrimoine += quantite * prix;
+            }
+            return Math.Round(valeurTotalePatrimoine, 1);
+        }
+        public double calculerProportion(double part, double partTotale)
+        {
+            return Math.Round(part / partTotale * 100, 2);
         }
     }
 }

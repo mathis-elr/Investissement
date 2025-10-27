@@ -7,7 +7,6 @@ using System;
 /*
 A FAIRE
 - regarder dans toutes les fonctions si on peut pas cree des fonctions plus parlantes (moins de if imbriquer et division en sous fonctions))
-- lors de l'ajout d'un actif chercher le symbole correspondant et non le demander à l'utilisateur
 */
 
 namespace Investissement
@@ -252,7 +251,7 @@ namespace Investissement
         }
 
 
-        /*ROLE BOUTONS EN FONCTION DE L'INTERFACE*/
+        /*ROLE EN FONCTION DE L'INTERFACE*/
         private void choixActionValidation(object sender, EventArgs e)
         {
             switch (this.etatBoutonValidation)
@@ -282,7 +281,7 @@ namespace Investissement
         }
 
 
-        /*ACTIONS BOUTONS*/
+        /*METHODES ACTION BTN*/
         private void ajoutActif()
         {
             Actif nvActif = new Actif(this.inputNomActif.Text, this.inputSymboleActif.Text, this.inputTypeActif.Text, this.inputISINActif.Text, this.inputRisqueActif.Text);
@@ -412,6 +411,12 @@ namespace Investissement
                 return;
             }
 
+            if(this.transactionVide())
+            {
+                MessageBox.Show("transaction vide", "Erreur suppression transaction modele");
+                return;
+            }
+
             if (this.reponsePositiveUtilisateur("Voulez-vous vraiment supprimer cette transaction ?"))
             {
                 this.supprTransactionModeleSelectionne();
@@ -433,10 +438,6 @@ namespace Investissement
             {
                 MessageBox.Show(ex.Message, "Erreur");
             }
-        }
-        private bool aucuneSelectionDansGrid()
-        {
-            return !this.gridActifs.SelectedRows[0].IsNewRow && this.gridActifs.SelectedRows.Count > 0;
         }
         private void validerInvest(object sender, EventArgs e)
         {
@@ -525,6 +526,14 @@ namespace Investissement
         private bool infoTransactionCouranteInexistante(string quantite, string prix)
         {
             return string.IsNullOrEmpty(quantite) || string.IsNullOrEmpty(prix);
+        }
+        private bool aucuneSelectionDansGrid()
+        {
+            return this.gridActifs.SelectedRows.Count == 0;
+        }
+        private bool transactionVide()
+        {
+            return this.gridActifs.SelectedRows[0].IsNewRow;
         }
 
 

@@ -18,18 +18,18 @@ namespace Investissement
 
 
         /*ENCAPSULATION*/
-        public List<(DateTime,double)> getListeQuantiteTotaleInvestitEURParDate()
+        public Dictionary<DateTime,double> getQuantiteInvestitParDate()
         {
-            List<(DateTime, double)> listeQuantiteTransactionsParDateInvest = new List<(DateTime, double)>();
+            Dictionary<DateTime, double> dictionnaireQuantiteInvestitParDate = new Dictionary<DateTime, double>();
             try
             {
-                string selectionQuantiteTransactionParDate = "SELECT date, quantiteEUR FROM InvestissementTotalParDate ORDER BY date;";
-                using (var commandSelectionQuantiteTransactionParDate = new SQLiteCommand(selectionQuantiteTransactionParDate, this.maBDD.connexion))
+                string selectionQuantiteInvestitParDate = "SELECT date, quantiteEUR FROM InvestissementTotal ORDER BY date;";
+                using (var commandSelectionQuantiteInvestitParDate = new SQLiteCommand(selectionQuantiteInvestitParDate, this.maBDD.connexion))
                 {
-                    var quantiteTransactionParDate = commandSelectionQuantiteTransactionParDate.ExecuteReader();
-                    while (quantiteTransactionParDate.Read())
+                    var quantiteInvestitParDate = commandSelectionQuantiteInvestitParDate.ExecuteReader();
+                    while (quantiteInvestitParDate.Read())
                     {
-                        listeQuantiteTransactionsParDateInvest.Add((quantiteTransactionParDate.GetDateTime(0), quantiteTransactionParDate.GetDouble(1)));
+                        dictionnaireQuantiteInvestitParDate[quantiteInvestitParDate.GetDateTime(0)] = quantiteInvestitParDate.GetDouble(1);
                     }
                 }
             }
@@ -37,7 +37,7 @@ namespace Investissement
             {
                 Console.Error.WriteLine($"Erreur selection quantite transactions SQLite : {ex.Message}");
             }
-            return listeQuantiteTransactionsParDateInvest;
+            return dictionnaireQuantiteInvestitParDate;
         }
         public double getQuantiteTotaleDetenuDunActif(string nomActif)
         {
@@ -58,18 +58,18 @@ namespace Investissement
             }
             return quantiteTotale;
         }
-        public List<(string,string)> getListePaireNomSymboleActif()
+        public Dictionary<string,string> getSymboleParActif()
         {
-            List<(string, string)> listeNomsEtSymboleActif = new List<(string, string)>();
+            Dictionary<string, string> dictionnaireSymboleParActif = new Dictionary<string, string>();
             try
             {
-                string selectionNomActifs = "SELECT DISTINCT Actif.nom, Actif.symbole FROM [Transaction] JOIN Actif ON Actif.nom = [Transaction].actif";
-                using (var commandSelectionNomActifs = new SQLiteCommand(selectionNomActifs, this.maBDD.connexion))
+                string selectionSymboleParAcif = "SELECT DISTINCT Actif.nom, Actif.symbole FROM [Transaction] JOIN Actif ON Actif.nom = [Transaction].actif";
+                using (var commandSelectionSymboleParActif = new SQLiteCommand(selectionSymboleParAcif, this.maBDD.connexion))
                 {
-                    var nomEtSymboleActifs = commandSelectionNomActifs.ExecuteReader();
-                    while (nomEtSymboleActifs.Read())
+                    var symboleParActif = commandSelectionSymboleParActif.ExecuteReader();
+                    while (symboleParActif.Read())
                     {
-                        listeNomsEtSymboleActif.Add((nomEtSymboleActifs.GetString(0), nomEtSymboleActifs.GetString(1)));
+                        dictionnaireSymboleParActif[symboleParActif.GetString(0)] = symboleParActif.GetString(1);
                     }
                 }
             }
@@ -77,11 +77,11 @@ namespace Investissement
             {
                 Console.Error.WriteLine($"Erreur selection Paire Nom/Symbole transactions SQLite : {ex.Message}");
             }
-            return listeNomsEtSymboleActif;
+            return dictionnaireSymboleParActif;
         }
-        public List<string> getListeSymboleActif()
+        public List<string> getSymbolesActif()
         {
-            List<string> listeNomsEtSymboleActif = new List<string>();
+            List<string> listeSymboleActif = new List<string>();
             try
             {
                 string selectionNomActifs = "SELECT DISTINCT Actif.symbole FROM [Transaction] JOIN Actif ON Actif.nom = [Transaction].actif";
@@ -90,7 +90,7 @@ namespace Investissement
                     var nomEtSymboleActifs = commandSelectionNomActifs.ExecuteReader();
                     while (nomEtSymboleActifs.Read())
                     {
-                        listeNomsEtSymboleActif.Add(nomEtSymboleActifs.GetString(0));
+                        listeSymboleActif.Add(nomEtSymboleActifs.GetString(0));
                     }
                 }
             }
@@ -98,21 +98,24 @@ namespace Investissement
             {
                 Console.Error.WriteLine($"Erreur selection symbole transactions SQLite : {ex.Message}");
             }
-            return listeNomsEtSymboleActif;
+            return listeSymboleActif;
         }
-
-        public List<(string actif,string symbole,string type,double quantiteTotale)> getListeQuantiteTotaleInvestitParActif()
+        public List<SyntheseDetentionActif> getSynthesesDetentionActifs()
         {
-            List<(string,string,string,double)> listeActifsQuantiteTotaleInvestit = new List<(string,string,string,double)>();
+            List<SyntheseDetentionActif> listeSyntheseDetentionActif = new List<SyntheseDetentionActif>();
             try
             {
-                string selectionActifsQuantiteTotaleInvestit = "SELECT actif, symbole, type,SUM(quantite) FROM [Transaction] JOIN Actif ON Actif.nom = [Transaction].actif GROUP BY actif";
-                using (var commandSelectionActifsQuantiteTotaleInvestit = new SQLiteCommand(selectionActifsQuantiteTotaleInvestit, this.maBDD.connexion))
+                string selectionSyntheseDetentionActif = "SELECT actif, symbole, type,SUM(quantite) FROM [Transaction] JOIN Actif ON Actif.nom = [Transaction].actif GROUP BY actif";
+                using (var commandSelectionSyntheseDetentionActif = new SQLiteCommand(selectionSyntheseDetentionActif, this.maBDD.connexion))
                 {
-                    var actifQuantiteTotaleInvestit = commandSelectionActifsQuantiteTotaleInvestit.ExecuteReader();
-                    while (actifQuantiteTotaleInvestit.Read())
+                    var syntheseParActif = commandSelectionSyntheseDetentionActif.ExecuteReader();
+                    while (syntheseParActif.Read())
                     {
-                        listeActifsQuantiteTotaleInvestit.Add((actifQuantiteTotaleInvestit.GetString(0), actifQuantiteTotaleInvestit.GetString(1), actifQuantiteTotaleInvestit.GetString(2), actifQuantiteTotaleInvestit.GetDouble(3)));
+                        SyntheseDetentionActif syntheseDetentionActif = new SyntheseDetentionActif(syntheseParActif.GetString(0), 
+                                                                                                   syntheseParActif.GetString(1), 
+                                                                                                   syntheseParActif.GetString(2),
+                                                                                                   syntheseParActif.GetDouble(3));
+                        listeSyntheseDetentionActif.Add(syntheseDetentionActif);
                     }
                 }
             }
@@ -120,8 +123,30 @@ namespace Investissement
             {
                 Console.Error.WriteLine($"Erreur selection actif et quantiteTotale(somme des quantite par actif) transactions SQLite : {ex.Message}");
             }
-            return listeActifsQuantiteTotaleInvestit;
+            return listeSyntheseDetentionActif;
         }
+        public Dictionary<DateTime, double> getMoyenneValeurPatrimoineParJour()
+        {
+            Dictionary<DateTime, double> dictionnaireMoyenneValeurPatrimoineParJour = new Dictionary<DateTime, double>();
+            try
+            {
+                string recupererMoyenneValeurPatrimoineParDate = "SELECT DATE(date) AS date_sans_heure,AVG(valeurEUR) FROM ValeurPatrimoine GROUP BY date_sans_heure;";
+                using (var commandRecupererMoyenneValeurPatrimoineParDate = new SQLiteCommand(recupererMoyenneValeurPatrimoineParDate, this.maBDD.connexion))
+                {
+                    var moyenneValeurPatrimoineParDate = commandRecupererMoyenneValeurPatrimoineParDate.ExecuteReader();
+                    while (moyenneValeurPatrimoineParDate.Read())
+                    {
+                        dictionnaireMoyenneValeurPatrimoineParJour[moyenneValeurPatrimoineParDate.GetDateTime(0)] = moyenneValeurPatrimoineParDate.GetDouble(1);
+                    }
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                Console.Error.WriteLine($"Erreur recuperation Moyenne Valeur Patrimoine par Date SQLite : {ex.Message}");
+            }
+            return dictionnaireMoyenneValeurPatrimoineParJour;
+        }
+
 
         /*METHODES*/
         public void ajouterTransaction(Transaction transaction)
@@ -150,13 +175,13 @@ namespace Investissement
             try
             {
                 double quantiteTotaleEURDernierInvest =  0;
-                string selectionQuantiteDernierInvest = "SELECT quantiteEUR FROM InvestissementTotalParDate ORDER BY date DESC LIMIT 1;";
+                string selectionQuantiteDernierInvest = "SELECT quantiteEUR FROM InvestissementTotal ORDER BY date DESC LIMIT 1;";
                 using (var commandSelectionQuantiteDernierInvest = new SQLiteCommand(selectionQuantiteDernierInvest, this.maBDD.connexion))
                 {
                     quantiteTotaleEURDernierInvest = (double)commandSelectionQuantiteDernierInvest.ExecuteScalar();
                 }
 
-                string query = "INSERT INTO InvestissementTotalParDate (date,quantiteEUR) VALUES (@date,@sommeQuantite);"; 
+                string query = "INSERT INTO InvestissementTotal (date,quantiteEUR) VALUES (@date,@sommeQuantite);"; 
                 using (var command = new SQLiteCommand(query, this.maBDD.connexion))
                 {
                     double totalInvest = quantiteTotaleEURDernierInvest + quantiteTotaleEnEUR;
@@ -166,20 +191,36 @@ namespace Investissement
                     command.ExecuteNonQuery();
                 }
 
-                string queryUpdate= "UPDATE InvestissementTotalParDate SET quantite = quantiteEUR + @ajoutQuantite WHERE date > @dateLimit;";
+                string queryUpdate= "UPDATE InvestissementTotal SET quantite = quantiteEUR + @ajoutQuantite WHERE date > @dateLimit;";
 
                 using (var commandUpdate = new SQLiteCommand(queryUpdate, this.maBDD.connexion))
                 {
-                    // @ajoutQuantite est la valeur que vous venez d'ajouter à l'historique
                     commandUpdate.Parameters.AddWithValue("@ajoutQuantite", quantiteTotaleEnEUR);
                     commandUpdate.Parameters.AddWithValue("@dateLimit", date);
-
                     commandUpdate.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException ex)
             {
                 Console.Error.WriteLine($"Erreur insertion investissement total par date SQLite : {ex.Message}");
+            }
+        }
+        public void enregistrerValeurPatrimoineActuel(double valeurEUR)
+        {
+            try
+            {
+                string insererValeurPatrimoine = "INSERT INTO ValeurPatrimoine (date,valeurEUR) VALUES (@date,@valeurEUR);";
+                using (var commandInsererValeurPatrimoine = new SQLiteCommand(insererValeurPatrimoine, this.maBDD.connexion))
+                {
+                    commandInsererValeurPatrimoine.Parameters.AddWithValue("@date", DateTime.Now);
+                    commandInsererValeurPatrimoine.Parameters.AddWithValue("@valeurEUR", valeurEUR);
+                    commandInsererValeurPatrimoine.ExecuteNonQuery();
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                Console.Error.WriteLine($"Erreur insertion ValeurPatrimoine SQLite : {ex.Message}");
+                throw new Exception("une erreur est survenue lors de l'insertion d'une transaction");
             }
         }
     }

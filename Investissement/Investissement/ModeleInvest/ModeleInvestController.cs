@@ -35,7 +35,6 @@ namespace Investissement
 
 
         /*METHODES MODELE INVEST*/
-
         public void ajouterModele(ModeleInvest modeleInvest)
         {
             if (string.IsNullOrEmpty(modeleInvest.nom)) { throw new ArgumentException("Nom du modèle vide"); }
@@ -60,17 +59,14 @@ namespace Investissement
             if (string.IsNullOrEmpty(transactionModele.actif)) { throw new ArgumentException("modele inconnu"); }
             modeleInvestbdd.ajouterTransactionsModele(transactionModele);
         }
-
-        public void supprToutesTransactionsModele(long idModele)
-        {
-            modeleInvestbdd.supprToutesTransactionsModele(idModele);
-        }
-
         public void supprUneTransactionModele(long idModeleAssocie, string nomActif)
         {
             if (string.IsNullOrEmpty(nomActif)) { throw new ArgumentException("Nom du modele vide"); }
             modeleInvestbdd.supprUneTransactionModele(idModeleAssocie, nomActif);
         }
-
+        public void supprToutesTransactionsModele(long idModele)
+        {
+            modeleInvestbdd.supprToutesTransactionsModele(idModele);
+        }
     }
 }

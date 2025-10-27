@@ -1,10 +1,12 @@
 ﻿using System.Windows.Forms.DataVisualization.Charting;
 using System.Collections.Generic;
-using MetroFramework.Controls;
 using System.Windows.Forms;
 using System.Drawing;
 using System;
 
+/*A FAIRE
+- ajouter que meme si investit pas ce jour la il faut ajouter la meme valeur que la denrière ajouté pour que ce soit plus logique entre les deux lignes dans le graphique
+*/
 
 namespace Investissement
 {
@@ -14,6 +16,8 @@ namespace Investissement
         private Series serieLineQuantiteInvestit;
         private Series seriePieChartTypeActif;
         private Series seriePieChartActifs;
+        private Series serieLineValeurPatrimoineMoyen;
+        private double valeurPatrimoineActuelle;
 
         public PatrimoineVue(ActifController actifController, TransactionController transactionController)
         {
@@ -81,14 +85,14 @@ namespace Investissement
             };
             chartAreaPatrimoine.AxisX.LabelStyle.ForeColor = Color.White;
             chartAreaPatrimoine.AxisY.LabelStyle.ForeColor = Color.White;
-            lineChartPatrimoine.ChartAreas.Add(chartAreaPatrimoine);
 
-            Legend legendLineChartPatrimoine = new Legend();
-            legendLineChartPatrimoine.BackColor = Color.Black;
-            legendLineChartPatrimoine.ForeColor = Color.White;
-            legendLineChartPatrimoine.Docking = Docking.Bottom;
-            legendLineChartPatrimoine.Alignment = StringAlignment.Center;
-            lineChartPatrimoine.Legends.Add(legendLineChartPatrimoine);
+            chartAreaPatrimoine.CursorX.IsUserEnabled = true;
+            chartAreaPatrimoine.CursorX.IsUserSelectionEnabled = true;
+            chartAreaPatrimoine.AxisX.ScaleView.Zoomable = true;
+            chartAreaPatrimoine.CursorY.IsUserEnabled = true;
+            chartAreaPatrimoine.CursorY.IsUserSelectionEnabled = true;
+            chartAreaPatrimoine.AxisY.ScaleView.Zoomable = true;
+            lineChartPatrimoine.ChartAreas.Add(chartAreaPatrimoine);
 
             /*1ere ligne du graphique montant total investit par rapport au temps*/
             this.serieLineQuantiteInvestit = new Series()
@@ -96,20 +100,28 @@ namespace Investissement
                 ChartType = SeriesChartType.Line,
                 Color = Color.DeepSkyBlue,
                 BorderWidth = 3,
-                Name = "Total Investit"
+                Name = "Total Investit",
+                XValueType = ChartValueType.DateTime
             };
             lineChartPatrimoine.Series.Add(this.serieLineQuantiteInvestit);
 
-            //Series series2 = new Series()
-            //{
-            //    ChartType = SeriesChartType.Line,
-            //    Color = Color.IndianRed,
-            //    BorderWidth = 3,
-            //};
-            //series2.Points.AddXY("Jan", 0);
-            //series2.Points.AddXY("Fév", 100);
-            //series2.Points.AddXY("Mars", 230);
-            //lineChartPatrimoine.Series.Add(series2);
+            /*2e ligne du graphique valeur du patrimoine moyen par rapport au temps*/
+            this.serieLineValeurPatrimoineMoyen = new Series()
+            {
+                ChartType = SeriesChartType.Line,
+                Color = Color.IndianRed,
+                BorderWidth = 3,
+                Name = "Valeur patrimoine moyen",
+                XValueType = ChartValueType.DateTime
+            };
+            lineChartPatrimoine.Series.Add(serieLineValeurPatrimoineMoyen);
+
+            Legend legendLineChart = new Legend();
+            legendLineChart.BackColor = Color.Black;
+            legendLineChart.ForeColor = Color.White;
+            legendLineChart.Docking = Docking.Bottom;
+            legendLineChart.Alignment = StringAlignment.Center;
+            lineChartPatrimoine.Legends.Add(legendLineChart);
 
             this.pageGraphique.Controls.Add(lineChartPatrimoine);
             lineChartPatrimoine.Dock = DockStyle.Fill;
@@ -119,68 +131,58 @@ namespace Investissement
         /*METHODES*/
         public async void majGraphiquesInterface(object sender, EventArgs e)
         {
-            await transactionController.recupererPrixActifsActuel();
-            //↓ mise a jour en consequence ↓
-            this.afficherLineGraphiqueValeurTotaleInvestitParDate();
-            this.afficherPieChartProportionParActifs();
-            this.afficherPieChartProportionParTypeActifs();
-            this.afficherValeurPatrimoineActuel();
+            try
+            {
+                await transactionController.recupererPrixActifsActuel();
+                //↓ mise a jour des graphiques en consequence ↓
+                this.valeurPatrimoineActuelle = transactionController.calculerEnregistrerValeurPatrimoineActuel();
+                this.afficherValeurPatrimoineActuel();
+                this.remplirPieChartProportionParActifs();
+                this.remplirPieChartProportionParTypeActifs();
+                this.remplirGraphiqueValeurTotaleInvestitParDate();
+                this.remplirGraphiqueValeurMoyenneParDate();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Erreur");
+            }
         }
-
         private void afficherValeurPatrimoineActuel()
         {
-            double valeur = transactionController.getValeurTotalePatrimoineActuel();
-            this.labelValeurPatrimoineTotal.Text = $"{valeur} €";
+            this.labelValeurPatrimoineTotal.Text = $"{this.valeurPatrimoineActuelle} €";
         }
-
-        private void afficherLineGraphiqueValeurTotaleInvestitParDate()
-        {
-            this.serieLineQuantiteInvestit.Points.Clear();
-            foreach ((DateTime date, double quantiteEUR) in transactionController.getPaireQuantiteTotaleInvestitEURParDate())
-            {
-                if (quantiteEUR == 0)
-                {
-                    this.serieLineQuantiteInvestit.Points.AddXY("j-1", quantiteEUR);
-                    continue;
-                }
-                this.serieLineQuantiteInvestit.Points.AddXY(date.Day + "/" + date.Month, quantiteEUR);
-            }
-        }
-
-        private void afficherLineGraphiqueValeurTotaleEnFonctionDuPrixParDate()
-        {
-            //this.serieLineQuantiteValeurTotaleEnFonctionDuPrix.Points.Clear();
-            //foreach ((DateTime date, double quantiteEUR) in transactionController.getListeQuantiteTotaleInvestitEURParDate())
-            //{
-            //    if (quantiteEUR == 0)
-            //    {
-            //        this.serieLineQuantiteInvestit.Points.AddXY("j-1", quantiteEUR);
-            //        continue;
-            //    }
-            //    this.serieLineQuantiteInvestit.Points.AddXY(date.Day + "/" + date.Month, quantiteEUR);
-            //}
-        }
-
-        private void afficherPieChartProportionParActifs()
+        private void remplirPieChartProportionParActifs()
         {
             this.seriePieChartActifs.Points.Clear();
-            double valeurTotalePatrimoineActuel = transactionController.getValeurTotalePatrimoineActuel();
-            if (valeurTotalePatrimoineActuel == 0) { return; }
-            foreach ((string actif, double quantiteTotaleEnEUR) in transactionController.getPaireQuantiteEnEURTotaleInvestitParActif())
+            foreach (KeyValuePair<string, double> quantiteParActif in transactionController.getValeurActuelleParActif())
             {
-                double proportion = transactionController.getProportion(quantiteTotaleEnEUR, valeurTotalePatrimoineActuel);
-                this.seriePieChartActifs.Points.AddXY(actif + $"\n{proportion}%", proportion);
+                double proportion = transactionController.calculerProportion(quantiteParActif.Value, this.valeurPatrimoineActuelle);
+                this.seriePieChartActifs.Points.AddXY(quantiteParActif.Key + $"\n{proportion}%", proportion);
             }
         }
-
-        private void afficherPieChartProportionParTypeActifs()
+        private void remplirPieChartProportionParTypeActifs()
         {
             this.seriePieChartTypeActif.Points.Clear();
-            double valeurTotalePatrimoineActuel = transactionController.getValeurTotalePatrimoineActuel();
-            foreach (KeyValuePair<string,double> type in transactionController.getDictionnaireQuantiteEnEURTotaleInvestitParTypeActif())
+            foreach (KeyValuePair<string, double> type in transactionController.getQuantiteInvestitParTypeActif())
             {
-                double proportion = transactionController.getProportion(type.Value, valeurTotalePatrimoineActuel);
+                double proportion = transactionController.calculerProportion(type.Value, this.valeurPatrimoineActuelle);
                 this.seriePieChartTypeActif.Points.AddXY(type.Key + $"\n{proportion}%", proportion);
+            }
+        }
+        private void remplirGraphiqueValeurTotaleInvestitParDate()
+        {
+            this.serieLineQuantiteInvestit.Points.Clear();
+            foreach (KeyValuePair<DateTime, double> quantiteInvestitParDate in transactionController.getQuantiteInvestitParDate())
+            {
+                this.serieLineQuantiteInvestit.Points.AddXY(quantiteInvestitParDate.Key, quantiteInvestitParDate.Value);
+            }
+        }
+        private void remplirGraphiqueValeurMoyenneParDate()
+        {
+            this.serieLineValeurPatrimoineMoyen.Points.Clear();
+            foreach (KeyValuePair<DateTime, double> valeurMoyenneParDate in transactionController.getMoyenneValeurPatrimoineParJour())
+            {
+                this.serieLineValeurPatrimoineMoyen.Points.AddXY(valeurMoyenneParDate.Key, valeurMoyenneParDate.Value);
             }
         }
     }

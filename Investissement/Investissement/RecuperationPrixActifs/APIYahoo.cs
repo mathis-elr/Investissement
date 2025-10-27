@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using YahooFinanceApi;
 using System.Linq;
 using System;
+using System.CodeDom;
 
 
 namespace Investissement
@@ -50,8 +51,8 @@ namespace Investissement
             }
             catch (Exception ex)
             {
-                // L'échec peut arriver si Yahoo change son site ou si tu es bloqué (très rare)
-                Console.WriteLine($"ERREUR (YahooApi) lors de l'appel groupé: {ex.Message}");
+                Console.WriteLine($"ERREUR recuperation prix actifs API yahoo : {ex.Message}");
+                throw new Exception($"ERREUR de connexion pour la recuperation prix");
             }
 
             return dictionnairePrix;
