@@ -441,8 +441,7 @@ namespace Investissement
         }
         private void validerInvest(object sender, EventArgs e)
         {
-            if (!validerSaisieTransactions())
-                return;
+            if (!validationSaisieTransactions()) { return; }
 
             DateTime dateInvestSaisie = this.dateInvest.Value;
             double quantiteTotaleEnEUR = 0;
@@ -458,18 +457,9 @@ namespace Investissement
                 quantiteTotaleEnEUR += nouvelleTransaction.quantite * nouvelleTransaction.prix;
             }
 
-            transactionController.ajouterInvestissementTotalParDate(dateInvestSaisie, quantiteTotaleEnEUR);
+            transactionController.modifierInvestissementTotal(dateInvestSaisie, quantiteTotaleEnEUR);
             MessageBox.Show("Investissement effectué avec succès", "Investissement");
             this.afficherActifsDansGrid();
-        }
-        private bool validerSaisieTransactions()
-        {
-            if (this.mauvaisTypeSaisie())
-            {
-                MessageBox.Show("double attendu pour le prix et la quantite des actifs choisis", "Erreur Transaction Invest");
-                return false;
-            }
-            return true;
         }
         private Transaction creerTransaction(DateTime date, DataGridViewRow row)
         {
@@ -489,22 +479,7 @@ namespace Investissement
                 MessageBox.Show(ex.Message, "Erreur");
             }
         }
-        private bool reponsePositiveUtilisateur(string message)
-        {
-            DialogResult reponse = MessageBox.Show(
-            message,
-            "Confirmation",
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question
-            );
-
-            if (reponse == DialogResult.Yes)
-            {
-                return true;
-            }
-            return false;
-        }
-        private bool mauvaisTypeSaisie()
+        private bool validationSaisieTransactions()
         {
             /*On est obliger de verifier avant toutes les lignes sinon ca peut ajouter certaines transactions et pas d'autre, donc on insere que si il n'y a pas d'erreur*/
             foreach (DataGridViewRow transaction in this.gridActifs.Rows)
@@ -518,10 +493,22 @@ namespace Investissement
                 bool prixOk = double.TryParse(prixString, out double prixLong);
                 if (!quantiteOk || !prixOk)
                 {
+                    MessageBox.Show("decimal ou entier attendu pour le prix et la quantite des actifs choisis", "Erreur Transaction");
                     return false;
                 }
             }
             return true;
+        }
+        private bool reponsePositiveUtilisateur(string message)
+        {
+            DialogResult reponse = MessageBox.Show(
+            message,
+            "Confirmation",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question
+            );
+
+            return reponse == DialogResult.Yes;
         }
         private bool infoTransactionCouranteInexistante(string quantite, string prix)
         {

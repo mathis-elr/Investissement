@@ -40,7 +40,7 @@ namespace Investissement
                     if (resultats.TryGetValue(symbole, out Security data))
                     {
                         // "RegularMarketPrice" est le prix actuel (ou le dernier prix de clôture)
-                        dictionnairePrix[symbole] = (double)data.RegularMarketPrice;
+                        dictionnairePrix[symbole] = Math.Round((double)data.RegularMarketPrice,2);
                     }
                     else
                     {

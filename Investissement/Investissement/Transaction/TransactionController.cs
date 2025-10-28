@@ -67,20 +67,60 @@ namespace Investissement
         {
             transactionbdd.ajouterTransaction(nvlTransaction);
         }
-        public void ajouterInvestissementTotalParDate(DateTime date, double quantiteTotaleEnEUR)
+        public void ajouterInvestissementTotalDuJour()
         {
-            transactionbdd.ajouterInvestissementTotalParDate(date, quantiteTotaleEnEUR);
+            //permet une harmonisation pour la visualisation du graphique,
+            //comme ça la ligne d'investissement total est à jour des que l'on veut visualiser le graphique même si n'a pas investit ajd
+            if (this.investissementEffectueAujourdhui()) { return; }
+            transactionbdd.ajouterInvestissementTotal(DateTime.Today,0);
+        }
+        public void ajouterInvestissementTotal(DateTime date, double quantiteInvestit)
+        {
+            transactionbdd.ajouterInvestissementTotal(date, quantiteInvestit);
+            this.verifierDateInvestissement(date, quantiteInvestit);
+        }
+        private void verifierDateInvestissement(DateTime date, double quantiteInvestit)
+        {
+            //cas ou on viens d'ajouter un investissement alors que des investissements plus recents on déjà été saisie
+            //on modifie donc la quantite de toute les date superieur a la date d'investissement qui vient d'être effectué
+            if (date.ToString("yyyy-MM-dd") != DateTime.Today.ToString("yyyy-MM-dd"))
+            {
+                transactionbdd.modifierInvestissementTotalApresDate(date, quantiteInvestit);
+            }
+        }
+        public void modifierInvestissementTotal(DateTime date, double quantiteInvestit)
+        {
+            //le premier if pourrait être suprimé en soit mais je trouve plus clair ecrit comme ça
+            if(date.ToString("yyyy-MM-dd") == DateTime.Today.ToString("yyyy-MM-dd") && transactionbdd.dateInvestissementExiste(date))
+            {
+                transactionbdd.modifierInvestissementTotal(DateTime.Today, quantiteInvestit);
+            }
+            else if(transactionbdd.dateInvestissementExiste(date))
+            {
+                transactionbdd.modifierInvestissementTotal(date, quantiteInvestit);
+            }
+            else
+            {
+                //- si la date d'investissement est ajd et que cette date n'existe pas encore dans la bdd
+                //(donc en gros si a juste ouvert l'appli et qu'on a fait un investissement direct sans charger les données de "Patrimoine"
+                //- si un investissement a une date quelquonque qui n'avais pas été ajouté a la bdd
+                //(car pas de chargement des données de la page "Patrimoine à cette date là)
+                this.ajouterInvestissementTotal(date, quantiteInvestit);
+            }
         }
         public async Task recupererPrixActifsActuel()
         {
             List<string> listeSymboles = transactionbdd.getSymbolesActif();
             this.dictionnairePrixActif = await GestionnaireYahoo.GetPrixActifs(listeSymboles);
         }
-        public double calculerEnregistrerValeurPatrimoineActuel()
+        public double calculerEnregistrerValeurPatrimoineActuel(double ancienPrix)
         {
             double valeurPatrimoine = this.calculerValeurPatrimoineActuel();
             if(valeurPatrimoine == 0) { throw new Exception("Auncun investissement effectué"); }
-            transactionbdd.enregistrerValeurPatrimoineActuel(valeurPatrimoine);
+            if (valeurPatrimoine != ancienPrix) 
+            {
+                transactionbdd.enregistrerValeurPatrimoineActuel(valeurPatrimoine);
+            };
             return valeurPatrimoine;
         }
         private double calculerValeurPatrimoineActuel()
@@ -98,11 +138,15 @@ namespace Investissement
 
                 valeurTotalePatrimoine += quantite * prix;
             }
-            return Math.Round(valeurTotalePatrimoine, 1);
+            return Math.Round(valeurTotalePatrimoine, 2);
         }
         public double calculerProportion(double part, double partTotale)
         {
             return Math.Round(part / partTotale * 100, 2);
+        }
+        private bool investissementEffectueAujourdhui()
+        {
+            return transactionbdd.getDateDernierInvest() == DateTime.Today;
         }
     }
 }

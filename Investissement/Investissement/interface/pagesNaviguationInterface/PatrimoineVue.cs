@@ -5,7 +5,6 @@ using System.Drawing;
 using System;
 
 /*A FAIRE
-- ajouter que meme si investit pas ce jour la il faut ajouter la meme valeur que la denrière ajouté pour que ce soit plus logique entre les deux lignes dans le graphique
 */
 
 namespace Investissement
@@ -135,10 +134,11 @@ namespace Investissement
             {
                 await transactionController.recupererPrixActifsActuel();
                 //↓ mise a jour des graphiques en consequence ↓
-                this.valeurPatrimoineActuelle = transactionController.calculerEnregistrerValeurPatrimoineActuel();
+                this.valeurPatrimoineActuelle = transactionController.calculerEnregistrerValeurPatrimoineActuel(this.valeurPatrimoineActuelle);
                 this.afficherValeurPatrimoineActuel();
                 this.remplirPieChartProportionParActifs();
                 this.remplirPieChartProportionParTypeActifs();
+                transactionController.ajouterInvestissementTotalDuJour();
                 this.remplirGraphiqueValeurTotaleInvestitParDate();
                 this.remplirGraphiqueValeurMoyenneParDate();
             }
