@@ -9,12 +9,14 @@ namespace Investissement
     public partial class Form1 : MetroForm
     {
         /*ATTRIBUTS*/
-        private MetroStyleManager styleManager;
-        public BDD maBDD;
+        private readonly MetroStyleManager styleManager;
+        private readonly BDD maBDD;
 
-        public ActifController actifController;
-        public ModeleInvestController modeleInvestController;
-        public TransactionController transactionController;
+        private readonly ActifController actifController;
+        private readonly ModeleInvestController modeleInvestController;
+        private readonly TransactionController transactionController;
+        private readonly InvestissementTotalController investissementTotalController;
+        private readonly ValeurPatrimoineController valeurPatrimoineController;
 
         public InvestirVue investirVue;
         public PatrimoineVue patrimoineVue;
@@ -28,7 +30,8 @@ namespace Investissement
 
             styleManager = new MetroStyleManager();
             styleManager.Owner = this;
-            string cheminAbsolueFichierBDD = "Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions.db";
+            string cheminAbsolueFichierBDD = "Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions_tests.db";
+            //string cheminAbsolueFichierBDD = "Data Source=C:\\Users\\mathi\\Documents\\prog perso\\c#\\Investissement\\bd\\historique_transactions_tests.db";
 
             /*GESTION DE LA CONNECTION A LA BASE DE DONNEE*/
             this.maBDD = new BDD(cheminAbsolueFichierBDD);
@@ -37,11 +40,14 @@ namespace Investissement
             /*LA VUE CONNAIT LES CONTROLLERS*/
             actifController = new ActifController(this.maBDD);
             modeleInvestController = new ModeleInvestController(this.maBDD);
-            transactionController = new TransactionController(this.maBDD);
+            valeurPatrimoineController = new ValeurPatrimoineController(this.maBDD);
+            transactionController = new TransactionController(this.maBDD, valeurPatrimoineController);
+            investissementTotalController = new InvestissementTotalController(this.maBDD);
+
 
             /*GESTION DES DIFFERENTES PAGES*/
-            investirVue = new InvestirVue(actifController, modeleInvestController, transactionController);
-            patrimoineVue = new PatrimoineVue(actifController,transactionController);
+            investirVue = new InvestirVue(actifController, modeleInvestController, transactionController, investissementTotalController);
+            patrimoineVue = new PatrimoineVue(valeurPatrimoineController, transactionController, investissementTotalController);
             bourseVue = new BourseVue();
 
             /*CHAQUE PAGE DE NAVIGUATION A SON PROPRE FICHIER*/

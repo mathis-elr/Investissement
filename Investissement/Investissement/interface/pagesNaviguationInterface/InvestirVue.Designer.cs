@@ -584,7 +584,7 @@
             this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 84.84849F));
             this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.15152F));
             this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52F));
-            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 86F));
+            this.pannelChoixModeles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 87F));
             this.pannelChoixModeles.Controls.Add(this.btnInterfaceEditerModeleInvest, 3, 0);
             this.pannelChoixModeles.Controls.Add(this.btnSupprModele, 2, 0);
             this.pannelChoixModeles.Controls.Add(this.labelDescrModele, 0, 2);
@@ -606,7 +606,7 @@
             this.btnInterfaceEditerModeleInvest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.btnInterfaceEditerModeleInvest.Enabled = false;
             this.btnInterfaceEditerModeleInvest.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnInterfaceEditerModeleInvest.Location = new System.Drawing.Point(349, 3);
+            this.btnInterfaceEditerModeleInvest.Location = new System.Drawing.Point(348, 3);
             this.btnInterfaceEditerModeleInvest.Name = "btnInterfaceEditerModeleInvest";
             this.btnInterfaceEditerModeleInvest.Size = new System.Drawing.Size(50, 35);
             this.btnInterfaceEditerModeleInvest.TabIndex = 12;
@@ -621,7 +621,7 @@
             this.btnSupprModele.BackColor = System.Drawing.Color.Red;
             this.btnSupprModele.Enabled = false;
             this.btnSupprModele.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnSupprModele.Location = new System.Drawing.Point(297, 3);
+            this.btnSupprModele.Location = new System.Drawing.Point(296, 3);
             this.btnSupprModele.Name = "btnSupprModele";
             this.btnSupprModele.Size = new System.Drawing.Size(35, 35);
             this.btnSupprModele.TabIndex = 9;
@@ -642,7 +642,7 @@
             this.labelDescrModele.ForeColor = System.Drawing.Color.White;
             this.labelDescrModele.Location = new System.Drawing.Point(3, 75);
             this.labelDescrModele.Name = "labelDescrModele";
-            this.labelDescrModele.Size = new System.Drawing.Size(244, 85);
+            this.labelDescrModele.Size = new System.Drawing.Size(243, 85);
             this.labelDescrModele.TabIndex = 6;
             this.labelDescrModele.Text = "aucun modèle sélectionné";
             this.labelDescrModele.UseCustomBackColor = true;
@@ -660,7 +660,7 @@
             this.labelTitreDescrModele.ForeColor = System.Drawing.Color.White;
             this.labelTitreDescrModele.Location = new System.Drawing.Point(3, 43);
             this.labelTitreDescrModele.Name = "labelTitreDescrModele";
-            this.labelTitreDescrModele.Size = new System.Drawing.Size(244, 32);
+            this.labelTitreDescrModele.Size = new System.Drawing.Size(243, 32);
             this.labelTitreDescrModele.TabIndex = 5;
             this.labelTitreDescrModele.Text = "description modele";
             this.labelTitreDescrModele.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -672,7 +672,7 @@
             // 
             this.btnInterfaceCreationModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.btnInterfaceCreationModel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.btnInterfaceCreationModel.Location = new System.Drawing.Point(253, 3);
+            this.btnInterfaceCreationModel.Location = new System.Drawing.Point(252, 3);
             this.btnInterfaceCreationModel.Name = "btnInterfaceCreationModel";
             this.btnInterfaceCreationModel.Size = new System.Drawing.Size(35, 35);
             this.btnInterfaceCreationModel.TabIndex = 5;
@@ -688,7 +688,7 @@
             this.comboBoxModelesInvest.ItemHeight = 24;
             this.comboBoxModelesInvest.Location = new System.Drawing.Point(3, 3);
             this.comboBoxModelesInvest.Name = "comboBoxModelesInvest";
-            this.comboBoxModelesInvest.Size = new System.Drawing.Size(244, 30);
+            this.comboBoxModelesInvest.Size = new System.Drawing.Size(243, 30);
             this.comboBoxModelesInvest.TabIndex = 3;
             this.comboBoxModelesInvest.UseSelectable = true;
             // 

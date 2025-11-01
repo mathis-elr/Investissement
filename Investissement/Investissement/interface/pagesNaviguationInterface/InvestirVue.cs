@@ -4,11 +4,6 @@ using System.Windows.Forms;
 using System.Data;
 using System;
 
-/*
-A FAIRE
-- regarder dans toutes les fonctions si on peut pas cree des fonctions plus parlantes (moins de if imbriquer et division en sous fonctions))
-*/
-
 namespace Investissement
 {
     public partial class InvestirVue : UserControl
@@ -17,6 +12,7 @@ namespace Investissement
         private readonly ActifController actifController;
         private readonly ModeleInvestController modeleInvestController;
         private readonly TransactionController transactionController;
+        private readonly InvestissementTotalController investissementTotalController;
 
         private enum EtatBoutonValidation
         {
@@ -35,11 +31,12 @@ namespace Investissement
         private EtatBoutonSuppression etatBoutonSuppression = EtatBoutonSuppression.supprActif;
 
 
-        public InvestirVue(ActifController actifController, ModeleInvestController modeleInvestController, TransactionController transactionController)
+        public InvestirVue(ActifController actifController, ModeleInvestController modeleInvestController, TransactionController transactionController, InvestissementTotalController investissementTotalController)
         {
             this.actifController = actifController;
             this.modeleInvestController = modeleInvestController;
             this.transactionController = transactionController;
+            this.investissementTotalController = investissementTotalController;
 
             InitializeComponent();
         }
@@ -160,10 +157,11 @@ namespace Investissement
             this.gridActifs.Columns.Clear();
             this.gridActifs.AllowUserToAddRows = true;
 
-            DataGridViewComboBoxColumn comboCol = new DataGridViewComboBoxColumn();
-            comboCol.HeaderText = "actif";
-            comboCol.Name = "Nom";
-            DataGridViewComboBoxColumn listeActifs = comboCol;
+            DataGridViewComboBoxColumn comboCol = new DataGridViewComboBoxColumn()
+            {
+                HeaderText = "actif",
+                Name = "Nom",
+            };
             DataTable actifs = actifController.getActifs();
             comboCol.DataSource = actifs;
             comboCol.DisplayMember = "Nom";
@@ -457,7 +455,7 @@ namespace Investissement
                 quantiteTotaleEnEUR += nouvelleTransaction.quantite * nouvelleTransaction.prix;
             }
 
-            transactionController.modifierInvestissementTotal(dateInvestSaisie, quantiteTotaleEnEUR);
+            investissementTotalController.modifierInvestissementTotal(dateInvestSaisie, quantiteTotaleEnEUR);
             MessageBox.Show("Investissement effectué avec succès", "Investissement");
             this.afficherActifsDansGrid();
         }

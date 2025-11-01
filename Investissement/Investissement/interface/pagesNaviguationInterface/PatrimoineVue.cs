@@ -4,24 +4,30 @@ using System.Windows.Forms;
 using System.Drawing;
 using System;
 
-/*A FAIRE
-*/
 
 namespace Investissement
 {
     public partial class PatrimoineVue : UserControl
     {
-        private TransactionController transactionController;
+        private readonly TransactionController transactionController;
+        private readonly ValeurPatrimoineController valeurPatrimoineController;
+        private readonly InvestissementTotalController investissementTotalController;
+
         private Series serieLineQuantiteInvestit;
         private Series seriePieChartTypeActif;
         private Series seriePieChartActifs;
         private Series serieLineValeurPatrimoineMoyen;
-        private double valeurPatrimoineActuelle;
+        private double valeurPatrimoineActuelle; 
+        private DataPoint lastHoveredPoint = null;
+        private readonly ToolTip chartToolTip = new ToolTip();
 
-        public PatrimoineVue(ActifController actifController, TransactionController transactionController)
+        public PatrimoineVue(ValeurPatrimoineController valeurPatrimoineController, 
+                             TransactionController transactionController,
+                             InvestissementTotalController investissementTotalController)
         {
             this.transactionController = transactionController;
-
+            this.valeurPatrimoineController = valeurPatrimoineController;
+            this.investissementTotalController = investissementTotalController;
             InitializeComponent();
         }
 
@@ -122,6 +128,9 @@ namespace Investissement
             legendLineChart.Alignment = StringAlignment.Center;
             lineChartPatrimoine.Legends.Add(legendLineChart);
 
+            chartAreaPatrimoine.CursorX.IsUserEnabled = true;
+            lineChartPatrimoine.MouseMove += LineChartPatrimoine_MouseMove;
+
             this.pageGraphique.Controls.Add(lineChartPatrimoine);
             lineChartPatrimoine.Dock = DockStyle.Fill;
         }
@@ -132,13 +141,14 @@ namespace Investissement
         {
             try
             {
-                await transactionController.recupererPrixActifsActuel();
+                await valeurPatrimoineController.recupererPrixActifsActuel();
                 //↓ mise a jour des graphiques en consequence ↓
-                this.valeurPatrimoineActuelle = transactionController.calculerEnregistrerValeurPatrimoineActuel(this.valeurPatrimoineActuelle);
+                this.valeurPatrimoineActuelle = valeurPatrimoineController.calculerEnregistrerValeurPatrimoineActuel(this.valeurPatrimoineActuelle);
                 this.afficherValeurPatrimoineActuel();
                 this.remplirPieChartProportionParActifs();
                 this.remplirPieChartProportionParTypeActifs();
-                transactionController.ajouterInvestissementTotalDuJour();
+
+                investissementTotalController.ajouterInvestissementsTotauxManquant();
                 this.remplirGraphiqueValeurTotaleInvestitParDate();
                 this.remplirGraphiqueValeurMoyenneParDate();
             }
@@ -172,7 +182,7 @@ namespace Investissement
         private void remplirGraphiqueValeurTotaleInvestitParDate()
         {
             this.serieLineQuantiteInvestit.Points.Clear();
-            foreach (KeyValuePair<DateTime, double> quantiteInvestitParDate in transactionController.getQuantiteInvestitParDate())
+            foreach (KeyValuePair<DateTime, double> quantiteInvestitParDate in investissementTotalController.getQuantiteInvestitParDate())
             {
                 this.serieLineQuantiteInvestit.Points.AddXY(quantiteInvestitParDate.Key, quantiteInvestitParDate.Value);
             }
@@ -180,9 +190,53 @@ namespace Investissement
         private void remplirGraphiqueValeurMoyenneParDate()
         {
             this.serieLineValeurPatrimoineMoyen.Points.Clear();
-            foreach (KeyValuePair<DateTime, double> valeurMoyenneParDate in transactionController.getMoyenneValeurPatrimoineParJour())
+            foreach (KeyValuePair<DateTime, double> valeurMoyenneParDate in valeurPatrimoineController.getMoyenneValeurPatrimoineParJour())
             {
                 this.serieLineValeurPatrimoineMoyen.Points.AddXY(valeurMoyenneParDate.Key, valeurMoyenneParDate.Value);
+            }
+        }
+        private void LineChartPatrimoine_MouseMove(object sender, MouseEventArgs e)
+        {
+            Chart chart = (Chart)sender;
+
+            // 1. Trouver l'élément sous le curseur
+            HitTestResult result = chart.HitTest(e.X, e.Y);
+
+            // 2. Réinitialisation visuelle de l'ancien point survolé (si vous utilisez le Marker Hover)
+            if (lastHoveredPoint != null)
+            {
+                lastHoveredPoint.MarkerStyle = MarkerStyle.None;
+                lastHoveredPoint = null;
+            }
+
+            // 3. Traiter le survol d'un point de donnée (la méthode HitTest est tolérante près de la ligne)
+            if (result.ChartElementType == ChartElementType.DataPoint)
+            {
+                DataPoint currentPoint = result.Series.Points[result.PointIndex];
+                Series series = result.Series;
+
+                // --- Affichage du ToolTip ---
+
+                // Récupérer et formater la Date X
+                DateTime date = DateTime.FromOADate(currentPoint.XValue);
+
+                // Formater le texte du ToolTip (utilisation de C0 pour la devise)
+                string tooltipText = $"{series.Name}\nDate: {date:dd/MM/yyyy}\nValeur: {currentPoint.YValues[0]:C0}";
+
+                // Afficher l'info-bulle via le composant ToolTip externe
+                // Remplacez 'this.chartToolTip' par le nom de votre composant ToolTip
+                this.chartToolTip.SetToolTip(chart, tooltipText);
+
+                // --- OPTIONNEL : Mise en évidence du point (Marker Hover) ---
+                currentPoint.MarkerStyle = MarkerStyle.Circle; // Afficher un marqueur
+                currentPoint.MarkerSize = 10;
+                currentPoint.MarkerColor = series.Color;
+                lastHoveredPoint = currentPoint;
+            }
+            else
+            {
+                // 4. Si la souris n'est pas sur un élément pertinent, masquer l'info-bulle
+                this.chartToolTip.SetToolTip(chart, string.Empty);
             }
         }
     }
